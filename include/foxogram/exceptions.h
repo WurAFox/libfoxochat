@@ -40,8 +40,8 @@ namespace foxogram {
         Exception(Exception&&) = default;
         ~Exception() override = default;
         const char* what() const noexcept override { return msg.c_str(); };
-        int errorCode() const noexcept {return errCode; };
-        int httpErrorCode() const noexcept {return httpCode; };
+        int &errorCode() const noexcept {return errCode; };
+        int &httpErrorCode() const noexcept {return httpCode; };
     };
 
     decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), 101, 404)
