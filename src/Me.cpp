@@ -43,7 +43,7 @@ foxogram::User foxogram::Me::fetchUser(long long id) {
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
-    nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/signup", std::unordered_map<std::string, std::string>{
+    nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/login", std::unordered_map<std::string, std::string>{
         {"email", email},
         {"password", password}
     }));
@@ -51,7 +51,7 @@ std::string foxogram::Me::login(std::string email, std::string password) {
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
-    nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/login",
+    nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/signup",
                                                              std::unordered_map<std::string, std::string>{
         {"username", username},
         {"email", email},
@@ -72,8 +72,9 @@ void foxogram::Me::deleteUser(std::string password) {
         }, token));
 }
 
-void foxogram::Me::confirmDeleteUser(std::string code) {
-    foxogram::HttpClient::request(Payload("POST", "/auth/delete/confirm"+code, token));
+bool foxogram::Me::confirmDeleteUser(std::string code) {
+    auto j = foxogram::HttpClient::request(Payload("POST", "/auth/delete/confirm"+code, token));
+    return j.at("ok").get<bool>();
 }
 
 foxogram::User foxogram::Me::fetchMe() {

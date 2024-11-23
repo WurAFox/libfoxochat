@@ -4,6 +4,9 @@ project(foxogram_lib
         DESCRIPTION "Library for foxogram"
         LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
+set(USE_OPEN_SSL "ON")
+set(USE_TLS "ON")
+set(USE_ZLIB "OFF")
 
 include(cmake/utils.cmake)
 include(GNUInstallDirs)
@@ -44,10 +47,6 @@ FetchContent_MakeAvailable(ixwebsocket)
 target_link_libraries(foxogram_lib PUBLIC ixwebsocket)
 
 set_target_properties(ixwebsocket PROPERTIES PUBLIC_HEADER "")
-
-set(USE_OPEN_SSL "ON")
-set(USE_TLS "ON")
-set(USE_ZLIB "OFF")
 
 include(GenerateExportHeader)
 set(export_file_name "export_shared.h")

@@ -22,8 +22,13 @@ namespace foxogram {
         static std::string signup(std::string username, std::string email, std::string password);
         bool verifyEmail(std::string code);
         void deleteUser(std::string password);
-        void confirmDeleteUser(std::string code);
-
+        bool confirmDeleteUser(std::string code);
+        using User::getUsername;
+        using User::getAvatar;
+        using User::getFlags;
+        using User::getType;
+        using User::getCreatedAt;
+        using User::getId;
     };
 
 }

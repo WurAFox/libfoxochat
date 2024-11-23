@@ -12,9 +12,10 @@ namespace foxogram {
         const std::string baseUrl = "https://api.foxogram.su/v1";
         std::string method;
         std::string url;
-
+        ix::WebSocketHttpHeaders headers {{"content-type", "application/json"}};
+        nlohmann::json bodyJson;
         std::string body;
-        ix::WebSocketHttpHeaders headers;
+
     public:
         void addAuth(std::string token);
         Payload(std::string method, std::string path);
@@ -33,6 +34,7 @@ namespace foxogram {
         const ix::WebSocketHttpHeaders &getHeaders() const;
         const std::string &getBody() const;
         const std::string &getUrl() const;
+        const nlohmann::json &getBodyJson() const;
     };
 
     class FOXOGRAM_LIB_EXPORT HttpClient {

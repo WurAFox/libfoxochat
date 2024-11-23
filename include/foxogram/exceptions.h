@@ -5,55 +5,45 @@
 #include <string>
 #include <ixwebsocket/IXHttpClient.h>
 
-#define decl_exception(name, Msg, ErrCode, HttpCode, Exception) class name : public foxogram::Exception { \
+#define decl_exception(name, Msg, Exception) class name : public foxogram::Exception { \
     protected: \
         std::string msg = Msg; \
-        int errCode = ErrCode; \
-        int httpCode = HttpCode; \
     public: \
         using foxogram::Exception::Exception; \
-        explicit name(const std::string& what, int& errCode, int& httpCode) : msg(what), errCode(errCode), \
-        httpCode(httpCode) {} \
-        explicit name(std::string&& what, int&& errCode, int&& httpCode) : msg(std::move(what)), \
-        errCode(errCode), httpCode(httpCode) {} \
-        name(const name&) = default; \
-        name(name&&) = default; \
+        explicit name(const std::string& what) = delete; \
+        explicit name(std::string&& what) = delete; \
+        name(const name&) = delete; \
+        name(name&&) = delete; \
+        name() = default; \
         ~name() override = default; \
         const char* what() const noexcept override { return msg.c_str(); }; \
-        int errorCode() const noexcept {return errCode; }; \
-        int httpErrorCode() const noexcept {return httpCode; }; \
 };
 
 namespace foxogram {
     class FOXOGRAM_LIB_EXPORT HttpException : public std::exception {
     protected:
         std::string msg;
-        int errCode;
-        int httpCode;
     public:
         using std::exception::exception;
-        explicit HttpException(const std::string& what, int& errCode, int& httpCode) : msg(what), errCode(errCode),
-        httpCode(httpCode) {}
-        explicit HttpException(std::string&& what, int&& errCode, int&& httpCode) : msg(std::move(what)),
-        errCode(errCode), httpCode(httpCode) {}
+        explicit HttpException(const std::string& what) : msg(what) {}
+        explicit HttpException(std::string&& what) : msg(std::move(what)) {}
         HttpException(const HttpException&) = default;
         HttpException(HttpException&&) = default;
         ~HttpException() override = default;
         const char* what() const noexcept override { return msg.c_str(); };
-        int &errorCode() noexcept {return errCode; };
-        int &httpErrorCode() noexcept {return httpCode; };
     };
 
-    decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), 101, 404, HttpException)
-    decl_exception(ChannelNotFoundException, std::string("Unknown channel"), 201, 404, HttpException)
-    decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), 302, 403, HttpException)
-    decl_exception(UserAuthenticationNeededException, std::string("You need to authenticate to perform this action"), 303, 403, HttpException)
-    decl_exception(UserAlreadyExistsException, std::string("User with this email already exist"), 304, 403, HttpException)
-    decl_exception(UserUnauthorizatedException, std::string("You need to authorize first."), 301, 401, HttpException)
-    decl_exception(InvalidCredentialsException, std::string("Invalid password or email"), 305, 400, HttpException)
-    decl_exception(InvalidCodeException, std::string("Code is invalid!"), 401, 404, HttpException)
-    decl_exception(CodeExpiredException, std::string("Code has expired!"), 401, 404, HttpException)
-    decl_exception(MemberInChannelNotFoundException, std::string("Can't find member in this channel"), 401, 404, HttpException)
-    decl_exception(MissingPermissionException, std::string("You don't have enough permissions to delete this channel"), 402, 404, HttpException)
+    decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), HttpException)
+    decl_exception(ChannelNotFoundException, std::string("Unknown channel"), HttpException)
+    decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), HttpException)
+    decl_exception(UserAuthenticationNeededException, std::string("You need to authenticate to perform this action"), HttpException)
+    decl_exception(UserWithThisEmailAlreadyExistException, std::string("User with this email already exist"), HttpException)
+    decl_exception(UserUnauthorizatedException, std::string("You need to authorize first."), HttpException)
+    decl_exception(UserCredentialsIsInvalidException, std::string("Invalid password or email"), HttpException)
+    decl_exception(CodeIsInvalidException, std::string("Code is invalid!"), HttpException)
+    decl_exception(CodeExpiredException, std::string("Code has expired!"), HttpException)
+    decl_exception(MemberInChannelNotFoundException, std::string("Can't find member in this channel"), HttpException)
+    decl_exception(MissingPermissionException, std::string("You don't have enough permissions to delete this channel"), HttpException)
+    decl_exception(MemberAlreadyInChannelException, std::string("You've already joined this channel."), HttpException)
 
 }
