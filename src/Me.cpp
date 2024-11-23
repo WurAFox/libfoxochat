@@ -1,8 +1,6 @@
 #include <foxogram/Me.h>
 #include <foxogram/HttpClient.h>
 
-#include <utility>
-
 foxogram::Me::Me(std::string token) {
     this->token = std::move(token);
     auto u = this->fetchMe();
@@ -38,7 +36,10 @@ foxogram::Me::Me(std::string email, std::string password) {
 
 foxogram::User foxogram::Me::fetchUser(long long id) {
     auto j = foxogram::HttpClient::request(Payload("GET", std::string("/users/")+std::to_string(id), this->token));
-    return foxogram::User(0, std::basic_string(""), std::basic_string(""), 0, 0, 0);
+    return foxogram::User(
+            j.at("id").get<long long>(), j.at("username").get<std::string>(),
+            j.at("avatar").get<std::string>(),j.at("flags").get<long long>(),
+            j.at("type"), j.at("createdAt").get<long long>());
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
@@ -46,7 +47,7 @@ std::string foxogram::Me::login(std::string email, std::string password) {
         {"email", email},
         {"password", password}
     }));
-    return std::string(j.at("access_token"));
+    return j.at("access_token").get<std::string>();
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
@@ -56,12 +57,12 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
         {"email", email},
         {"password", password}
     }));
-    return std::string(j.at("access_token"));
+    return j.at("access_token").get<std::string>();
 }
 
 bool foxogram::Me::verifyEmail(std::string code) {
     nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/v1/auth/email/verify/"+code, token));
-    return j.at("ok") == "true";
+    return j.at("ok").get<bool>();
 }
 
 void foxogram::Me::deleteUser(std::string password) {
@@ -77,5 +78,8 @@ void foxogram::Me::confirmDeleteUser(std::string code) {
 
 foxogram::User foxogram::Me::fetchMe() {
     auto j = foxogram::HttpClient::request(Payload("GET", "/users/@me", token));
-    return foxogram::User(0, std::basic_string(""), std::basic_string(""), 0, 0, 0);
+    return foxogram::User(
+            j.at("id").get<long long>(), j.at("username").get<std::string>(),
+            j.at("avatar").get<std::string>(),j.at("flags").get<long long>(),
+            j.at("type"), j.at("createdAt").get<long long>());
 }
