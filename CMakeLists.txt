@@ -63,11 +63,9 @@ set(sources
         include/foxogram/exceptions.h
         include/foxogram/Enums.h
         include/foxogram/HttpClient.h
-        include/foxogram/BaseUser.h
         include/foxogram/User.h
         include/foxogram/Me.h
         src/HttpClient.cpp
-        src/BaseUser.cpp
         src/User.cpp
         src/Me.cpp
 )

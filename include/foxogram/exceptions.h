@@ -48,7 +48,7 @@ namespace foxogram {
     decl_exception(ChannelNotFoundException, std::string("Unknown channel"), 201, 404, HttpException)
     decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), 302, 403, HttpException)
     decl_exception(UserAuthenticationNeededException, std::string("You need to authenticate to perform this action"), 303, 403, HttpException)
-    decl_exception(UserAlreadyExistsException, std::string("BaseUser with this email already exist"), 304, 403, HttpException)
+    decl_exception(UserAlreadyExistsException, std::string("User with this email already exist"), 304, 403, HttpException)
     decl_exception(UserUnauthorizatedException, std::string("You need to authorize first."), 301, 401, HttpException)
     decl_exception(InvalidCredentialsException, std::string("Invalid password or email"), 305, 400, HttpException)
     decl_exception(InvalidCodeException, std::string("Code is invalid!"), 401, 404, HttpException)

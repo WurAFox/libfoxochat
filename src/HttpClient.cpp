@@ -29,11 +29,25 @@ namespace foxogram {
         this->url = this->baseUrl + path;
     }
 
+    Payload::Payload(std::string method, std::string path, std::string token) {
+        this->method = std::move(method);
+        this->url = this->baseUrl + path;
+        this->addAuth(std::move(token));
+    }
+
     Payload::Payload(std::string method, std::string path,
                      std::map<std::string, std::string> headers) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         this->headers.merge(headers);
+    }
+
+    Payload::Payload(std::string method, std::string path,
+                     std::map<std::string, std::string> headers, std::string token) {
+        this->method = std::move(method);
+        this->url = this->baseUrl + path;
+        this->headers.merge(headers);
+        this->addAuth(std::move(token));
     }
 
     Payload::Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
@@ -46,6 +60,29 @@ namespace foxogram {
             strBody += pair.first + "+" + pair.second;
         }
         this->body = strBody;
+    }
+
+    Payload::Payload(std::string method, std::string path,
+                     std::unordered_map<std::string, std::string> body) {
+        this->method = std::move(method);
+        this->url = this->baseUrl + path;
+        std::string strBody = "";
+        for (const auto& pair : body) {
+            strBody += pair.first + "+" + pair.second;
+        }
+        this->body = strBody;
+    }
+
+    Payload::Payload(std::string method, std::string path,
+                     std::unordered_map<std::string, std::string> body, std::string token) {
+        this->method = std::move(method);
+        this->url = this->baseUrl + path;
+        std::string strBody = "";
+        for (const auto& pair : body) {
+            strBody += pair.first + "+" + pair.second;
+        }
+        this->body = strBody;
+        this->addAuth(token);
     }
 
     Payload::Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
@@ -78,7 +115,7 @@ namespace foxogram {
         } else if (payload.getMethod() == "PATCH") {
             r = httpClient.patch(payload.getUrl(), payload.getBody(), args);
         }
-        auto j = nlohmann::json::parse(r->body);
+        nlohmann::json j = nlohmann::json::parse(r->body);
 
         return j;
     }
