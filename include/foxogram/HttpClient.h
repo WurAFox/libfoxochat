@@ -7,7 +7,7 @@
 
 namespace foxogram {
 
-    class Payload {
+    class FOXOGRAM_LIB_EXPORT Payload {
     private:
         const std::string baseUrl = "https://api.foxogram.su/v1";
         std::string method;
@@ -29,7 +29,7 @@ namespace foxogram {
         const std::string &getUrl() const;
     };
 
-    class HttpClient {
+    class FOXOGRAM_LIB_EXPORT HttpClient {
     public:
         static nlohmann::json request(Payload request);
     };

@@ -61,10 +61,15 @@ generate_export_header(foxogram_lib EXPORT_FILE_NAME include/foxogram_lib/${expo
 set(sources
         include/foxogram/export.h
         include/foxogram/exceptions.h
-        include/foxogram/HttpClient
+        include/foxogram/Enums.h
+        include/foxogram/HttpClient.h
+        include/foxogram/BaseUser.h
         include/foxogram/User.h
+        include/foxogram/Me.h
         src/HttpClient.cpp
+        src/BaseUser.cpp
         src/User.cpp
+        src/Me.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

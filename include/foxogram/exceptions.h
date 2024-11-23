@@ -5,7 +5,7 @@
 #include <string>
 #include <ixwebsocket/IXHttpClient.h>
 
-#define decl_exception(name, Msg, ErrCode, HttpCode) class name : public foxogram::Exception { \
+#define decl_exception(name, Msg, ErrCode, HttpCode, Exception) class name : public foxogram::Exception { \
     protected: \
         std::string msg = Msg; \
         int errCode = ErrCode; \
@@ -25,35 +25,35 @@
 };
 
 namespace foxogram {
-    class FOXOGRAM_LIB_EXPORT Exception : public std::exception {
+    class FOXOGRAM_LIB_EXPORT HttpException : public std::exception {
     protected:
         std::string msg;
         int errCode;
         int httpCode;
     public:
         using std::exception::exception;
-        explicit Exception(const std::string& what, int& errCode, int& httpCode) : msg(what), errCode(errCode),
+        explicit HttpException(const std::string& what, int& errCode, int& httpCode) : msg(what), errCode(errCode),
         httpCode(httpCode) {}
-        explicit Exception(std::string&& what, int&& errCode, int&& httpCode) : msg(std::move(what)),
+        explicit HttpException(std::string&& what, int&& errCode, int&& httpCode) : msg(std::move(what)),
         errCode(errCode), httpCode(httpCode) {}
-        Exception(const Exception&) = default;
-        Exception(Exception&&) = default;
-        ~Exception() override = default;
+        HttpException(const HttpException&) = default;
+        HttpException(HttpException&&) = default;
+        ~HttpException() override = default;
         const char* what() const noexcept override { return msg.c_str(); };
-        int &errorCode() const noexcept {return errCode; };
-        int &httpErrorCode() const noexcept {return httpCode; };
+        int &errorCode() noexcept {return errCode; };
+        int &httpErrorCode() noexcept {return httpCode; };
     };
 
-    decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), 101, 404)
-    decl_exception(ChannelNotFoundException, std::string("Unknown channel"), 201, 404)
-    decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), 302, 403)
-    decl_exception(UserAuthenticationNeededException, std::string("You need to authenticate to perform this action"), 303, 403)
-    decl_exception(UserAlreadyExistsException, std::string("User with this email already exist"), 304, 403)
-    decl_exception(UserUnauthorizatedException, std::string("You need to authorize first."), 301, 401)
-    decl_exception(InvalidCredentialsException, std::string("Invalid password or email"), 305, 400)
-    decl_exception(InvalidCodeException, std::string("Code is invalid!"), 401, 404)
-    decl_exception(CodeExpiredException, std::string("Code has expired!"), 401, 404)
-    decl_exception(MemberInChannelNotFoundException, std::string("Can't find member in this channel"), 401, 404)
-    decl_exception(MissingPermissionException, std::string("You don't have enough permissions to delete this channel"), 402, 404)
+    decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), 101, 404, HttpException)
+    decl_exception(ChannelNotFoundException, std::string("Unknown channel"), 201, 404, HttpException)
+    decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), 302, 403, HttpException)
+    decl_exception(UserAuthenticationNeededException, std::string("You need to authenticate to perform this action"), 303, 403, HttpException)
+    decl_exception(UserAlreadyExistsException, std::string("BaseUser with this email already exist"), 304, 403, HttpException)
+    decl_exception(UserUnauthorizatedException, std::string("You need to authorize first."), 301, 401, HttpException)
+    decl_exception(InvalidCredentialsException, std::string("Invalid password or email"), 305, 400, HttpException)
+    decl_exception(InvalidCodeException, std::string("Code is invalid!"), 401, 404, HttpException)
+    decl_exception(CodeExpiredException, std::string("Code has expired!"), 401, 404, HttpException)
+    decl_exception(MemberInChannelNotFoundException, std::string("Can't find member in this channel"), 401, 404, HttpException)
+    decl_exception(MissingPermissionException, std::string("You don't have enough permissions to delete this channel"), 402, 404, HttpException)
 
 }

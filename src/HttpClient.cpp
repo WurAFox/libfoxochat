@@ -78,8 +78,9 @@ namespace foxogram {
         } else if (payload.getMethod() == "PATCH") {
             r = httpClient.patch(payload.getUrl(), payload.getBody(), args);
         }
+        auto j = nlohmann::json::parse(r->body);
 
-        return nlohmann::json::parse(r->body);
+        return j;
     }
 
 }

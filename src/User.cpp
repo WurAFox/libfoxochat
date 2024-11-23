@@ -1,3 +1,8 @@
 //
-// Created by admin on 11/22/2024.
+// Created by admin on 11/23/2024.
 //
+
+#include "foxogram/User.h"
+
+namespace foxogram {
+} // foxogram
