@@ -47,7 +47,7 @@ std::string foxogram::Me::login(std::string email, std::string password) {
         {"email", email},
         {"password", password}
     }));
-    return j.at("access_token").get<std::string>();
+    return j.at("accessToken").get<std::string>();
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
@@ -57,7 +57,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
         {"email", email},
         {"password", password}
     }));
-    return j.at("access_token").get<std::string>();
+    return j.at("accessToken").get<std::string>();
 }
 
 bool foxogram::Me::verifyEmail(std::string code) {

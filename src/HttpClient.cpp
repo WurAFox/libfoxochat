@@ -136,7 +136,7 @@ namespace foxogram {
         }
 
         nlohmann::json j = nlohmann::json::parse(r->body);
-        if (!j.at("ok").get<bool>()) {
+        if (r->statusCode != 200) {
             switch (j.at("code").get<int>()) {
                 case (101): throw MessageNotFoundException(); break;
                 case(201): throw ChannelNotFoundException(); break;
