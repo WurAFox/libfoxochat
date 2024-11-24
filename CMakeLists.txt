@@ -64,9 +64,15 @@ set(sources
         include/foxogram/HttpClient.h
         include/foxogram/User.h
         include/foxogram/Me.h
+        include/foxogram/Message.h
+        include/foxogram/Channel.h
+        include/foxogram/Member.h
         src/HttpClient.cpp
         src/User.cpp
         src/Me.cpp
+        src/Message.cpp
+        src/Channel.cpp
+        src/Member.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
