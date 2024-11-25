@@ -88,28 +88,32 @@ foxogram::User foxogram::Me::fetchMe() {
 foxogram::Channel foxogram::Me::createChannel(std::string name, int type) {
     auto j = foxogram::HttpClient::request(Payload("POST", "/channels/create",
                                                    nlohmann::json({{"name", name}, {"type", type}}), token));
-    auto channel = foxogram::Channel(0, std::string(""), 0, 0);
+    auto channel = foxogram::Channel(j.at("id").get<long long>(), j.at("name").get<std::string>(),
+            j.at("type").get<int>(), j.at("ownerId").get<long long>());
     channel.token = token;
     return channel;
 }
 
 foxogram::Channel foxogram::Me::joinChannel(long long int id) {
     auto j = foxogram::HttpClient::request(Payload("POST", "/channels/"+std::to_string(id)+"/join", token));
-    auto channel = foxogram::Channel(0, std::string(""), 0, 0);
+    auto channel = foxogram::Channel(j.at("id").get<long long>(), j.at("name").get<std::string>(),
+                                     j.at("type").get<int>(), j.at("ownerId").get<long long>());
     channel.token = token;
     return channel;
 }
 
 foxogram::Channel foxogram::Me::fetchChannel(long long int id) {
     auto j = foxogram::HttpClient::request(Payload("GET", "/channels/"+std::to_string(id), token));
-    auto channel = foxogram::Channel(0, std::string(""), 0, 0);
+    auto channel = foxogram::Channel(j.at("id").get<long long>(), j.at("name").get<std::string>(),
+                                     j.at("type").get<int>(), j.at("ownerId").get<long long>());
     channel.token = token;
     return channel;
 }
 
 foxogram::Message foxogram::Me::fetchMessage(long long int id) {
     auto j = foxogram::HttpClient::request(Payload("GET", "/messages/"+std::to_string(id), token));
-    auto message = foxogram::Message(0, nullptr, 0, 0, std::list<std::string>());
+    auto message = foxogram::Message(j.at("id").get<long long>(), nullptr, j.at("authorId").get<long long>(),
+            j.at("timestamp").get<long long>(), j.at("attachments").get<std::list<std::string>>());
     message.token = token;
     return message;
 }
