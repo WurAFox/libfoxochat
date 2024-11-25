@@ -9,9 +9,12 @@ namespace foxogram {
     struct Channel;
 
     struct FOXOGRAM_LIB_EXPORT Member : foxogram::User {
+        friend class Me;
     private:
         foxogram::Channel* channel;
         long long permissions;
+    protected:
+        std::string token;
     public:
         void addPermissions(MemberPermissions permission);
         void removePermissions(MemberPermissions permission);

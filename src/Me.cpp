@@ -43,20 +43,20 @@ foxogram::User foxogram::Me::fetchUser(long long id) {
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
-    nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/login", std::unordered_map<std::string, std::string>{
+    nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/login", nlohmann::json({
         {"email", email},
         {"password", password}
-    }));
+    })));
     return j.at("accessToken").get<std::string>();
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
     nlohmann::json j = foxogram::HttpClient::request(Payload("POST", "/auth/signup",
-                                                             std::unordered_map<std::string, std::string>{
+                                                             nlohmann::json({
         {"username", username},
         {"email", email},
         {"password", password}
-    }));
+    })));
     return j.at("accessToken").get<std::string>();
 }
 
@@ -67,9 +67,9 @@ bool foxogram::Me::verifyEmail(std::string code) {
 
 void foxogram::Me::deleteUser(std::string password) {
     foxogram::HttpClient::request(Payload("POST", "/auth/delete",
-                                          std::unordered_map<std::string, std::string>{
+                                          nlohmann::json({
         {"password", password}
-        }, token));
+        }), token));
 }
 
 bool foxogram::Me::confirmDeleteUser(std::string code) {
@@ -83,4 +83,33 @@ foxogram::User foxogram::Me::fetchMe() {
             j.at("id").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(),j.at("flags").get<long long>(),
             j.at("type"), j.at("createdAt").get<long long>());
+}
+
+foxogram::Channel foxogram::Me::createChannel(std::string name, int type) {
+    auto j = foxogram::HttpClient::request(Payload("POST", "/channels/create",
+                                                   nlohmann::json({{"name", name}, {"type", type}}), token));
+    auto channel = foxogram::Channel(0, std::string(""), 0, 0);
+    channel.token = token;
+    return channel;
+}
+
+foxogram::Channel foxogram::Me::joinChannel(long long int id) {
+    auto j = foxogram::HttpClient::request(Payload("POST", "/channels/"+std::to_string(id)+"/join", token));
+    auto channel = foxogram::Channel(0, std::string(""), 0, 0);
+    channel.token = token;
+    return channel;
+}
+
+foxogram::Channel foxogram::Me::fetchChannel(long long int id) {
+    auto j = foxogram::HttpClient::request(Payload("GET", "/channels/"+std::to_string(id), token));
+    auto channel = foxogram::Channel(0, std::string(""), 0, 0);
+    channel.token = token;
+    return channel;
+}
+
+foxogram::Message foxogram::Me::fetchMessage(long long int id) {
+    auto j = foxogram::HttpClient::request(Payload("GET", "/messages/"+std::to_string(id), token));
+    auto message = foxogram::Message(0, nullptr, 0, 0, std::list<std::string>());
+    message.token = token;
+    return message;
 }

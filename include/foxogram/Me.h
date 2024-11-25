@@ -2,6 +2,7 @@
 
 #include <foxogram/export.h>
 #include <foxogram/User.h>
+#include <foxogram/Channel.h>
 
 namespace foxogram {
 
@@ -23,6 +24,10 @@ namespace foxogram {
         bool verifyEmail(std::string code);
         void deleteUser(std::string password);
         bool confirmDeleteUser(std::string code);
+        Channel createChannel(std::string name, int type);
+        Channel joinChannel(long long id);
+        Channel fetchChannel(long long id);
+        Message fetchMessage(long long id);
     };
 
 }

@@ -22,14 +22,10 @@ namespace foxogram {
         Payload(std::string method, std::string path, std::string token);
         Payload(std::string method, std::string path, std::map<std::string, std::string> headers);
         Payload(std::string method, std::string path, std::map<std::string, std::string> headers, std::string token);
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
-                std::unordered_map<std::string, std::string> body);
-        Payload(std::string method, std::string path,
-                std::unordered_map<std::string, std::string> body);
-        Payload(std::string method, std::string path,
-                std::unordered_map<std::string, std::string> body, std::string token);
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
-                std::unordered_map<std::string, std::string> body, std::string token);
+        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body);
+        Payload(std::string method, std::string path, nlohmann::json body);
+        Payload(std::string method, std::string path, nlohmann::json body, std::string token);
+        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body, std::string token);
         const std::string &getMethod() const;
         const ix::WebSocketHttpHeaders &getHeaders() const;
         const std::string &getBody() const;

@@ -15,6 +15,9 @@ namespace foxogram {
         long long authorId;
         long long timestamp;
         std::list<std::string> attachments;
+    protected:
+        std::string token;
+        friend class Me;
     public:
         Message(long long id, foxogram::Channel* channel, long long authorId, long long timestamp, std::list<std::string> attachments);
     };

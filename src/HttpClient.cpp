@@ -54,37 +54,37 @@ namespace foxogram {
     }
 
     Payload::Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
-                     std::unordered_map<std::string, std::string> body) {
+                     nlohmann::json body) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         this->headers.merge(headers);
         std::string strBody = "";
         for (const auto& pair : body) {
-            strBody += pair.first + "=" + pair.second + "+";
+            strBody += to_string(pair.at(1)) + "=" + to_string(pair.at(2)) + "+";
         }
         this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
     }
 
     Payload::Payload(std::string method, std::string path,
-                     std::unordered_map<std::string, std::string> body) {
+                     nlohmann::json body) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         std::string strBody = "";
         for (const auto& pair : body) {
-            strBody += pair.first + "=" + pair.second + "+";
+            strBody += to_string(pair.at(1)) + "=" + to_string(pair.at(2)) + "+";
         }
         this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
     }
 
     Payload::Payload(std::string method, std::string path,
-                     std::unordered_map<std::string, std::string> body, std::string token) {
+                     nlohmann::json body, std::string token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         std::string strBody = "";
         for (const auto& pair : body) {
-            strBody += pair.first + "=" + pair.second + "+";
+            strBody += to_string(pair.at(1)) + "=" + to_string(pair.at(2)) + "+";
         }
         this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
@@ -92,13 +92,13 @@ namespace foxogram {
     }
 
     Payload::Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
-                     std::unordered_map<std::string, std::string> body, std::string token) {
+                     nlohmann::json body, std::string token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         this->headers.merge(headers);
         std::string strBody = "";
         for (const auto& pair : body) {
-            strBody += pair.first + "=" + pair.second + "+";
+            strBody += to_string(pair.at(1)) + "=" + to_string(pair.at(2)) + "+";
         }
         this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
