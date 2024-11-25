@@ -12,7 +12,7 @@ namespace foxogram {
                 MFA_ENABLED = 1 << 1,
                 DISABLED = 1 << 2,
         };
-        UserFlags(long long bit) : bit(bit) {}
+        explicit UserFlags(long long bit) : bit(bit) {}
         const long long getBit() const {
             return bit;
         }
@@ -31,7 +31,7 @@ namespace foxogram {
             ATTACH_FILES = 1 << 5,
             SEND_MESSAGES = 1 << 6
         };
-        MemberPermissions(long long bit) : bit(bit) {}
+        explicit MemberPermissions(long long bit) : bit(bit) {}
         const long long getBit() const {
             return bit;
         };

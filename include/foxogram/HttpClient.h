@@ -17,15 +17,10 @@ namespace foxogram {
 
     public:
         void addAuth(std::string token);
-        Payload(std::string method, std::string path);
-        Payload(std::string method, std::string path, std::string token);
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers);
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, std::string token);
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body);
-        Payload(std::string method, std::string path, nlohmann::json body);
-        Payload(std::string method, std::string path, nlohmann::json body, std::string token);
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body, std::string token);
-        const std::string &getMethod() const;
+        Payload(std::string method, std::string path, std::string token = "");
+        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, std::string token = "");
+        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body, std::string token = "");
+        Payload(std::string method, std::string path, nlohmann::json body, std::string token = "");const std::string &getMethod() const;
         const ix::WebSocketHttpHeaders &getHeaders() const;
         const std::string &getBody() const;
         const std::string &getUrl() const;
