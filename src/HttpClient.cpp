@@ -92,30 +92,13 @@ namespace foxogram {
         } else if (payload.getMethod() == "PATCH") {
             r = httpClient.patch(payload.getUrl(), to_string(payload.getBodyJson()), args);
         } else {
-            throw std::exception("Invalid method");
+            throw std::invalid_argument("Invalid method");
         }
         if (!r->errorMsg.empty()) {
             throw HttpException(r->errorMsg);
         }
 
         nlohmann::json j = nlohmann::json::parse(r->body);
-        if (r->statusCode != 200) {
-            switch (j.at("code").get<int>()) {
-                case(101): throw MessageNotFoundException();
-                case(201): throw ChannelNotFoundException();
-                case(301): throw UserUnauthorizatedException();
-                case(302): throw UserEmailNotVerfiedException();
-                case(304): throw UserWithThisEmailAlreadyExistException();
-                case(305): throw UserCredentialsIsInvalidException();
-                case(401): throw MemberInChannelNotFoundException();
-                case(402): throw MemberAlreadyInChannelException();
-                case(403): throw MissingPermissionException();
-                case(501): throw CodeIsInvalidException();
-                case(503): throw CodeExpiredException();
-                default: throw HttpException(j.at("message").get<std::string>());
-            }
-        }
-
         return j;
     }
 
