@@ -23,7 +23,7 @@ namespace foxogram {
         return url;
     }
 
-    void Payload::addAuth(std::string token) {
+    void Payload::addAuth(const std::string &token) {
         this->headers.insert({{"Authorization", "Bearer " + token}});
     }
 

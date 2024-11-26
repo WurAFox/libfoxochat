@@ -11,20 +11,31 @@ namespace foxogram {
         const std::string baseUrl = std::string(FOXOGRAM_BASE_API) + std::string(FOXOGRAM_API_VERSION);
         std::string method;
         std::string url;
-        ix::WebSocketHttpHeaders headers {{"content-type", "application/json"}};
+        ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};
         nlohmann::json bodyJson;
         std::string body;
 
     public:
-        void addAuth(std::string token);
+        void addAuth(const std::string &token);
+
         Payload(std::string method, std::string path, std::string token = "");
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, std::string token = "");
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body, std::string token = "");
+
+        Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
+                std::string token = "");
+
+        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body,
+                std::string token = "");
+
         Payload(std::string method, std::string path, nlohmann::json body, std::string token = "");
+
         [[nodiscard]] const std::string &getMethod() const;
+
         [[nodiscard]] const ix::WebSocketHttpHeaders &getHeaders() const;
+
         [[nodiscard]] const std::string &getBody() const;
+
         [[nodiscard]] const std::string &getUrl() const;
+
         [[nodiscard]] const nlohmann::json &getBodyJson() const;
     };
 
@@ -32,5 +43,4 @@ namespace foxogram {
     public:
         static nlohmann::json request(Payload request);
     };
-
 }
