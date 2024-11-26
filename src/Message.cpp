@@ -4,36 +4,30 @@
 #include <foxogram/HttpClient.h>
 #include <utility>
 
-foxogram::Message::Message(long long int id, foxogram::Channel *channel, long long int authorId, long long int timestamp,
-                           std::list<std::string> attachments) {
-    this->id = id;
-    this->channel = channel;
-    this->authorId = authorId;
-    this->timestamp = timestamp;
-    this->attachments = std::move(attachments);
+foxogram::Message::Message(const long long int id, Channel *channel, const long long int authorId,
+                           const long long int timestamp,
+                           std::list<std::string> attachments): BaseEntity(id), channel(channel), authorId(authorId),
+                                                                timestamp(timestamp),
+                                                                attachments(std::move(attachments)) {
 }
 
-void foxogram::Message::deleteMessage() {
-    auto j = foxogram::HttpClient::request(Payload("DELETE", "/channels/"+
-    std::to_string(this->channel->getId())+std::to_string(this->id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(403): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
+void foxogram::Message::handleError(const nlohmann::json &response) const {
+    if (!response.at("ok").get<bool>()) {
+        switch (response.at("code").get<int>()) {
+            case(301): throw UserUnauthorizatedException();
+            case(302): throw UserEmailNotVerfiedException();
+            case(403): throw MissingPermissionException();
+            default: throw HttpException(response.at("message").get<std::string>());
         }
     }
 }
 
-void foxogram::Message::edit() {
-    auto j = foxogram::HttpClient::request(Payload("PATCH", "/channels/"+std::to_string(this->id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(401): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
-        }
-    }
+void foxogram::Message::deleteMessage() const {
+    handleError(HttpClient::request(Payload("DELETE", "/channels/" +
+                                                                std::to_string(channel->getId()) + std::to_string(
+                                                                    id), token)));
+}
+
+void foxogram::Message::edit() const {
+    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
 }

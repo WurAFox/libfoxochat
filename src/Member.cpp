@@ -1,26 +1,19 @@
 #include <foxogram/Member.h>
 
-#include <utility>
-
-void foxogram::Member::addPermissions(foxogram::MemberPermissions permission) {
-    this->permissions |= permission.getBit();
+foxogram::Member::Member(const long long id, Channel *channel, const long long permissions, const std::string &username,
+                         const std::string &avatar, const long long flags, const int type, const long long createdAt)
+    : User(id, username, avatar, flags, type, createdAt),
+      channel(channel), permissions(permissions) {
 }
 
-bool foxogram::Member::hasPermissions(foxogram::MemberPermissions permission) const {
-    return (this->permissions & permission.getBit()) != 0;
+void foxogram::Member::addPermissions(const MemberPermissions permission) {
+    permissions.addFlag(permission);
 }
 
-void foxogram::Member::removePermissions(foxogram::MemberPermissions permission) {
-    this->permissions &= permission.getBit();
+bool foxogram::Member::hasPermissions(const MemberPermissions permission) const {
+    return permissions.hasFlag(permission);
 }
 
-foxogram::Member::Member(long long int id, foxogram::Channel* channel, long long int permission, std::string avatar,
-                         long long int createdAt, long long int flags, int type) {
-    this->id = id;
-    this->channel = channel;
-    this->permissions = permission;
-    this->avatar = std::move(avatar);
-    this->createdAt = createdAt;
-    this->flags = flags;
-    this->type = type;
+void foxogram::Member::removePermissions(const MemberPermissions permission) {
+    permissions.removeFlag(permission);
 }

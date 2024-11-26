@@ -1,3 +1,6 @@
-/.idea/
+/.idea
+/.vs
 /cmake-build-*/
+/cmake-build
 /tests/.env
+/tests/cmake-build-debug

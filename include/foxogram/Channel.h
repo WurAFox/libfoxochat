@@ -5,35 +5,45 @@
 #include <list>
 #include <foxogram/Member.h>
 #include <foxogram/Message.h>
+#include <foxogram/BaseEntity.h>
 
 namespace foxogram {
-
-
-    struct FOXOGRAM_LIB_EXPORT Channel {
+    struct FOXOGRAM_LIB_EXPORT Channel : BaseEntity {
         friend class Me;
+
     private:
-        long long id;
         std::string name;
         int type;
         long long ownerId;
-        std::list<foxogram::Member> members;
-        std::list<foxogram::Message> messages;
+        std::list<Member> members;
+        std::list<Message> messages;
+
     protected:
         std::string token;
+
+        void handleError(const nlohmann::json &response) const override;
+
     public:
         Channel(long long id, std::string name, int type, long long int ownerId);
-        void leave();
-        void edit();
-        void deleteChannel();
-        std::list<foxogram::Message> getMessages();
-        foxogram::Message getMessage(long long id);
-        foxogram::Message createMessage();
-        [[nodiscard]] long long int getId() const;
+
+        void leave() const;
+
+        void edit() const;
+
+        void deleteChannel() const;
+
+        [[nodiscard]] std::list<Message> getMessages() const;
+
+        [[nodiscard]] Message getMessage(long long id) const;
+
+        [[nodiscard]] Message createMessage() const;
+
         [[nodiscard]] const std::string &getName() const;
+
         [[nodiscard]] int getType() const;
+
         [[nodiscard]] long long int getOwnerId() const;
-        [[nodiscard]] const std::list<foxogram::Member> &getMembers() const;
 
+        [[nodiscard]] const std::list<Member> &getMembers() const;
     };
-
 }

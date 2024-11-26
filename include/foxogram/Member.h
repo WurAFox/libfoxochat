@@ -5,22 +5,27 @@
 #include <foxogram/Enums.h>
 
 namespace foxogram {
-
     struct Channel;
 
-    struct FOXOGRAM_LIB_EXPORT Member : foxogram::User {
+    struct FOXOGRAM_LIB_EXPORT Member : User {
         friend class Me;
+
     private:
-        foxogram::Channel* channel;
-        long long permissions;
+        Channel *channel;
+
+        FlagsBase<MemberPermissions> permissions;
+
     protected:
         std::string token;
+
     public:
         void addPermissions(MemberPermissions permission);
+
         void removePermissions(MemberPermissions permission);
+
         [[nodiscard]] bool hasPermissions(MemberPermissions permission) const;
-        Member(long long id, Channel* channel, long long permission, std::string avatar, long long createdAt, long long flags, int type);
 
+        Member(long long id, Channel *channel, long long permissions, const std::string &username,
+               const std::string &avatar, long long flags, int type, long long createdAt);
     };
-
 }

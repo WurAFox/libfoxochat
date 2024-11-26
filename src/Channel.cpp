@@ -2,94 +2,60 @@
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
 
-foxogram::Channel::Channel(long long int id, std::string name, int type, long long int ownerId) : id(id),
-                                                                                                         name(name),
-                                                                                                         type(type),
-                                                                                                         ownerId(ownerId) {
-    this->id = id;
-    this->name = std::move(name);
-    this->type = type;
-    this->ownerId = ownerId;
+#include <utility>
+
+foxogram::Channel::Channel(const long long int id, std::string name, const int type,
+                           const long long int ownerId) : BaseEntity(id), name(std::move(name)), type(type),
+                                                          ownerId(ownerId) {
 }
 
-void foxogram::Channel::deleteChannel() {
-    auto j = foxogram::HttpClient::request(Payload("DELETE", "/channels/"+std::to_string(id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(403): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
+void foxogram::Channel::handleError(const nlohmann::json &response) const {
+    if (!response.at("ok").get<bool>()) {
+        switch (response.at("code").get<int>()) {
+            case 301: throw UserUnauthorizatedException();
+            case 302: throw UserEmailNotVerfiedException();
+            case 401: throw MissingPermissionException();
+            case 403: throw MemberInChannelNotFoundException();
+            default: throw HttpException(response.at("message").get<std::string>());
         }
     }
 }
 
-void foxogram::Channel::edit() {
-    auto j = foxogram::HttpClient::request(Payload("PATCH", "/channels/"+std::to_string(id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(401): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
-        }
-    }
+void foxogram::Channel::deleteChannel() const {
+    handleError(HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(id), token)));
 }
 
-void foxogram::Channel::leave() {
-    auto j = foxogram::HttpClient::request(Payload("POST", "/channels/"+std::to_string(id)+"leave", token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(401): throw foxogram::MemberInChannelNotFoundException();
-            default: throw HttpException(j.at("message").get<std::string>());
-        }
-    }
+void foxogram::Channel::edit() const {
+    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
 }
 
-std::list<foxogram::Message> foxogram::Channel::getMessages() {
-    auto j = foxogram::HttpClient::request(Payload("GET", "/channels/"+std::to_string(id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(401): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
-        }
-    }
+void foxogram::Channel::leave() const {
+    handleError(HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/leave", token)));
+}
+
+std::list<foxogram::Message> foxogram::Channel::getMessages() const {
+    const auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(this->id), token));
+
+    handleError(j);
+
     return {};
 }
 
-foxogram::Message foxogram::Channel::getMessage(long long id) {
-    auto j = foxogram::HttpClient::request(Payload("GET",
-                                                   "/channels/"+std::to_string(this->id)+"/"+std::to_string(id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(401): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
-        }
-    }
+foxogram::Message foxogram::Channel::getMessage(const long long id) const {
+    const auto j = HttpClient::request(
+        Payload("GET", "/channels/" + std::to_string(this->id) + "/" + std::to_string(id), token));
+
+    handleError(j);
+
     return {0, nullptr, 0, 0, {}};
 }
 
-foxogram::Message foxogram::Channel::createMessage() {
-    auto j = foxogram::HttpClient::request(Payload("POST", "/channels/"+std::to_string(id), token));
-    if (!j.at("ok").get<bool>()) {
-        switch (j.at("code").get<int>()) {
-            case(301): throw foxogram::UserUnauthorizatedException();
-            case(302): throw foxogram::UserEmailNotVerfiedException();
-            case(401): throw foxogram::MissingPermissionException();
-            default: throw HttpException(j.at("message").get<std::string>());
-        }
-    }
-    return {0, nullptr, 0, 0, {}};
-}
+foxogram::Message foxogram::Channel::createMessage() const {
+    const auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id), token));
 
-long long int foxogram::Channel::getId() const {
-    return id;
+    handleError(j);
+
+    return {0, nullptr, 0, 0, {}};
 }
 
 const std::string &foxogram::Channel::getName() const {
