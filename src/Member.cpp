@@ -6,7 +6,7 @@ void foxogram::Member::addPermissions(foxogram::MemberPermissions permission) {
     this->permissions |= permission.getBit();
 }
 
-bool foxogram::Member::hasPermissions(foxogram::MemberPermissions permission) {
+bool foxogram::Member::hasPermissions(foxogram::MemberPermissions permission) const {
     return (this->permissions & permission.getBit()) != 0;
 }
 

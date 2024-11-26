@@ -15,7 +15,7 @@ void foxogram::User::removeFlag(foxogram::UserFlags flag) {
     this->flags &= flag.getBit();
 }
 
-bool foxogram::User::hasFlag(foxogram::UserFlags flag) {
+bool foxogram::User::hasFlag(foxogram::UserFlags flag) const {
     return (this->flags & flag.getBit()) != 0;
 }
 

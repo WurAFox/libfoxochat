@@ -21,12 +21,12 @@ namespace foxogram {
         User(User&&) = default;
         void addFlag(foxogram::UserFlags flag);
         void removeFlag(foxogram::UserFlags flag);
-        bool hasFlag(foxogram::UserFlags flag);
-        const std::string &getUsername() const;
-        const std::string &getAvatar() const;
-        long long int getFlags() const;
-        int getType() const;
-        long long int getCreatedAt() const;
-        long long int getId() const;
+        [[nodiscard]] bool hasFlag(foxogram::UserFlags flag) const;
+        [[nodiscard]] const std::string &getUsername() const;
+        [[nodiscard]] const std::string &getAvatar() const;
+        [[nodiscard]] long long int getFlags() const;
+        [[nodiscard]] int getType() const;
+        [[nodiscard]] long long int getCreatedAt() const;
+        [[nodiscard]] long long int getId() const;
     };
 }

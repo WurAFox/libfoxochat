@@ -18,7 +18,7 @@ namespace foxogram {
     public:
         void addPermissions(MemberPermissions permission);
         void removePermissions(MemberPermissions permission);
-        bool hasPermissions(MemberPermissions permission);
+        [[nodiscard]] bool hasPermissions(MemberPermissions permission) const;
         Member(long long id, Channel* channel, long long permission, std::string avatar, long long createdAt, long long flags, int type);
 
     };

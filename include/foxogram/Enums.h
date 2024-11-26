@@ -13,7 +13,7 @@ namespace foxogram {
                 DISABLED = 1 << 2,
         };
         explicit UserFlags(long long bit) : bit(bit) {}
-        const long long getBit() const {
+        [[nodiscard]] long long getBit() const {
             return bit;
         }
     };
@@ -32,7 +32,7 @@ namespace foxogram {
             SEND_MESSAGES = 1 << 6
         };
         explicit MemberPermissions(long long bit) : bit(bit) {}
-        const long long getBit() const {
+        [[nodiscard]] long long getBit() const {
             return bit;
         };
     };

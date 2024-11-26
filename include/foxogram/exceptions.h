@@ -30,13 +30,12 @@ namespace foxogram {
         HttpException(const HttpException&) = default;
         HttpException(HttpException&&) = default;
         ~HttpException() override = default;
-        const char* what() const noexcept override { return msg.c_str(); };
+        [[nodiscard]] const char* what() const noexcept override { return msg.c_str(); };
     };
 
     decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), HttpException)
     decl_exception(ChannelNotFoundException, std::string("Unknown channel"), HttpException)
     decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), HttpException)
-    decl_exception(UserAuthenticationNeededException, std::string("You need to authenticate to perform this action"), HttpException)
     decl_exception(UserWithThisEmailAlreadyExistException, std::string("User with this email already exist"), HttpException)
     decl_exception(UserUnauthorizatedException, std::string("You need to authorize first."), HttpException)
     decl_exception(UserCredentialsIsInvalidException, std::string("Invalid password or email"), HttpException)

@@ -105,7 +105,6 @@ namespace foxogram {
                 case(201): throw ChannelNotFoundException();
                 case(301): throw UserUnauthorizatedException();
                 case(302): throw UserEmailNotVerfiedException();
-                case(303): throw UserAuthenticationNeededException();
                 case(304): throw UserWithThisEmailAlreadyExistException();
                 case(305): throw UserCredentialsIsInvalidException();
                 case(401): throw MemberInChannelNotFoundException();

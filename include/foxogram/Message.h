@@ -20,6 +20,9 @@ namespace foxogram {
         friend class Me;
     public:
         Message(long long id, foxogram::Channel* channel, long long authorId, long long timestamp, std::list<std::string> attachments);
+        void deleteMessage();
+        void edit();
+
     };
 
 }

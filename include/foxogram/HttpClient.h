@@ -20,11 +20,12 @@ namespace foxogram {
         Payload(std::string method, std::string path, std::string token = "");
         Payload(std::string method, std::string path, std::map<std::string, std::string> headers, std::string token = "");
         Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body, std::string token = "");
-        Payload(std::string method, std::string path, nlohmann::json body, std::string token = "");const std::string &getMethod() const;
-        const ix::WebSocketHttpHeaders &getHeaders() const;
-        const std::string &getBody() const;
-        const std::string &getUrl() const;
-        const nlohmann::json &getBodyJson() const;
+        Payload(std::string method, std::string path, nlohmann::json body, std::string token = "");
+        [[nodiscard]] const std::string &getMethod() const;
+        [[nodiscard]] const ix::WebSocketHttpHeaders &getHeaders() const;
+        [[nodiscard]] const std::string &getBody() const;
+        [[nodiscard]] const std::string &getUrl() const;
+        [[nodiscard]] const nlohmann::json &getBodyJson() const;
     };
 
     class FOXOGRAM_LIB_EXPORT HttpClient {
