@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(USE_OPEN_SSL "ON")
 set(USE_TLS "ON")
 set(USE_ZLIB "OFF")
+set(BUILD_SHARED_LIBS "OFF")
 
 include(cmake/utils.cmake)
 include(GNUInstallDirs)
@@ -19,6 +20,13 @@ option(FOXOGRAM_LIB_BUILD_DOCS "Build foxogram_lib documentation" OFF)
 option(FOXOGRAM_LIB_INSTALL "Generate target for installing foxogram_lib" ${is_top_level})
 set_if_undefined(FOXOGRAM_LIB_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/foxogram_lib" CACHE STRING
         "Install path for foxogram_lib package-related CMake files")
+option(FOXOGRAM_LIB_USE_DEV_API "Use foxogram dev api" OFF)
+option(FOXOGRAM_LIB_BASE_API_URL "Base api for foxogram" "api.foxogram.su/")
+option(FOXOGRAM_LIB_API_VERSION "Foxogram api version" "v1")
+
+if(FOXOGRAM_LIB_USE_DEV_API)
+    set(FOXOGRAM_LIB_BASE_API_URL "dev-${FOXOGRAM_BASE_API_URL}")
+endif()
 
 if(DEFINED FOXOGRAM_LIB_SHARED_LIBS)
     set(BUILD_SHARED_LIBS ${FOXOGRAM_LIB_SHARED_LIBS})
@@ -35,7 +43,7 @@ set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 add_library(foxogram_lib)
 add_library(foxogram_lib::foxogram_lib ALIAS foxogram_lib)
 
-target_compile_definitions(foxogram_lib PRIVATE FOXOGRAM_BASE_API="https://api.foxogram.su/" FOXOGRAM_API_VERSION="v1")
+target_compile_definitions(foxogram_lib PUBLIC FOXOGRAM_API="${FOXOGRAM_LIB_BASE_API}/${FOXOGRAM_LIB_API_VERSION}")
 
 include(FetchContent)
 FetchContent_Declare(nlohmann_json GIT_REPOSITORY https://github.com/nlohmann/json.git

@@ -8,7 +8,7 @@
 namespace foxogram {
     class FOXOGRAM_LIB_EXPORT Payload {
     private:
-        const std::string baseUrl = std::string(FOXOGRAM_BASE_API) + std::string(FOXOGRAM_API_VERSION);
+        const std::string baseUrl = std::string(FOXOGRAM_API);
         std::string method;
         std::string url;
         ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};
