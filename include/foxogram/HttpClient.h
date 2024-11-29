@@ -3,12 +3,12 @@
 #include <foxogram/export.h>
 #include <ixwebsocket/IXHttpClient.h>
 #include <string>
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
 
 namespace foxogram {
     class FOXOGRAM_LIB_EXPORT Payload {
     private:
-        const std::string baseUrl = std::string(FOXOGRAM_API);
+        const std::string baseUrl = "http://" + std::string(FOXOGRAM_API);
         std::string method;
         std::string url;
         ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};

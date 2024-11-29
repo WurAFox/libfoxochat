@@ -21,8 +21,8 @@ option(FOXOGRAM_LIB_INSTALL "Generate target for installing foxogram_lib" ${is_t
 set_if_undefined(FOXOGRAM_LIB_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/foxogram_lib" CACHE STRING
         "Install path for foxogram_lib package-related CMake files")
 option(FOXOGRAM_LIB_USE_DEV_API "Use foxogram dev api" OFF)
-option(FOXOGRAM_LIB_BASE_API_URL "Base api for foxogram" "api.foxogram.su/")
-option(FOXOGRAM_LIB_API_VERSION "Foxogram api version" "v1")
+set(FOXOGRAM_LIB_BASE_API_URL "api.foxogram.su")
+set(FOXOGRAM_LIB_API_VERSION "v1")
 
 if(FOXOGRAM_LIB_USE_DEV_API)
     set(FOXOGRAM_LIB_BASE_API_URL "dev-${FOXOGRAM_BASE_API_URL}")
@@ -42,15 +42,9 @@ set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 add_library(foxogram_lib)
 add_library(foxogram_lib::foxogram_lib ALIAS foxogram_lib)
-
-target_compile_definitions(foxogram_lib PUBLIC FOXOGRAM_API="${FOXOGRAM_LIB_BASE_API}/${FOXOGRAM_LIB_API_VERSION}")
+target_compile_definitions(foxogram_lib PUBLIC FOXOGRAM_API="${FOXOGRAM_LIB_BASE_API_URL}/${FOXOGRAM_LIB_API_VERSION}")
 
 include(FetchContent)
-FetchContent_Declare(nlohmann_json GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG bc889afb4c5bf1c0d8ee29ef35eaaf4c8bef8a5d)
-FetchContent_MakeAvailable(nlohmann_json)
-target_link_libraries(foxogram_lib PUBLIC nlohmann_json)
-
 FetchContent_Declare(ixwebsocket GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
         GIT_TAG 688af99747bc109d3476cb3a6703c5e7d37b10d9)
 FetchContent_MakeAvailable(ixwebsocket)
@@ -68,6 +62,8 @@ endif()
 generate_export_header(foxogram_lib EXPORT_FILE_NAME include/foxogram_lib/${export_file_name})
 
 set(sources
+        include/nlohmann/json.hpp
+        include/nlohmann/json_fwd.hpp
         include/foxogram/export.h
         include/foxogram/exceptions.h
         include/foxogram/Enums.h
@@ -94,19 +90,18 @@ target_compile_definitions(foxogram_lib PUBLIC "$<$<NOT:$<BOOL:${BUILD_SHARED_LI
 target_include_directories(foxogram_lib
         PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>")
-
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
+)
 set_target_properties(foxogram_lib PROPERTIES
         SOVERSION ${PROJECT_VERSION_MAJOR}
         VERSION ${PROJECT_VERSION})
-
 if(FOXOGRAM_LIB_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
     configure_package_config_file(cmake/foxogram_lib-config.cmake.in foxogram_lib-config.cmake
             INSTALL_DESTINATION "${FOXOGRAM_LIB_INSTALL_CMAKEDIR}")
 
     write_basic_package_version_file(foxogram_lib-config-version.cmake
             COMPATIBILITY SameMajorVersion)
-    install(TARGETS foxogram_lib nlohmann_json ixwebsocket
+    install(TARGETS foxogram_lib ixwebsocket
             EXPORT foxogram_lib_export
             RUNTIME COMPONENT foxogram_lib
             LIBRARY COMPONENT foxogram_lib NAMELINK_COMPONENT foxogram_lib-dev

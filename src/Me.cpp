@@ -1,18 +1,16 @@
 #include <foxogram/Me.h>
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
-
 #include <utility>
 
-foxogram::Me::Me(std::string token) : User(fetchMe()), token(std::move(token)) {
+foxogram::Me::Me(std::string token) : User(fetchMe(token)), token(token) {
 }
 
-foxogram::Me::Me(std::string username, std::string email, std::string password): User(fetchMe()),
-    token(Me::signup(std::move(username), std::move(email), std::move(password))) {
+foxogram::Me::Me(std::string username, std::string email, std::string password): User(fetchMe(Me::signup(username, email, password))),
+    token(Me::login(email, password)) {
 }
 
-foxogram::Me::Me(std::string email, std::string password): User(fetchMe()),
-                                                           token(Me::login(std::move(email), std::move(password))) {
+foxogram::Me::Me(std::string email, std::string password): User(fetchMe(Me::login(email, password))), token(Me::login(email, password)) {
 }
 
 void foxogram::Me::handleError(const nlohmann::json &response) const {
@@ -20,7 +18,7 @@ void foxogram::Me::handleError(const nlohmann::json &response) const {
 }
 
 void foxogram::Me::_handleError(const nlohmann::json &response) {
-    if (!response.at("ok").get<bool>()) {
+    if (response.value("ok", false)) {
         switch (response.at("code").get<int>()) {
             case 301: throw UserUnauthorizatedException();
             case 302: throw UserEmailNotVerfiedException();
@@ -39,29 +37,27 @@ foxogram::User foxogram::Me::fetchUser(const long long id) const {
     handleError(j);
 
     return {
-        j.at("id").get<long long>(), j.at("username").get<std::string>(),
-        j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-        j.at("type"), j.at("createdAt").get<long long>()
+            j.at("id").get<long long>(), j.at("username").get<std::string>(),
+            j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
+            j.at("type"), j.at("createdAt").get<long long>()
     };
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
     auto j = HttpClient::request(Payload("POST", "/auth/login", nlohmann::json({
-                                             {"email", email},
-                                             {"password", password}
-                                         })));
-
+                                                                                       {"email", email},
+                                                                                       {"password", password}
+                                                                               })));
     _handleError(j);
-
     return j.at("accessToken").get<std::string>();
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
     nlohmann::json j = HttpClient::request(Payload("POST", "/auth/signup", nlohmann::json({
-                                                       {"username", username},
-                                                       {"email", email},
-                                                       {"password", password}
-                                                   })));
+                                                                                                  {"username", username},
+                                                                                                  {"email", email},
+                                                                                                  {"password", password}
+                                                                                          })));
     _handleError(j);
 
     return j.at("accessToken").get<std::string>();
@@ -77,8 +73,8 @@ bool foxogram::Me::verifyEmail(const std::string &code) const {
 
 void foxogram::Me::deleteUser(std::string password) const {
     auto j = HttpClient::request(Payload("POST", "/auth/delete", nlohmann::json({
-                                             {"password", password}
-                                         }), token));
+                                                                                        {"password", password}
+                                                                                }), token));
     handleError(j);
 }
 
@@ -90,15 +86,23 @@ bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
     return j.at("ok").get<bool>();
 }
 
-foxogram::User foxogram::Me::fetchMe() const {
+foxogram::User foxogram::Me::fetchMe(std::string token) {
     auto j = HttpClient::request(Payload("GET", "/users/@me", token));
-
     handleError(j);
-
     return {
-        j.at("id").get<long long>(), j.at("username").get<std::string>(),
-        j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-        j.at("type"), j.at("createdAt").get<long long>()
+            j.at("id").get<long long>(), j.at("username").get<std::string>(),
+            j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
+            j.at("type"), j.at("createdAt").get<long long>()
+    };
+}
+
+foxogram::User foxogram::Me::fetchMe() const {
+    auto j = HttpClient::request(Payload("GET", "/users/@me", this->token));
+    handleError(j);
+    return {
+            j.at("id").get<long long>(), j.at("username").get<std::string>(),
+            j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
+            j.at("type"), j.at("createdAt").get<long long>()
     };
 }
 
