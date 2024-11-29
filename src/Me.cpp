@@ -1,16 +1,19 @@
 #include <foxogram/Me.h>
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
+
 #include <utility>
 
-foxogram::Me::Me(std::string token) : User(fetchMe(token)), token(token) {
+#include <utility>
+
+foxogram::Me::Me(const std::string& token) : User(fetchMe(token)), token(token) {
 }
 
-foxogram::Me::Me(std::string username, std::string email, std::string password): User(fetchMe(Me::signup(username, email, password))),
+foxogram::Me::Me(std::string username, const std::string& email, const std::string& password): User(fetchMe(Me::signup(std::move(std::move(username)), email, password))),
     token(Me::login(email, password)) {
 }
 
-foxogram::Me::Me(std::string email, std::string password): User(fetchMe(Me::login(email, password))), token(Me::login(email, password)) {
+foxogram::Me::Me(const std::string& email, const std::string& password): User(fetchMe(Me::login(email, password))), token(Me::login(email, password)) {
 }
 
 void foxogram::Me::handleError(const nlohmann::json &response) const {
@@ -86,7 +89,7 @@ bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
     return j.at("ok").get<bool>();
 }
 
-foxogram::User foxogram::Me::fetchMe(std::string token) {
+foxogram::User foxogram::Me::fetchMe(const std::string& token) {
     auto j = HttpClient::request(Payload("GET", "/users/@me", token));
     handleError(j);
     return {

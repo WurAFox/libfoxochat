@@ -8,7 +8,7 @@
 namespace foxogram {
     class FOXOGRAM_LIB_EXPORT Payload {
     private:
-        const std::string baseUrl = "http://" + std::string(FOXOGRAM_API);
+        const std::string baseUrl = "https://" + std::string(FOXOGRAM_API);
         std::string method;
         std::string url;
         ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};
@@ -18,15 +18,15 @@ namespace foxogram {
     public:
         void addAuth(const std::string &token);
 
-        Payload(std::string method, std::string path, std::string token = "");
+        Payload(std::string method, const std::string& path, const std::string& token = "");
 
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
-                std::string token = "");
+        Payload(std::string method, const std::string& path, std::map<std::string, std::string> headers,
+                const std::string& token = "");
 
-        Payload(std::string method, std::string path, std::map<std::string, std::string> headers, nlohmann::json body,
-                std::string token = "");
+        Payload(std::string method, const std::string& path, std::map<std::string, std::string> headers, const nlohmann::json& body,
+                const std::string& token = "");
 
-        Payload(std::string method, std::string path, nlohmann::json body, std::string token = "");
+        Payload(std::string method, const std::string& path, const nlohmann::json& body, const std::string& token = "");
 
         [[nodiscard]] const std::string &getMethod() const;
 
@@ -41,6 +41,6 @@ namespace foxogram {
 
     class FOXOGRAM_LIB_EXPORT HttpClient {
     public:
-        static nlohmann::json request(Payload request);
+        static nlohmann::json request(const Payload& request);
     };
 }

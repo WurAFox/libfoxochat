@@ -4,7 +4,6 @@
 
 TEST(add_test, Me) {
     dotenv::init();
-    std::string emailCode, deleteCode;
 //    auto u = foxogram::Me(dotenv::getenv("USERNAME"), dotenv::getenv("EMAIL"),
 //                          dotenv::getenv("PASSWORD"));
 //    EXPECT_EQ(foxogram::Me(dotenv::getenv("USERNAME"), dotenv::getenv("EMAIL"),

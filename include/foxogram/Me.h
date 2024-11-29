@@ -7,13 +7,13 @@
 namespace foxogram {
     class FOXOGRAM_LIB_EXPORT Me : public User {
         std::string token;
-        [[nodiscard]] User fetchMe(std::string token);
+        [[nodiscard]] User fetchMe(const std::string& token);
     public:
-        explicit Me(std::string token);
+        explicit Me(const std::string& token);
 
-        Me(std::string username, std::string email, std::string password);
+        Me(std::string username, const std::string& email, const std::string& password);
 
-        Me(std::string email, std::string password);
+        Me(const std::string& email, const std::string& password);
 
         Me(const Me &) = delete;
 

@@ -26,22 +26,22 @@ namespace foxogram {
         this->headers.insert({{"Authorization", "Bearer " + token}});
     }
 
-    Payload::Payload(std::string method, std::string path, std::string token) {
+    Payload::Payload(std::string method, const std::string& path, const std::string& token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         this->addAuth(token);
     }
 
-    Payload::Payload(std::string method, std::string path,
-                     std::map<std::string, std::string> headers, std::string token) {
+    Payload::Payload(std::string method, const std::string& path,
+                     std::map<std::string, std::string> headers, const std::string& token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         this->headers.merge(headers);
         this->addAuth(token);
     }
 
-    Payload::Payload(std::string method, std::string path,
-                     nlohmann::json body, std::string token) {
+    Payload::Payload(std::string method, const std::string& path,
+                     const nlohmann::json& body, const std::string& token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         std::string strBody;
@@ -53,8 +53,8 @@ namespace foxogram {
         this->addAuth(token);
     }
 
-    Payload::Payload(std::string method, std::string path, std::map<std::string, std::string> headers,
-                     nlohmann::json body, std::string token) {
+    Payload::Payload(std::string method, const std::string& path, std::map<std::string, std::string> headers,
+                     const nlohmann::json& body, const std::string& token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         this->headers.merge(headers);
@@ -71,7 +71,7 @@ namespace foxogram {
         return bodyJson;
     }
 
-    nlohmann::json HttpClient::request(Payload payload) {
+    nlohmann::json HttpClient::request(const Payload& payload) {
         if (!isWSAInitialized) {
             ix::initNetSystem();
             isWSAInitialized = true;
