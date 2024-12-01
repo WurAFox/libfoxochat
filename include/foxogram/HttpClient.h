@@ -6,9 +6,9 @@
 #include "nlohmann/json.hpp"
 
 namespace foxogram {
-    class FOXOGRAM_LIB_EXPORT Payload {
+    class LIBFOXOGRAM_EXPORT Payload {
     private:
-        const std::string baseUrl = "https://" + std::string(FOXOGRAM_API);
+        const std::string baseUrl = "https://" + std::string(FOXOGRAM_URL) + std::string(FOXOGRAM_API_VERSION);
         std::string method;
         std::string url;
         ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};
@@ -39,7 +39,7 @@ namespace foxogram {
         [[nodiscard]] const nlohmann::json &getBodyJson() const;
     };
 
-    class FOXOGRAM_LIB_EXPORT HttpClient {
+    class LIBFOXOGRAM_EXPORT HttpClient {
     public:
         static nlohmann::json request(const Payload& request);
     };

@@ -4,7 +4,7 @@
 
 namespace foxogram {
     template<typename EnumType>
-    class FOXOGRAM_LIB_EXPORT FlagsBase {
+    class LIBFOXOGRAM_EXPORT FlagsBase {
         long long bits;
 
     public:

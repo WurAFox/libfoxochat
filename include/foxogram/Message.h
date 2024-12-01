@@ -7,7 +7,7 @@
 namespace foxogram {
     struct Channel;
 
-    struct FOXOGRAM_LIB_EXPORT Message : BaseEntity {
+    struct LIBFOXOGRAM_EXPORT Message : BaseEntity {
     private:
         Channel *channel;
         long long authorId;

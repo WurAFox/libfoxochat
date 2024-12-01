@@ -5,7 +5,7 @@
 #include <foxogram/Channel.h>
 
 namespace foxogram {
-    class FOXOGRAM_LIB_EXPORT Me : public User {
+    class LIBFOXOGRAM_EXPORT Me : public User {
         std::string token;
         [[nodiscard]] User fetchMe(const std::string& token);
     public:

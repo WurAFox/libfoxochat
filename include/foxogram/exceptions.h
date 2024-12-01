@@ -20,7 +20,7 @@
 };
 
 namespace foxogram {
-    class FOXOGRAM_LIB_EXPORT HttpException : public std::exception {
+    class LIBFOXOGRAM_EXPORT HttpException : public std::exception {
     protected:
         std::string msg;
     public:

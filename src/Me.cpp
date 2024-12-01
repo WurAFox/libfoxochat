@@ -4,8 +4,6 @@
 
 #include <utility>
 
-#include <utility>
-
 foxogram::Me::Me(const std::string& token) : User(fetchMe(token)), token(token) {
 }
 
@@ -42,7 +40,7 @@ foxogram::User foxogram::Me::fetchUser(const long long id) const {
     return {
             j.at("id").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-            j.at("type"), j.at("createdAt").get<long long>()
+            j.at("type")
     };
 }
 
@@ -95,7 +93,7 @@ foxogram::User foxogram::Me::fetchMe(const std::string& token) {
     return {
             j.at("id").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-            j.at("type"), j.at("createdAt").get<long long>()
+            j.at("type")
     };
 }
 
@@ -105,7 +103,7 @@ foxogram::User foxogram::Me::fetchMe() const {
     return {
             j.at("id").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-            j.at("type"), j.at("createdAt").get<long long>()
+            j.at("type")
     };
 }
 

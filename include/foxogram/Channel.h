@@ -8,7 +8,7 @@
 #include <foxogram/BaseEntity.h>
 
 namespace foxogram {
-    struct FOXOGRAM_LIB_EXPORT Channel : BaseEntity {
+    struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
         friend class Me;
 
     private:

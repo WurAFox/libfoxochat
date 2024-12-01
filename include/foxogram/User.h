@@ -6,7 +6,7 @@
 #include <string>
 
 namespace foxogram {
-    struct FOXOGRAM_LIB_EXPORT User : BaseEntity {
+    struct LIBFOXOGRAM_EXPORT User : BaseEntity {
     protected:
         std::string username;
         std::string avatar;
@@ -16,8 +16,7 @@ namespace foxogram {
 
         void handleError(const nlohmann::json &response) const override;
     public:
-        User(long long int id, std::string username, std::string avatar, long long int flags,
-             int type, long long int createdAt);
+        User(long long int id, std::string username, std::string avatar, long long int flags, int type);
 
         User(const User &) = default;
 

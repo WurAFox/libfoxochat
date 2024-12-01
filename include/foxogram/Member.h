@@ -7,7 +7,7 @@
 namespace foxogram {
     struct Channel;
 
-    struct FOXOGRAM_LIB_EXPORT Member : User {
+    struct LIBFOXOGRAM_EXPORT Member : User {
         friend class Me;
 
     private:

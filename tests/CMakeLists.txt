@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(foxogram_lib-tests)
+project(libfoxogram-tests)
 
 include("../cmake/utils.cmake")
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_level)
@@ -21,26 +21,26 @@ FetchContent_MakeAvailable(dotenv)
 
 
 if(is_top_level)
-    find_package(foxogram_lib REQUIRED)
+    find_package(libfoxogram REQUIRED)
 endif()
 
 set(sources
         main.cpp)
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
-add_executable(foxogram_lib-tests)
-target_sources(foxogram_lib-tests PRIVATE ${sources})
+add_executable(libfoxogram-tests)
+target_sources(libfoxogram-tests PRIVATE ${sources})
 
-target_link_libraries(foxogram_lib-tests
+target_link_libraries(libfoxogram-tests
         PRIVATE
-        foxogram_lib::foxogram_lib
+        libfoxogram::libfoxogram
         gtest_main
         dotenv
 )
 
 if(NOT is_top_level)
-    win_copy_deps_to_target_dir(foxogram_lib-tests foxogram_lib::foxogram_lib)
+    win_copy_deps_to_target_dir(libfoxogram-tests libfoxogram::libfoxogram)
 endif()
 
 include(GoogleTest)
-gtest_discover_tests(foxogram_lib-tests)
+gtest_discover_tests(libfoxogram-tests)

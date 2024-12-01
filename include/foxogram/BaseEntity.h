@@ -3,7 +3,7 @@
 #include <foxogram/HttpClient.h>
 
 namespace foxogram {
-    class FOXOGRAM_LIB_EXPORT BaseEntity {
+    class LIBFOXOGRAM_EXPORT BaseEntity {
     protected:
         long long id;
 
