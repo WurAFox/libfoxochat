@@ -3,6 +3,14 @@
 #include <bitset>
 
 namespace foxogram {
+    enum LIBFOXOGRAM_EXPORT LogLevel {
+        LOG_DEBUG = 0,
+        LOG_INFO,
+        LOG_WARNING,
+        LOG_ERROR,
+        LOG_NOTHING,
+    };
+
     template<typename EnumType>
     class LIBFOXOGRAM_EXPORT FlagsBase {
         long long bits;

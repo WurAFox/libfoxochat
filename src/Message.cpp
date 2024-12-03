@@ -12,7 +12,7 @@ foxogram::Message::Message(const long long int id, Channel *channel, const long 
 }
 
 void foxogram::Message::handleError(const nlohmann::json &response) const {
-    if (!response.value("ok", false)) {
+    if (!response.value("ok", true)) {
         switch (response.at("code").get<int>()) {
             case(301): throw UserUnauthorizatedException();
             case(302): throw UserEmailNotVerfiedException();

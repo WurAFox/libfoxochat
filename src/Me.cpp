@@ -1,7 +1,7 @@
 #include <foxogram/Me.h>
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
-
+#include <foxogram/Logger.h>
 #include <utility>
 
 foxogram::Me::Me(const std::string& token) : User(fetchMe(token)), token(token) {
@@ -19,12 +19,12 @@ void foxogram::Me::handleError(const nlohmann::json &response) const {
 }
 
 void foxogram::Me::_handleError(const nlohmann::json &response) {
-    if (response.value("ok", false)) {
+    if (!response.value("ok", true)) {
         switch (response.at("code").get<int>()) {
             case 301: throw UserUnauthorizatedException();
             case 302: throw UserEmailNotVerfiedException();
-            case 305: throw UserCredentialsIsInvalidException();
-            case 304: throw UserWithThisEmailAlreadyExistException();
+            case 303: throw UserWithThisEmailAlreadyExistException();
+            case 304: throw UserCredentialsIsInvalidException();
             case 503: throw CodeExpiredException();
             case 501: throw CodeIsInvalidException();
             default: throw HttpException(response.at("message").get<std::string>());
@@ -45,15 +45,18 @@ foxogram::User foxogram::Me::fetchUser(const long long id) const {
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
+    Logger::logDebug("Attempt to login as " + email + " with password " + password);
     auto j = HttpClient::request(Payload("POST", "/auth/login", nlohmann::json({
                                                                                        {"email", email},
                                                                                        {"password", password}
                                                                                })));
     _handleError(j);
+    Logger::logInfo("Logged in as " + email);
     return j.at("accessToken").get<std::string>();
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
+    Logger::logDebug("Attempt to signup as " + email + " username " + username + " with password " + password);
     nlohmann::json j = HttpClient::request(Payload("POST", "/auth/signup", nlohmann::json({
                                                                                                   {"username", username},
                                                                                                   {"email", email},
@@ -61,6 +64,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
                                                                                           })));
     _handleError(j);
 
+    Logger::logInfo("Signed up in as " + email);
     return j.at("accessToken").get<std::string>();
 }
 

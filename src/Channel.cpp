@@ -10,7 +10,7 @@ foxogram::Channel::Channel(const long long int id, std::string name, const int t
 }
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
-    if (!response.value("ok", false)) {
+    if (!response.value("ok", true)) {
         switch (response.at("code").get<int>()) {
             case 301: throw UserUnauthorizatedException();
             case 302: throw UserEmailNotVerfiedException();

@@ -2,6 +2,7 @@
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
 #include <ixwebsocket/IXNetSystem.h>
+#include <foxogram/Logger.h>
 
 bool isWSAInitialized = false;
 
@@ -80,6 +81,7 @@ namespace foxogram {
         ix::HttpRequestArgsPtr args = httpClient.createRequest();
         args->extraHeaders = payload.getHeaders();
         ix::HttpResponsePtr r;
+        Logger::logDebug("Performing " + payload.getMethod() + " request to " + payload.getUrl() + " with body: " + to_string(payload.getBodyJson()));
         if (payload.getMethod() == "GET") {
             r = httpClient.get(payload.getUrl()+"?"+payload.getBody(), args);
         } else if (payload.getMethod() == "POST") {
@@ -96,6 +98,7 @@ namespace foxogram {
         if (!r->errorMsg.empty()) {
             throw HttpException(r->errorMsg);
         }
+        Logger::logDebug("Request successful with response: " + r->body);
         nlohmann::json j = nlohmann::json::parse(r->body);
         return j;
     }

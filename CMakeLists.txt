@@ -62,6 +62,7 @@ endif()
 generate_export_header(libfoxogram EXPORT_FILE_NAME include/libfoxogram/${export_file_name})
 
 set(sources
+        include/foxogram/Logger.h
         include/nlohmann/json.hpp
         include/nlohmann/json_fwd.hpp
         include/foxogram/export.h
@@ -73,6 +74,7 @@ set(sources
         include/foxogram/Message.h
         include/foxogram/Channel.h
         include/foxogram/Member.h
+        src/Logger.cpp
         src/HttpClient.cpp
         src/User.cpp
         src/Me.cpp
