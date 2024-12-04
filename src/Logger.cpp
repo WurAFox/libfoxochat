@@ -11,19 +11,19 @@ void foxogram::Logger::logDebug(const std::string& info) {
 
 void foxogram::Logger::logInfo(const std::string& info) {
     if (logLevel < 2) {
-        std::cout << "\x1B[34m[INFO] " + info + "\033[0m" << std::endl;
+        std::cout << "\033[0;34m[INFO] " + info + "\033[0m" << std::endl;
     }
 }
 
 void foxogram::Logger::logWarning(const std::string& info) {
     if (logLevel < 3) {
-        std::cout << "\x1B[33m[WARNING] " + info + "\033[0m" << std::endl;
+        std::cout << "\033[0;33m[WARNING] " + info + "\033[0m" << std::endl;
     }
 }
 
 void foxogram::Logger::logError(const std::string& info) {
     if (logLevel < 4) {
-        std::cout << "\x1B[31m[ERROR] " + info + "\033[0m" << std::endl;
+        std::cout << "\033[0;31m[ERROR] " + info + "\033[0m" << std::endl;
     }
 }
 

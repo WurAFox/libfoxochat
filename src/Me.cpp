@@ -4,14 +4,14 @@
 #include <foxogram/Logger.h>
 #include <utility>
 
-foxogram::Me::Me(const std::string& token) : User(fetchMe(token)), token(token) {
+foxogram::Me::Me(const std::string& _token) : User(fetchMe(token = new std::string(_token))) {
 }
 
-foxogram::Me::Me(std::string username, const std::string& email, const std::string& password): User(fetchMe(Me::signup(std::move(std::move(username)), email, password))),
-    token(Me::login(email, password)) {
+foxogram::Me::Me(const std::string& username, const std::string& email, const std::string& password):
+    User(fetchMe(token = new std::string(signup(username, email, password)))) {
 }
 
-foxogram::Me::Me(const std::string& email, const std::string& password): User(fetchMe(Me::login(email, password))), token(Me::login(email, password)) {
+foxogram::Me::Me(const std::string& email, const std::string& password): User(fetchMe(token = new std::string(Me::login(email, password)))) {
 }
 
 void foxogram::Me::handleError(const nlohmann::json &response) const {
@@ -34,7 +34,7 @@ void foxogram::Me::_handleError(const nlohmann::json &response) {
 
 foxogram::User foxogram::Me::fetchUser(const long long id) const {
     auto j = HttpClient::request(Payload("GET",
-                                         std::string("/users/") + std::to_string(id), this->token));
+                                         std::string("/users/") + std::to_string(id), *token));
     handleError(j);
 
     return {
@@ -69,7 +69,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
 }
 
 bool foxogram::Me::verifyEmail(const std::string &code) const {
-    nlohmann::json j = HttpClient::request(Payload("POST", "/v1/auth/email/verify/" + code, token));
+    nlohmann::json j = HttpClient::request(Payload("POST", "/v1/auth/email/verify/" + code, *token));
 
     handleError(j);
 
@@ -79,20 +79,20 @@ bool foxogram::Me::verifyEmail(const std::string &code) const {
 void foxogram::Me::deleteUser(std::string password) const {
     auto j = HttpClient::request(Payload("POST", "/auth/delete", nlohmann::json({
                                                                                         {"password", password}
-                                                                                }), token));
+                                                                                }), *token));
     handleError(j);
 }
 
 bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
-    auto j = HttpClient::request(Payload("POST", "/auth/delete/confirm/" + code, token));
+    auto j = HttpClient::request(Payload("POST", "/auth/delete/confirm/" + code, *token));
 
     handleError(j);
 
     return j.at("ok").get<bool>();
 }
 
-foxogram::User foxogram::Me::fetchMe(const std::string& token) {
-    auto j = HttpClient::request(Payload("GET", "/users/@me", token));
+foxogram::User foxogram::Me::fetchMe(std::string* token) {
+    auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
     return {
             j.at("id").get<long long>(), j.at("username").get<std::string>(),
@@ -102,7 +102,7 @@ foxogram::User foxogram::Me::fetchMe(const std::string& token) {
 }
 
 foxogram::User foxogram::Me::fetchMe() const {
-    auto j = HttpClient::request(Payload("GET", "/users/@me", this->token));
+    auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
     return {
             j.at("id").get<long long>(), j.at("username").get<std::string>(),
@@ -113,46 +113,46 @@ foxogram::User foxogram::Me::fetchMe() const {
 
 foxogram::Channel foxogram::Me::createChannel(std::string name, int type) const {
     auto j = HttpClient::request(Payload("POST", "/channels/create",
-                                         nlohmann::json({{"name", name}, {"type", type}}), token));
+                                         nlohmann::json({{"name", name}, {"type", type}}), *token));
 
     handleError(j);
 
     auto channel = Channel(j.at("id").get<long long>(), j.at("name").get<std::string>(),
                            j.at("type").get<int>(), j.at("ownerId").get<long long>());
-    channel.token = token;
+    channel.token = *token;
     return channel;
 }
 
 foxogram::Channel foxogram::Me::joinChannel(const long long int id) const {
-    auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/join", token));
+    auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/join", *token));
 
     handleError(j);
 
     auto channel = Channel(j.at("id").get<long long>(), j.at("name").get<std::string>(),
                            j.at("type").get<int>(), j.at("ownerId").get<long long>());
-    channel.token = token;
+    channel.token = *token;
     return channel;
 }
 
 foxogram::Channel foxogram::Me::fetchChannel(const long long int id) const {
-    auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id), token));
+    auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id), *token));
     auto channel = Channel(j.at("id").get<long long>(), j.at("name").get<std::string>(),
                            j.at("type").get<int>(), j.at("ownerId").get<long long>());
 
     handleError(j);
 
-    channel.token = token;
+    channel.token = *token;
     return channel;
 }
 
 foxogram::Message foxogram::Me::fetchMessage(const long long int id) const {
-    auto j = HttpClient::request(Payload("GET", "/messages/" + std::to_string(id), token));
+    auto j = HttpClient::request(Payload("GET", "/messages/" + std::to_string(id), *token));
 
     handleError(j);
 
     auto message = Message(j.at("id").get<long long>(), nullptr, j.at("authorId").get<long long>(),
                            j.at("timestamp").get<long long>(),
                            j.at("attachments").get<std::list<std::string> >());
-    message.token = token;
+    message.token = *token;
     return message;
 }

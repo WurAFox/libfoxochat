@@ -6,12 +6,12 @@
 
 namespace foxogram {
     class LIBFOXOGRAM_EXPORT Me : public User {
-        std::string token;
-        [[nodiscard]] User fetchMe(const std::string& token);
+        std::string* token;
+        [[nodiscard]] User fetchMe(std::string* token);
     public:
         explicit Me(const std::string& token);
 
-        Me(std::string username, const std::string& email, const std::string& password);
+        Me(const std::string& username, const std::string& email, const std::string& password);
 
         Me(const std::string& email, const std::string& password);
 
