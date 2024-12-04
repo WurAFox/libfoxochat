@@ -32,7 +32,7 @@ namespace foxogram {
 
         [[nodiscard]] bool verifyEmail(const std::string &code) const;
 
-        void deleteUser(std::string password) const;
+        bool deleteUser(std::string password) const;
 
         [[nodiscard]] bool confirmDeleteUser(const std::string &code) const;
 

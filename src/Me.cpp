@@ -69,18 +69,19 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
 }
 
 bool foxogram::Me::verifyEmail(const std::string &code) const {
-    nlohmann::json j = HttpClient::request(Payload("POST", "/v1/auth/email/verify/" + code, *token));
+    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify/" + code, *token));
 
     handleError(j);
 
     return j.at("ok").get<bool>();
 }
 
-void foxogram::Me::deleteUser(std::string password) const {
+bool foxogram::Me::deleteUser(std::string password) const {
     auto j = HttpClient::request(Payload("POST", "/auth/delete", nlohmann::json({
                                                                                         {"password", password}
                                                                                 }), *token));
     handleError(j);
+    return j.at("ok").get<bool>();
 }
 
 bool foxogram::Me::confirmDeleteUser(const std::string &code) const {

@@ -17,16 +17,12 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_
 option(LIBFOXOGRAM_BUILD_TESTS "Build libfoxogram tests" OFF)
 option(LIBFOXOGRAM_BUILD_EXAMPLES "Build libfoxogram examples" OFF)
 option(LIBFOXOGRAM_BUILD_DOCS "Build libfoxogram documentation" OFF)
-option(LIBFOXOGRAM_INSTALL "Generate target for installing libfoxogram" ${is_top_level})
+option(LIBFOXOGRAM_INSTALL "Generate target for installing libfoxogram" OFF)
 set_if_undefined(LIBFOXOGRAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/libfoxogram" CACHE STRING
         "Install path for libfoxogram package-related CMake files")
 option(LIBFOXOGRAM_USE_DEV "Use foxogram dev api" OFF)
 set(LIBFOXOGRAM_BASE_URL "foxogram.su")
 set(LIBFOXOGRAM_API_VERSION "v1")
-
-if(LIBFOXOGRAM_USE_DEV)
-    set(LIBFOXOGRAM_BASE_URL "dev-${FOXOGRAM_BASE_API_URL}")
-endif()
 
 if(DEFINED LIBFOXOGRAM_SHARED_LIBS)
     set(BUILD_SHARED_LIBS ${LIBFOXOGRAM_SHARED_LIBS})
@@ -42,7 +38,6 @@ set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 add_library(libfoxogram)
 add_library(libfoxogram::libfoxogram ALIAS libfoxogram)
-target_compile_definitions(libfoxogram PUBLIC FOXOGRAM_URL="${LIBFOXOGRAM_BASE_URL}" FOXOGRAM_API_VERSION="/${LIBFOXOGRAM_API_VERSION}")
 
 include(FetchContent)
 FetchContent_Declare(ixwebsocket GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
@@ -154,6 +149,12 @@ if(LIBFOXOGRAM_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
                 OPTIONAL)
     endif()
 endif()
+
+if(LIBFOXOGRAM_USE_DEV OR LIBFOXOGRAM_BUILD_TESTS)
+    set(LIBFOXOGRAM_BASE_URL "dev.${LIBFOXOGRAM_BASE_URL}")
+endif()
+
+target_compile_definitions(libfoxogram PUBLIC FOXOGRAM_URL="${LIBFOXOGRAM_BASE_URL}" FOXOGRAM_API_VERSION="/${LIBFOXOGRAM_API_VERSION}")
 
 if(LIBFOXOGRAM_BUILD_TESTS)
     enable_testing()

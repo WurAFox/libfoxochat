@@ -1,15 +1,37 @@
 #include <foxogram/Me.h>
-#include <dotenv.h>
+#include <foxogram/Logger.h>
+#include <random>
+#include <string>
 #include <gtest/gtest.h>
 
+std::string generateRandomString(int length) {
+    const std::string CHARACTERS
+            = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+    std::random_device rd;
+    std::mt19937 generator(rd());
+
+    std::uniform_int_distribution<> distribution(
+            0, CHARACTERS.size() - 1);
+
+    std::string random_string;
+    for (int i = 0; i < length; ++i) {
+        random_string
+                += CHARACTERS[distribution(generator)];
+    }
+
+    return random_string;
+}
+
 TEST(add_test, Me) {
-    dotenv::init();
-//    auto u = foxogram::Me(dotenv::getenv("USERNAME"), dotenv::getenv("EMAIL"),
-//                          dotenv::getenv("PASSWORD"));
-//    EXPECT_EQ(foxogram::Me(dotenv::getenv("USERNAME"), dotenv::getenv("EMAIL"),
-//                           dotenv::getenv("PASSWORD")).getUsername(), std::string(dotenv::getenv("USERNAME")));
-//    u.deleteUser(dotenv::getenv("PASSWORD"));
-//    EXPECT_TRUE(u.confirmDeleteUser())
+    foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG);
+    std::string username = generateRandomString(12);
+    std::string email = generateRandomString(12)+"@foxogram.su";
+    std::string password = generateRandomString(12);
+    auto u = foxogram::Me(username, email, password);
+    EXPECT_EQ(u.getUsername(), username);
+    EXPECT_EQ(foxogram::Me(email, password).getUsername(), username);
+    EXPECT_TRUE(u.deleteUser(password));
 }
 
 int main(int argc, char **argv)

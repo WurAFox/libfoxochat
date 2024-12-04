@@ -15,11 +15,6 @@ set(INSTALL_GTEST OFF)
 set(BUILD_SHARED_LIBS OFF)
 FetchContent_MakeAvailable(googletest)
 
-FetchContent_Declare(dotenv GIT_REPOSITORY https://github.com/laserpants/dotenv-cpp
-        GIT_TAG master)
-FetchContent_MakeAvailable(dotenv)
-
-
 if(is_top_level)
     find_package(libfoxogram REQUIRED)
 endif()
@@ -35,9 +30,7 @@ target_link_libraries(libfoxogram-tests
         PRIVATE
         libfoxogram::libfoxogram
         gtest_main
-        dotenv
 )
-
 if(NOT is_top_level)
     win_copy_deps_to_target_dir(libfoxogram-tests libfoxogram::libfoxogram)
 endif()
