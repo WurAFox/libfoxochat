@@ -17,12 +17,16 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_
 option(LIBFOXOGRAM_BUILD_TESTS "Build libfoxogram tests" OFF)
 option(LIBFOXOGRAM_BUILD_EXAMPLES "Build libfoxogram examples" OFF)
 option(LIBFOXOGRAM_BUILD_DOCS "Build libfoxogram documentation" OFF)
-option(LIBFOXOGRAM_INSTALL "Generate target for installing libfoxogram" OFF)
+set(LIBFOXOGRAM_INSTALL ON)
 set_if_undefined(LIBFOXOGRAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/libfoxogram" CACHE STRING
         "Install path for libfoxogram package-related CMake files")
 option(LIBFOXOGRAM_USE_DEV "Use foxogram dev api" OFF)
 set(LIBFOXOGRAM_BASE_URL "foxogram.su")
 set(LIBFOXOGRAM_API_VERSION "v1")
+
+if(LIBFOXOGRAM_USE_DEV)
+    set(LIBFOXOGRAM_BASE_URL "dev-${FOXOGRAM_BASE_API_URL}")
+endif()
 
 if(DEFINED LIBFOXOGRAM_SHARED_LIBS)
     set(BUILD_SHARED_LIBS ${LIBFOXOGRAM_SHARED_LIBS})
@@ -38,6 +42,7 @@ set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 add_library(libfoxogram)
 add_library(libfoxogram::libfoxogram ALIAS libfoxogram)
+target_compile_definitions(libfoxogram PUBLIC FOXOGRAM_URL="${LIBFOXOGRAM_BASE_URL}" FOXOGRAM_API_VERSION="/${LIBFOXOGRAM_API_VERSION}")
 
 include(FetchContent)
 FetchContent_Declare(ixwebsocket GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
@@ -92,69 +97,55 @@ target_include_directories(libfoxogram
 set_target_properties(libfoxogram PROPERTIES
         SOVERSION ${PROJECT_VERSION_MAJOR}
         VERSION ${PROJECT_VERSION})
-if(LIBFOXOGRAM_INSTALL AND NOT CMAKE_SKIP_INSTALL_RULES)
-    configure_package_config_file(cmake/libfoxogram-config.cmake.in libfoxogram-config.cmake
-            INSTALL_DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
-
-    write_basic_package_version_file(libfoxogram-config-version.cmake
-            COMPATIBILITY SameMajorVersion)
-    install(TARGETS libfoxogram ixwebsocket
-            EXPORT libfoxogram_export
-            RUNTIME COMPONENT libfoxogram
-            LIBRARY COMPONENT libfoxogram NAMELINK_COMPONENT libfoxogram-dev
-            ARCHIVE COMPONENT libfoxogram-dev
-            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-
-    install(DIRECTORY include/
-            TYPE INCLUDE
-            COMPONENT libfoxogram-dev)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
-            COMPONENT libfoxogram-dev
-            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
-
-    set(targets_file "libfoxogram-shared-targets.cmake")
-
-    if(NOT BUILD_SHARED_LIBS)
-        set(targets_file "libfoxogram-static-targets.cmake")
-    endif()
-
-    install(EXPORT libfoxogram_export
-            COMPONENT libfoxogram-dev
-            FILE "${targets_file}"
-            DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}"
-            NAMESPACE libfoxogram::)
-
-    install(FILES
-            "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config.cmake"
-            "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config-version.cmake"
-            COMPONENT libfoxogram-dev
-            DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
-
-    if(MSVC)
-        set(pdb_file "")
-        set(pdb_file_destination "")
-
-        if(BUILD_SHARED_LIBS)
-            set(pdb_file "$<TARGET_PDB_FILE:libfoxogram>")
-            set(pdb_file_destination "${CMAKE_INSTALL_BINDIR}")
-        else()
-            set(pdb_file "$<TARGET_FILE_DIR:libfoxogram>/$<TARGET_FILE_PREFIX:libfoxogram>$<TARGET_FILE_BASE_NAME:libfoxogram>.pdb")
-            set(pdb_file_destination "${CMAKE_INSTALL_LIBDIR}")
-        endif()
-
-        install(FILES "${pdb_file}"
-                COMPONENT libfoxogram-dev
-                CONFIGURATIONS Debug RelWithDebInfo
-                DESTINATION "${pdb_file_destination}"
-                OPTIONAL)
-    endif()
+configure_package_config_file(cmake/libfoxogram-config.cmake.in libfoxogram-config.cmake
+        INSTALL_DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
+write_basic_package_version_file(libfoxogram-config-version.cmake
+        COMPATIBILITY SameMajorVersion)
+install(TARGETS libfoxogram ixwebsocket
+        EXPORT libfoxogram_export
+        RUNTIME COMPONENT libfoxogram
+        LIBRARY COMPONENT libfoxogram NAMELINK_COMPONENT libfoxogram-dev
+        ARCHIVE COMPONENT libfoxogram-dev
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+install(DIRECTORY include/
+        TYPE INCLUDE
+        COMPONENT libfoxogram-dev)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
+        COMPONENT libfoxogram-dev
+        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
+set(targets_file "libfoxogram-shared-targets.cmake")
+if(NOT BUILD_SHARED_LIBS)
+    set(targets_file "libfoxogram-static-targets.cmake")
 endif()
 
-if(LIBFOXOGRAM_USE_DEV OR LIBFOXOGRAM_BUILD_TESTS)
-    set(LIBFOXOGRAM_BASE_URL "dev.${LIBFOXOGRAM_BASE_URL}")
-endif()
+install(EXPORT libfoxogram_export
+        COMPONENT libfoxogram-dev
+        FILE "${targets_file}"
+        DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}"
+        NAMESPACE libfoxogram::)
 
-target_compile_definitions(libfoxogram PUBLIC FOXOGRAM_URL="${LIBFOXOGRAM_BASE_URL}" FOXOGRAM_API_VERSION="/${LIBFOXOGRAM_API_VERSION}")
+install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config-version.cmake"
+        COMPONENT libfoxogram-dev
+        DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
+if(MSVC)
+    set(pdb_file "")
+    set(pdb_file_destination "")
+    if(BUILD_SHARED_LIBS)
+        set(pdb_file "$<TARGET_PDB_FILE:libfoxogram>")
+        set(pdb_file_destination "${CMAKE_INSTALL_BINDIR}")
+    else()
+        set(pdb_file "$<TARGET_FILE_DIR:libfoxogram>/$<TARGET_FILE_PREFIX:libfoxogram>$<TARGET_FILE_BASE_NAME:libfoxogram>.pdb")
+        set(pdb_file_destination "${CMAKE_INSTALL_LIBDIR}")
+    endif()
+
+    install(FILES "${pdb_file}"
+            COMPONENT libfoxogram-dev
+            CONFIGURATIONS Debug RelWithDebInfo
+            DESTINATION "${pdb_file_destination}"
+            OPTIONAL)
+endif()
 
 if(LIBFOXOGRAM_BUILD_TESTS)
     enable_testing()

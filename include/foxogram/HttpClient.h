@@ -6,13 +6,13 @@
 #include "nlohmann/json.hpp"
 
 #ifndef FOXOGRAM_BASE_API_URL
-#define FOXOGRAM_BASE_API_URL "https://api." FOXOGRAM_URL "/" FOXOGRAM_API_VERSION
+#define FOXOGRAM_BASE_API_URL "https://api." FOXOGRAM_URL FOXOGRAM_API_VERSION
 #endif
 
 namespace foxogram {
     class LIBFOXOGRAM_EXPORT Payload {
     private:
-        std::string baseUrl = std::string(FOXOGRAM_BASE_API_URL);
+        inline static std::string baseUrl = FOXOGRAM_BASE_API_URL;
         std::string method;
         std::string url;
         ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};

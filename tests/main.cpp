@@ -1,3 +1,5 @@
+#define FOXOGRAM_BASE_API_URL "https://api.dev." FOXOGRAM_URL FOXOGRAM_API_VERSION
+
 #include <foxogram/Me.h>
 #include <foxogram/Logger.h>
 #include <random>
@@ -24,6 +26,7 @@ std::string generateRandomString(int length) {
 }
 
 TEST(add_test, Me) {
+    foxogram::Payload i("GET", "/1");
     foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG);
     std::string username = generateRandomString(12);
     std::string email = generateRandomString(12)+"@foxogram.su";
