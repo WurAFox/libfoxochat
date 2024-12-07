@@ -57,7 +57,7 @@ std::string foxogram::Me::login(std::string email, std::string password) {
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
     Logger::logDebug("Attempt to signup as " + email + " username " + username + " with password " + password);
-    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/signup", nlohmann::json({
+    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/register", nlohmann::json({
                                                                                                   {"username", username},
                                                                                                   {"email", email},
                                                                                                   {"password", password}
@@ -69,7 +69,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
 }
 
 bool foxogram::Me::verifyEmail(const std::string &code) const {
-    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify/" + code, *token));
+    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify/"+code, *token));
 
     handleError(j);
 
@@ -77,7 +77,7 @@ bool foxogram::Me::verifyEmail(const std::string &code) const {
 }
 
 bool foxogram::Me::deleteUser(std::string password) const {
-    auto j = HttpClient::request(Payload("POST", "/auth/delete", nlohmann::json({
+    auto j = HttpClient::request(Payload("DELETE", "/users/@me", nlohmann::json({
                                                                                         {"password", password}
                                                                                 }), *token));
     handleError(j);
@@ -85,7 +85,7 @@ bool foxogram::Me::deleteUser(std::string password) const {
 }
 
 bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
-    auto j = HttpClient::request(Payload("POST", "/auth/delete/confirm/" + code, *token));
+    auto j = HttpClient::request(Payload("POST", "/auth/delete/confirm/", nlohmann::json({{"code", code}}), *token));
 
     handleError(j);
 
