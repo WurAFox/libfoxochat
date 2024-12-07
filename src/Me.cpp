@@ -85,7 +85,7 @@ bool foxogram::Me::deleteUser(std::string password) const {
 }
 
 bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
-    auto j = HttpClient::request(Payload("POST", "/auth/delete/confirm/", nlohmann::json({{"code", code}}), *token));
+    auto j = HttpClient::request(Payload("DELETE", "/auth/delete/confirm/", nlohmann::json({{"code", code}}), *token));
 
     handleError(j);
 
