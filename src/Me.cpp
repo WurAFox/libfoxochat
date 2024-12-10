@@ -2,7 +2,6 @@
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
 #include <foxogram/Logger.h>
-#include <utility>
 
 foxogram::Me::Me(const std::string& _token) : User(fetchMe(token = new std::string(_token))) {
 }
@@ -32,13 +31,13 @@ void foxogram::Me::_handleError(const nlohmann::json &response) {
     }
 }
 
-foxogram::User foxogram::Me::fetchUser(const long long id) const {
+foxogram::User foxogram::Me::fetchUser(const std::string& username) const {
     auto j = HttpClient::request(Payload("GET",
-                                         std::string("/users/") + std::to_string(id), *token));
+                                         std::string("/users/") +username, *token));
     handleError(j);
 
     return {
-            std::stoll(j.at("id").get<std::string>()), j.at("username").get<std::string>(),
+            j.at("createdAt").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
             j.at("type")
     };
@@ -69,7 +68,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
 }
 
 bool foxogram::Me::verifyEmail(const std::string &code) const {
-    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify/"+code, *token));
+    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify", nlohmann::json({{"code", code}}), *token));
 
     handleError(j);
 
@@ -96,7 +95,7 @@ foxogram::User foxogram::Me::fetchMe(std::string* token) {
     auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
     return {
-            std::stoll(j.at("id").get<std::string>()), j.at("username").get<std::string>(),
+            j.at("createdAt").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
             j.at("type")
     };
@@ -106,7 +105,7 @@ foxogram::User foxogram::Me::fetchMe() const {
     auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
     return {
-            std::stoll(j.at("id").get<std::string>()), j.at("username").get<std::string>(),
+            j.at("createdAt").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
             j.at("type")
     };

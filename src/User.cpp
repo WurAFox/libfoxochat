@@ -1,13 +1,10 @@
 #include <foxogram/User.h>
 #include <utility>
 
-foxogram::User::User(const long long int id, std::string username, std::string avatar,
-                     const long long int flags, const int type) : BaseEntity(id),
+foxogram::User::User(long long createdAt, std::string username, std::string avatar, long long int flags, int type): createdAt(createdAt),
     username(std::move(username)),
     avatar(std::move(avatar)), flags(flags),
-    type(type) {
-    this->createdAt = (id >> 22) + 1698406020000L;
-}
+    type(type) {}
 
 void foxogram::User::handleError(const nlohmann::json &response) const {
 }

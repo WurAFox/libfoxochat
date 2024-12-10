@@ -12,6 +12,7 @@ namespace foxogram {
         Channel *channel;
         long long authorId;
         long long timestamp;
+        const long long id;
         std::list<std::string> attachments;
 
     protected:

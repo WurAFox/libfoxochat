@@ -13,10 +13,12 @@ namespace foxogram {
 
     private:
         std::string name;
-        int type;
+        const int type;
         long long ownerId;
         std::list<Member> members;
         std::list<Message> messages;
+        const long long id;
+        const long long createdAt;
 
     protected:
         std::string token;
@@ -41,6 +43,8 @@ namespace foxogram {
         [[nodiscard]] const std::string &getName() const;
 
         [[nodiscard]] int getType() const;
+
+        [[nodiscard]] long long getId() const;
 
         [[nodiscard]] long long int getOwnerId() const;
 

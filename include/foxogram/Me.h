@@ -22,7 +22,7 @@ namespace foxogram {
         Me(long long int id, std::string username, std::string avatar, long long int flags,
            int type, long long int createdAt) = delete;
 
-        [[nodiscard]] User fetchUser(long long id) const;
+        [[nodiscard]] User fetchUser(const std::string& username) const;
 
         [[nodiscard]] User fetchMe() const;
 
@@ -34,11 +34,11 @@ namespace foxogram {
 
         bool deleteUser(std::string password) const;
 
-        [[nodiscard]] bool confirmDeleteUser(const std::string &code) const;
+        bool confirmDeleteUser(const std::string &code) const;
 
-        [[nodiscard]] Channel createChannel(std::string name, int type) const;
+        Channel createChannel(std::string name, int type) const;
 
-        [[nodiscard]] Channel joinChannel(long long id) const;
+        Channel joinChannel(long long id) const;
 
         [[nodiscard]] Channel fetchChannel(long long id) const;
 

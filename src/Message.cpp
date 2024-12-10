@@ -6,7 +6,7 @@
 
 foxogram::Message::Message(const long long int id, Channel *channel, const long long int authorId,
                            const long long int timestamp,
-                           std::list<std::string> attachments): BaseEntity(id), channel(channel), authorId(authorId),
+                           std::list<std::string> attachments): id(id), channel(channel), authorId(authorId),
                                                                 timestamp(timestamp),
                                                                 attachments(std::move(attachments)) {
 }

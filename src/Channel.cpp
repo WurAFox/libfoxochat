@@ -4,9 +4,9 @@
 
 #include <utility>
 
-foxogram::Channel::Channel(const long long int id, std::string name, const int type,
-                           const long long int ownerId) : BaseEntity(id), name(std::move(name)), type(type),
-                                                          ownerId(ownerId) {
+foxogram::Channel::Channel(const long long id, std::string name, const int type,
+                           const long long int ownerId) : id(id), name(std::move(name)), type(type),
+                                                          ownerId(ownerId), createdAt((id >> 22) + 1420070400000) {
 }
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
@@ -64,6 +64,10 @@ const std::string &foxogram::Channel::getName() const {
 
 int foxogram::Channel::getType() const {
     return type;
+}
+
+long long foxogram::Channel::getId() const {
+    return id;
 }
 
 long long int foxogram::Channel::getOwnerId() const {
