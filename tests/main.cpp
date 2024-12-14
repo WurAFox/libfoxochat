@@ -5,6 +5,7 @@
 #include <random>
 #include <string>
 #include <gtest/gtest.h>
+#include <foxogram/exceptions.h>
 
 std::string generateRandomString(int length) {
     const std::string CHARACTERS
@@ -33,9 +34,10 @@ TEST(add_test, Me) {
     auto u = foxogram::Me(username, email, password);
     EXPECT_EQ(u.getUsername(), username);
     EXPECT_EQ(foxogram::Me(email, password).getUsername(), username);
+    EXPECT_THROW(u.resendEmail(), foxogram::HttpException);
     EXPECT_TRUE(u.verifyEmail("000000"));
-    //EXPECT_TRUE(u.deleteUser(password));
-    //EXPECT_TRUE(u.confirmDeleteUser("000000"));
+    EXPECT_TRUE(u.deleteUser(password));
+    EXPECT_TRUE(u.confirmDeleteUser("000000"));
 }
 
 int main(int argc, char **argv)

@@ -30,7 +30,9 @@ namespace foxogram {
 
         static std::string signup(std::string username, std::string email, std::string password);
 
-        [[nodiscard]] bool verifyEmail(const std::string &code) const;
+        bool verifyEmail(const std::string &code) const;
+
+        bool resendEmail() const;
 
         bool deleteUser(std::string password) const;
 

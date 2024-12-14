@@ -24,7 +24,7 @@ void foxogram::Me::_handleError(const nlohmann::json &response) {
             case 302: throw UserEmailNotVerfiedException();
             case 303: throw UserWithThisEmailAlreadyExistException();
             case 304: throw UserCredentialsIsInvalidException();
-            case 503: throw CodeExpiredException();
+            case 502: throw CodeExpiredException();
             case 501: throw CodeIsInvalidException();
             default: throw HttpException(response.at("message").get<std::string>());
         }
@@ -75,6 +75,14 @@ bool foxogram::Me::verifyEmail(const std::string &code) const {
     return j.at("ok").get<bool>();
 }
 
+bool foxogram::Me::resendEmail() const {
+    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/resend", *token));
+
+    handleError(j);
+
+    return j.at("ok").get<bool>();
+}
+
 bool foxogram::Me::deleteUser(std::string password) const {
     auto j = HttpClient::request(Payload("DELETE", "/users/@me", nlohmann::json({
                                                                                         {"password", password}
@@ -96,8 +104,8 @@ foxogram::User foxogram::Me::fetchMe(std::string* token) {
     handleError(j);
     return {
             j.at("createdAt").get<long long>(), j.at("username").get<std::string>(),
-            j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-            j.at("type")
+            j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
+            j.at("type").get<int>(), j.at("displayName").is_string() ? j.at("displayName").get<std::string>() : ""
     };
 }
 
@@ -106,8 +114,8 @@ foxogram::User foxogram::Me::fetchMe() const {
     handleError(j);
     return {
             j.at("createdAt").get<long long>(), j.at("username").get<std::string>(),
-            j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
-            j.at("type")
+            j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
+            j.at("type").get<int>(), j.at("displayName").is_string() ? j.at("displayName").get<std::string>() : ""
     };
 }
 

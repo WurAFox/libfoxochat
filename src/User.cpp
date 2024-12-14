@@ -1,10 +1,10 @@
 #include <foxogram/User.h>
 #include <utility>
 
-foxogram::User::User(long long createdAt, std::string username, std::string avatar, long long int flags, int type): createdAt(createdAt),
+foxogram::User::User(long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName): createdAt(createdAt),
     username(std::move(username)),
     avatar(std::move(avatar)), flags(flags),
-    type(type) {}
+    type(type), displayName(std::move(displayName)) {}
 
 void foxogram::User::handleError(const nlohmann::json &response) const {
 }

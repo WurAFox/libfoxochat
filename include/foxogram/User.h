@@ -13,10 +13,11 @@ namespace foxogram {
         FlagsBase<UserFlags> flags;
         int type{};
         long long createdAt{};
+        std::string displayName;
 
         void handleError(const nlohmann::json &response) const override;
     public:
-        User(long long createdAt, std::string username, std::string avatar, long long int flags, int type);
+        User(long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");
 
         User(const User &) = default;
 
