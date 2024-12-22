@@ -14,10 +14,9 @@ namespace foxogram {
     private:
         std::string name;
         const int type;
-        long long ownerId;
+        std::string ownerName;
         std::list<Member> members;
         std::list<Message> messages;
-        const long long id;
         const long long createdAt;
 
     protected:
@@ -26,7 +25,7 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
-        Channel(long long id, std::string name, int type, long long int ownerId);
+        Channel(std::string name, short type, std::string ownerName, long long createdAt);
 
         void leave() const;
 
@@ -44,9 +43,7 @@ namespace foxogram {
 
         [[nodiscard]] int getType() const;
 
-        [[nodiscard]] long long getId() const;
-
-        [[nodiscard]] long long int getOwnerId() const;
+        [[nodiscard]] std::string getOwnerName() const;
 
         [[nodiscard]] const std::list<Member> &getMembers() const;
     };

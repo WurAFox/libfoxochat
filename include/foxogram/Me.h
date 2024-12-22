@@ -40,9 +40,9 @@ namespace foxogram {
 
         Channel createChannel(std::string name, int type) const;
 
-        Channel joinChannel(long long id) const;
+        Channel joinChannel(std::string name) const;
 
-        [[nodiscard]] Channel fetchChannel(long long id) const;
+        [[nodiscard]] Channel fetchChannel(std::string name) const;
 
         [[nodiscard]] Message fetchMessage(long long id) const;
 

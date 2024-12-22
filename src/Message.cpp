@@ -24,8 +24,7 @@ void foxogram::Message::handleError(const nlohmann::json &response) const {
 
 void foxogram::Message::deleteMessage() const {
     handleError(HttpClient::request(Payload("DELETE", "/channels/" +
-                                                                std::to_string(channel->getId()) + std::to_string(
-                                                                    id), token)));
+                                                                channel->getName() + std::to_string(id), token)));
 }
 
 void foxogram::Message::edit() const {

@@ -4,9 +4,9 @@
 
 #include <utility>
 
-foxogram::Channel::Channel(const long long id, std::string name, const int type,
-                           const long long int ownerId) : id(id), name(std::move(name)), type(type),
-                                                          ownerId(ownerId), createdAt((id >> 22) + 1420070400000) {
+foxogram::Channel::Channel(std::string name, short type,
+                           std::string ownerName, long long createdAt) : name(std::move(name)), type(type),
+                                                          ownerName(ownerName), createdAt(createdAt) {
 }
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
@@ -22,19 +22,19 @@ void foxogram::Channel::handleError(const nlohmann::json &response) const {
 }
 
 void foxogram::Channel::deleteChannel() const {
-    handleError(HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(id), token)));
+    handleError(HttpClient::request(Payload("DELETE", "/channels/" + name, token)));
 }
 
 void foxogram::Channel::edit() const {
-    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
+    handleError(HttpClient::request(Payload("PATCH", "/channels/" + name, token)));
 }
 
 void foxogram::Channel::leave() const {
-    handleError(HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/leave", token)));
+    handleError(HttpClient::request(Payload("POST", "/channels/" + name + "/leave", token)));
 }
 
 std::list<foxogram::Message> foxogram::Channel::getMessages() const {
-    const auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(this->id), token));
+    const auto j = HttpClient::request(Payload("GET", "/channels/" + name, token));
 
     handleError(j);
 
@@ -43,7 +43,7 @@ std::list<foxogram::Message> foxogram::Channel::getMessages() const {
 
 foxogram::Message foxogram::Channel::getMessage(const long long id) const {
     const auto j = HttpClient::request(
-        Payload("GET", "/channels/" + std::to_string(this->id) + "/" + std::to_string(id), token));
+        Payload("GET", "/channels/" + name + "/" + std::to_string(id), token));
 
     handleError(j);
 
@@ -51,7 +51,7 @@ foxogram::Message foxogram::Channel::getMessage(const long long id) const {
 }
 
 foxogram::Message foxogram::Channel::createMessage() const {
-    const auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id), token));
+    const auto j = HttpClient::request(Payload("POST", "/channels/" + name, token));
 
     handleError(j);
 
@@ -66,14 +66,10 @@ int foxogram::Channel::getType() const {
     return type;
 }
 
-long long foxogram::Channel::getId() const {
-    return id;
-}
-
-long long int foxogram::Channel::getOwnerId() const {
-    return ownerId;
-}
-
 const std::list<foxogram::Member> &foxogram::Channel::getMembers() const {
     return members;
+}
+
+std::string foxogram::Channel::getOwnerName() const {
+    return name;
 }
