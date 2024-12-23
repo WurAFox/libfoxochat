@@ -30,3 +30,7 @@ void foxogram::Message::deleteMessage() const {
 void foxogram::Message::edit() const {
     handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
 }
+
+std::string foxogram::Message::getIdOrName() const {
+    return std::to_string(id);
+}

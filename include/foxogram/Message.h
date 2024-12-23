@@ -28,5 +28,7 @@ namespace foxogram {
         void deleteMessage() const;
 
         void edit() const;
+
+        [[nodiscard]] std::string getIdOrName() const override;
     };
 }

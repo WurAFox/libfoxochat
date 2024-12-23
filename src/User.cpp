@@ -40,3 +40,7 @@ int foxogram::User::getType() const {
 long long int foxogram::User::getCreatedAt() const {
     return createdAt;
 }
+
+std::string foxogram::User::getIdOrName() const {
+    return username;
+}

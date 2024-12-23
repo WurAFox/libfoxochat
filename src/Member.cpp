@@ -17,3 +17,7 @@ bool foxogram::Member::hasPermissions(const MemberPermissions permission) const 
 void foxogram::Member::removePermissions(const MemberPermissions permission) {
     permissions.removeFlag(permission);
 }
+
+std::string foxogram::Member::getIdOrName() const {
+    return username;
+}

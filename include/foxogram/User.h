@@ -37,6 +37,8 @@ namespace foxogram {
 
         [[nodiscard]] int getType() const;
 
-        [[nodiscard]] long long int getCreatedAt() const;
+        [[nodiscard]] long long getCreatedAt() const;
+
+        [[nodiscard]] std::string getIdOrName() const override;
     };
 }

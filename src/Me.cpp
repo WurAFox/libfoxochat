@@ -31,16 +31,18 @@ void foxogram::Me::_handleError(const nlohmann::json &response) {
     }
 }
 
-foxogram::User foxogram::Me::fetchUser(const std::string& username) const {
+foxogram::User* foxogram::Me::fetchUser(const std::string& username) const {
     auto j = HttpClient::request(Payload("GET",
                                          std::string("/users/") +username, *token));
     handleError(j);
 
-    return {
+    auto user = new User{
             j.at("createdAt").get<long long>(), j.at("username").get<std::string>(),
             j.at("avatar").get<std::string>(), j.at("flags").get<long long>(),
             j.at("type")
     };
+    userCache->store(user);
+    return user;
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
@@ -118,48 +120,51 @@ foxogram::User foxogram::Me::fetchMe() const {
     };
 }
 
-foxogram::Channel foxogram::Me::createChannel(std::string name, int type) const {
+foxogram::Channel* foxogram::Me::createChannel(std::string name, int type) {
     auto j = HttpClient::request(Payload("POST", "/channels/create",
                                          nlohmann::json({{"name", name}, {"type", type}}), *token));
 
     handleError(j);
 
-    auto channel = Channel(j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
+    auto channel = new Channel(j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
                            j.at("createdAt").get<long long>());
-    channel.token = *token;
+    channel->token = *token;
+    channelCache->store(channel);
     return channel;
 }
 
-foxogram::Channel foxogram::Me::joinChannel(std::string name) const {
+foxogram::Channel* foxogram::Me::joinChannel(std::string name) {
     auto j = HttpClient::request(Payload("POST", "/channels/" + name + "/join", *token));
 
     handleError(j);
 
-    auto channel = Channel(j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
+    auto channel = new Channel(j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
             j.at("createdAt").get<long long>());
-    channel.token = *token;
+    channel->token = *token;
+    channelCache->store(channel);
     return channel;
 }
 
-foxogram::Channel foxogram::Me::fetchChannel(std::string name) const {
+foxogram::Channel* foxogram::Me::fetchChannel(std::string name) {
     auto j = HttpClient::request(Payload("GET", "/channels/" + name, *token));
-    auto channel = Channel(j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
+    auto channel = new Channel(j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
                            j.at("createdAt").get<long long>());
 
     handleError(j);
 
-    channel.token = *token;
+    channel->token = *token;
+    channelCache->store(channel);
     return channel;
 }
 
-foxogram::Message foxogram::Me::fetchMessage(const long long int id) const {
+foxogram::Message* foxogram::Me::fetchMessage(const long long int id) {
     auto j = HttpClient::request(Payload("GET", "/messages/" + std::to_string(id), *token));
 
     handleError(j);
 
-    auto message = Message(std::stoll(j.at("id").get<std::string>()), nullptr, j.at("authorId").get<long long>(),
+    auto message = new Message(j.at("id").get<long long>(), nullptr, j.at("authorId").get<long long>(),
                            j.at("timestamp").get<long long>(),
                            j.at("attachments").get<std::list<std::string> >());
-    message.token = *token;
+    message->token = *token;
     return message;
 }

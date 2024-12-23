@@ -46,5 +46,7 @@ namespace foxogram {
         [[nodiscard]] std::string getOwnerName() const;
 
         [[nodiscard]] const std::list<Member> &getMembers() const;
+
+        [[nodiscard]] std::string getIdOrName() const override;
     };
 }

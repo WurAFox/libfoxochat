@@ -73,3 +73,7 @@ const std::list<foxogram::Member> &foxogram::Channel::getMembers() const {
 std::string foxogram::Channel::getOwnerName() const {
     return name;
 }
+
+std::string foxogram::Channel::getIdOrName() const {
+    return name;
+}

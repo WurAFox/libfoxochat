@@ -57,7 +57,7 @@ namespace foxogram {
     Payload::Payload(std::string method, const std::string& path, std::map<std::string, std::string> headers,
                      const nlohmann::json& body, const std::string& token) {
         this->method = std::move(method);
-        this->url = this->baseUrl + path;
+        this->url = foxogram::Payload::baseUrl + path;
         this->headers.merge(headers);
         std::string strBody;
         for (const auto& pair : body.get<std::map<std::string, std::string>>()) {
@@ -78,23 +78,12 @@ namespace foxogram {
             isWSAInitialized = true;
         }
         ix::HttpClient httpClient;
+        httpClient.setForceBody(true);
         ix::HttpRequestArgsPtr args = httpClient.createRequest();
         args->extraHeaders = payload.getHeaders();
         ix::HttpResponsePtr r;
         Logger::logDebug("Performing " + payload.getMethod() + " request to " + payload.getUrl() + " with body: " + to_string(payload.getBodyJson()));
-        if (payload.getMethod() == "GET") {
-            r = httpClient.get(payload.getUrl()+"?"+payload.getBody(), args);
-        } else if (payload.getMethod() == "POST") {
-            r = httpClient.post(payload.getUrl(), to_string(payload.getBodyJson()), args);
-        } else if (payload.getMethod() == "PUT") {
-            r = httpClient.put(payload.getUrl(), to_string(payload.getBodyJson()), args);
-        } else if (payload.getMethod() == "DELETE") {
-            r = httpClient.Delete(payload.getUrl(), args);
-        } else if (payload.getMethod() == "PATCH") {
-            r = httpClient.patch(payload.getUrl(), to_string(payload.getBodyJson()), args);
-        } else {
-            throw std::invalid_argument("Invalid method");
-        }
+        r = httpClient.request(payload.getUrl(), payload.getMethod(), to_string(payload.getBodyJson()), args);
         if (!r->errorMsg.empty()) {
             throw HttpException(r->errorMsg);
         }

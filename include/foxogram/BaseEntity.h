@@ -11,5 +11,6 @@ namespace foxogram {
         BaseEntity() = default;
 
         virtual ~BaseEntity() = default;
+        [[nodiscard]] virtual std::string getIdOrName() const = 0;
     };
 }
