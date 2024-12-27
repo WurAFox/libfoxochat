@@ -41,4 +41,5 @@ namespace foxogram {
 
         [[nodiscard]] std::string getIdOrName() const override;
     };
+    using UserPtr = std::shared_ptr<User>;
 }

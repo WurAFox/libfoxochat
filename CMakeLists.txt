@@ -4,8 +4,11 @@ project(libfoxogram
         DESCRIPTION "Library for foxogram"
         LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
-set(USE_OPEN_SSL "ON")
-set(USE_TLS "ON")
+option(LIBFOXOGRAM_USE_TLS "Build libfoxogram with tls support" ON)
+if (LIBFOXOGRAM_USE_TLS)
+    set(USE_TLS ON)
+    set(USE_OPEN_SSL ON)
+endif ()
 set(USE_ZLIB "OFF")
 set(BUILD_SHARED_LIBS "OFF")
 

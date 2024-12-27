@@ -6,6 +6,7 @@
 #include <foxogram/Member.h>
 #include <foxogram/Message.h>
 #include <foxogram/BaseEntity.h>
+#include <foxogram/Cache.h>
 
 namespace foxogram {
     struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
@@ -18,6 +19,7 @@ namespace foxogram {
         std::list<Member> members;
         std::list<Message> messages;
         const long long createdAt;
+        Cache<Message>* messageCache = new Cache<Message>();
 
     protected:
         std::string token;
@@ -49,4 +51,5 @@ namespace foxogram {
 
         [[nodiscard]] std::string getIdOrName() const override;
     };
+    using ChannelPtr = std::shared_ptr<Channel>;
 }

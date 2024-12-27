@@ -6,7 +6,11 @@
 #include "nlohmann/json.hpp"
 
 #ifndef FOXOGRAM_BASE_API_URL
+#ifdef IXWEBSOCKET_USE_TLS
 #define FOXOGRAM_BASE_API_URL "https://api." FOXOGRAM_URL
+#else
+#define FOXOGRAM_BASE_API_URL "http://api." FOXOGRAM_URL
+#endif
 #endif
 
 namespace foxogram {

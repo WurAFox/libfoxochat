@@ -9,7 +9,6 @@ namespace foxogram {
     class LIBFOXOGRAM_EXPORT Me : public User {
         Cache<User>* userCache = new Cache<User>();
         Cache<Channel>* channelCache = new Cache<Channel>();
-        Cache<Message>* messageCache = new Cache<Message>();
         std::string* token;
         [[nodiscard]] User fetchMe(std::string* token);
     public:
@@ -26,7 +25,7 @@ namespace foxogram {
         Me(long long int id, std::string username, std::string avatar, long long int flags,
            int type, long long int createdAt) = delete;
 
-        [[nodiscard]] User* fetchUser(const std::string& username) const;
+        [[nodiscard]] UserPtr fetchUser(const std::string& username) const;
 
         [[nodiscard]] User fetchMe() const;
 
@@ -42,13 +41,11 @@ namespace foxogram {
 
         bool confirmDeleteUser(const std::string &code) const;
 
-        Channel* createChannel(std::string name, int type);
+        ChannelPtr createChannel(std::string name, int type);
 
-        Channel* joinChannel(std::string name);
+        ChannelPtr joinChannel(std::string name);
 
-        [[nodiscard]] Channel* fetchChannel(std::string name);
-
-        [[nodiscard]] Message* fetchMessage(long long id);
+        [[nodiscard]] ChannelPtr fetchChannel(std::string name);
 
     protected:
         void handleError(const nlohmann::json &response) const override;
