@@ -114,7 +114,7 @@ install(TARGETS libfoxogram ixwebsocket
 install(DIRECTORY include/
         TYPE INCLUDE
         COMPONENT libfoxogram-dev)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}" "${LIB_EAY}" "${SSL_EAY}"
         COMPONENT libfoxogram-dev
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
 set(targets_file "libfoxogram-shared-targets.cmake")
