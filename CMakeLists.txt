@@ -134,16 +134,19 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config-version.cmake"
         COMPONENT libfoxogram-dev
         DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
+set(OpenSSL_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
 if (WIN32)
     set(openssldlls "$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libssl-3-x64.dll;$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libcrypto-3-x64.dll")
 elseif(APPLE)
     set(openssldlls ${OPENSSL_LIBRARIES})
+    set(OpenSSL_INSTALL_DIR )
 elseif(UNIX)
     set(openssldlls ${OPENSSL_LIBRARIES})
+    set(OpenSSL_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/foxogram.app/Contents/MacOS/Frameworks/")
 endif ()
 
 install(FILES ${openssldlls}
-        DESTINATION "${CMAKE_INSTALL_BINDIR}")
+        DESTINATION "${OpenSSL_INSTALL_DIR}")
 
 if(MSVC)
     set(pdb_file "")
