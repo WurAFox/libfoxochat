@@ -142,7 +142,6 @@ elseif(APPLE)
     set(OpenSSL_INSTALL_DIR )
 elseif(UNIX)
     set(openssldlls ${OPENSSL_LIBRARIES})
-    set(OpenSSL_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/foxogram.app/Contents/MacOS/Frameworks/")
 endif ()
 
 install(FILES ${openssldlls}
