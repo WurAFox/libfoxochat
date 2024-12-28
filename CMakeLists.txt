@@ -118,12 +118,15 @@ if (LIB_EAY AND SSL_EAY)
     set(SSL ${SSL_EAY})
     set(CRYPTO ${LIB_EAY})
 else ()
-    set(SSL OPENSSL_SSL_LIBRARIES)
-    set(CRYPTO OPENSSL_SSL_LIBRARIES)
+    set(SSL ${OPENSSL_SSL_LIBRARIES})
+    set(CRYPTO ${OPENSSL_SSL_LIBRARIES})
 endif ()
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}" "${SSL}" "${CRYPTO}"
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
         COMPONENT libfoxogram-dev
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
+install(FILES  "${SSL}" "${CRYPTO}"
+        COMPONENT libfoxogram-dev
+        DESTINATION "${CMAKE_INSTALL_BINDIR}")
 set(targets_file "libfoxogram-shared-targets.cmake")
 if(NOT BUILD_SHARED_LIBS)
     set(targets_file "libfoxogram-static-targets.cmake")
