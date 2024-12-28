@@ -8,6 +8,7 @@ option(LIBFOXOGRAM_USE_TLS "Build libfoxogram with tls support" ON)
 if (LIBFOXOGRAM_USE_TLS)
     set(USE_TLS ON)
     set(USE_OPEN_SSL ON)
+    find_package(OpenSSL REQUIRED)
 endif ()
 set(USE_ZLIB "OFF")
 set(BUILD_SHARED_LIBS "OFF")
@@ -114,19 +115,9 @@ install(TARGETS libfoxogram ixwebsocket
 install(DIRECTORY include/
         TYPE INCLUDE
         COMPONENT libfoxogram-dev)
-if (LIB_EAY AND SSL_EAY)
-    set(SSL ${SSL_EAY})
-    set(CRYPTO ${LIB_EAY})
-else ()
-    set(SSL ${OPENSSL_SSL_LIBRARIES})
-    set(CRYPTO ${OPENSSL_SSL_LIBRARIES})
-endif ()
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
         COMPONENT libfoxogram-dev
         DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
-install(FILES  "${SSL}" "${CRYPTO}"
-        COMPONENT libfoxogram-dev
-        DESTINATION "${CMAKE_INSTALL_BINDIR}")
 set(targets_file "libfoxogram-shared-targets.cmake")
 if(NOT BUILD_SHARED_LIBS)
     set(targets_file "libfoxogram-static-targets.cmake")
@@ -143,6 +134,17 @@ install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config-version.cmake"
         COMPONENT libfoxogram-dev
         DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
+if (WIN32)
+    set(openssldlls "$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libssl-3-x64.dll;$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libcrypto-3-x64.dll")
+elseif(APPLE)
+    set(openssldlls ${OPENSSL_LIBRARIES})
+elseif(UNIX)
+    set(openssldlls ${OPENSSL_LIBRARIES})
+endif ()
+
+install(FILES ${openssldlls}
+        DESTINATION "${CMAKE_INSTALL_BINDIR}")
+
 if(MSVC)
     set(pdb_file "")
     set(pdb_file_destination "")
