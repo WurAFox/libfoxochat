@@ -27,16 +27,16 @@ std::string generateRandomString(int length) {
 }
 
 TEST(add_test, Me) {
-    foxogram::Logger::setLogLevel(foxogram::LOG_ERROR);
+    foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG   );
     std::string username = generateRandomString(12);
     std::string email = username+"@foxogram.su";
     std::string password = generateRandomString(12);
     auto u = foxogram::Me(username, email, password);
     EXPECT_EQ(u.getUsername(), username);
-    EXPECT_THROW(u.resendEmail(), foxogram::HttpException);
-    EXPECT_THROW(u.verifyEmail("000000"), foxogram::HttpException);
+    EXPECT_TRUE(u.resendEmail());
+    EXPECT_TRUE(u.verifyEmail("000000"));
     EXPECT_TRUE(u.deleteUser(password));
-    EXPECT_THROW(u.confirmDeleteUser("000000"), foxogram::HttpException);
+    EXPECT_TRUE(u.confirmDeleteUser("000000"));
 }
 
 int main(int argc, char **argv)
