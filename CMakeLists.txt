@@ -21,7 +21,7 @@ string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" is_top_
 option(LIBFOXOGRAM_BUILD_TESTS "Build libfoxogram tests" OFF)
 option(LIBFOXOGRAM_BUILD_EXAMPLES "Build libfoxogram examples" OFF)
 option(LIBFOXOGRAM_BUILD_DOCS "Build libfoxogram documentation" OFF)
-set(LIBFOXOGRAM_INSTALL ON)
+OPTION(LIBFOXOGRAM_INSTALL "Install libfoxogram" ON)
 set_if_undefined(LIBFOXOGRAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/libfoxogram" CACHE STRING
         "Install path for libfoxogram package-related CMake files")
 option(LIBFOXOGRAM_USE_DEV "Use foxogram dev api" OFF)
@@ -106,68 +106,69 @@ configure_package_config_file(cmake/libfoxogram-config.cmake.in libfoxogram-conf
         INSTALL_DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
 write_basic_package_version_file(libfoxogram-config-version.cmake
         COMPATIBILITY SameMajorVersion)
-install(TARGETS libfoxogram ixwebsocket
-        EXPORT libfoxogram_export
-        RUNTIME COMPONENT libfoxogram
-        LIBRARY COMPONENT libfoxogram NAMELINK_COMPONENT libfoxogram-dev
-        ARCHIVE COMPONENT libfoxogram-dev
-        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-install(DIRECTORY include/
-        TYPE INCLUDE
-        COMPONENT libfoxogram-dev)
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
-        COMPONENT libfoxogram-dev
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
-set(targets_file "libfoxogram-shared-targets.cmake")
-if(NOT BUILD_SHARED_LIBS)
-    set(targets_file "libfoxogram-static-targets.cmake")
-endif()
-
-install(EXPORT libfoxogram_export
-        COMPONENT libfoxogram-dev
-        FILE "${targets_file}"
-        DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}"
-        NAMESPACE libfoxogram::)
-
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config-version.cmake"
-        COMPONENT libfoxogram-dev
-        DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
-set_if_undefined(OpenSSL_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
-if (WIN32)
-    if(OPENSSL_VERSION VERSION_GREATER_EQUAL "3.0.0")
-        set(openssldlls "$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libssl-3-x64.dll;$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libcrypto-3-x64.dll")
-    else ()
-        set(openssldlls "$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libssl-1_1-x64.dll;$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libcrypto-1_1-x64.dll")
-    endif ()
-elseif(APPLE)
-    set(openssldlls ${OPENSSL_LIBRARIES})
-elseif(UNIX)
-    set(openssldlls ${OPENSSL_LIBRARIES})
-endif ()
-
-install(FILES ${openssldlls}
-        DESTINATION "${OpenSSL_INSTALL_DIR}")
-
-if(MSVC)
-    set(pdb_file "")
-    set(pdb_file_destination "")
-    if(BUILD_SHARED_LIBS)
-        set(pdb_file "$<TARGET_PDB_FILE:libfoxogram>")
-        set(pdb_file_destination "${CMAKE_INSTALL_BINDIR}")
-    else()
-        set(pdb_file "$<TARGET_FILE_DIR:libfoxogram>/$<TARGET_FILE_PREFIX:libfoxogram>$<TARGET_FILE_BASE_NAME:libfoxogram>.pdb")
-        set(pdb_file_destination "${CMAKE_INSTALL_LIBDIR}")
+if (LIBFOXOGRAM_INSTALL)
+    install(TARGETS libfoxogram ixwebsocket
+            EXPORT libfoxogram_export
+            RUNTIME COMPONENT libfoxogram
+            LIBRARY COMPONENT libfoxogram NAMELINK_COMPONENT libfoxogram-dev
+            ARCHIVE COMPONENT libfoxogram-dev
+            INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+    install(DIRECTORY include/
+            TYPE INCLUDE
+            COMPONENT libfoxogram-dev)
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/libfoxogram/${export_file_name}"
+            COMPONENT libfoxogram-dev
+            DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/libfoxogram")
+    set(targets_file "libfoxogram-shared-targets.cmake")
+    if(NOT BUILD_SHARED_LIBS)
+        set(targets_file "libfoxogram-static-targets.cmake")
     endif()
 
-    install(FILES "${pdb_file}"
+    install(EXPORT libfoxogram_export
             COMPONENT libfoxogram-dev
-            CONFIGURATIONS Debug RelWithDebInfo
-            DESTINATION "${pdb_file_destination}"
-            OPTIONAL)
-endif()
+            FILE "${targets_file}"
+            DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}"
+            NAMESPACE libfoxogram::)
 
+    install(FILES
+            "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config.cmake"
+            "${CMAKE_CURRENT_BINARY_DIR}/libfoxogram-config-version.cmake"
+            COMPONENT libfoxogram-dev
+            DESTINATION "${LIBFOXOGRAM_INSTALL_CMAKEDIR}")
+    set_if_undefined(OpenSSL_INSTALL_DIR ${CMAKE_INSTALL_BINDIR})
+    if (WIN32)
+        if(OPENSSL_VERSION VERSION_GREATER_EQUAL "3.0.0")
+            set(openssldlls "$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libssl-3-x64.dll;$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libcrypto-3-x64.dll")
+        else ()
+            set(openssldlls "$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libssl-1_1-x64.dll;$<TARGET_PROPERTY:OpenSSL::SSL,INTERFACE_INCLUDE_DIRECTORIES>/../libcrypto-1_1-x64.dll")
+        endif ()
+    elseif(APPLE)
+        set(openssldlls ${OPENSSL_LIBRARIES})
+    elseif(UNIX)
+        set(openssldlls ${OPENSSL_LIBRARIES})
+    endif ()
+
+    install(FILES ${openssldlls}
+            DESTINATION "${OpenSSL_INSTALL_DIR}")
+
+    if(MSVC)
+        set(pdb_file "")
+        set(pdb_file_destination "")
+        if(BUILD_SHARED_LIBS)
+            set(pdb_file "$<TARGET_PDB_FILE:libfoxogram>")
+            set(pdb_file_destination "${CMAKE_INSTALL_BINDIR}")
+        else()
+            set(pdb_file "$<TARGET_FILE_DIR:libfoxogram>/$<TARGET_FILE_PREFIX:libfoxogram>$<TARGET_FILE_BASE_NAME:libfoxogram>.pdb")
+            set(pdb_file_destination "${CMAKE_INSTALL_LIBDIR}")
+        endif()
+
+        install(FILES "${pdb_file}"
+                COMPONENT libfoxogram-dev
+                CONFIGURATIONS Debug RelWithDebInfo
+                DESTINATION "${pdb_file_destination}"
+                OPTIONAL)
+    endif()
+endif()
 if(LIBFOXOGRAM_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
