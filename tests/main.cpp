@@ -1,4 +1,5 @@
 #define FOXOGRAM_BASE_API_URL "https://api.dev." FOXOGRAM_URL
+#define FOXOGRAM_BASE_WEBSOCKET_URL "wss://gateway.dev." FOXOGRAM_URL
 
 #include <foxogram/Me.h>
 #include <foxogram/Logger.h>

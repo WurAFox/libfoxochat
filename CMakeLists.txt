@@ -29,7 +29,7 @@ set(LIBFOXOGRAM_BASE_URL "foxogram.su")
 set(LIBFOXOGRAM_API_VERSION "v1")
 
 if(LIBFOXOGRAM_USE_DEV)
-    set(LIBFOXOGRAM_BASE_URL "dev-${FOXOGRAM_BASE_API_URL}")
+    set(LIBFOXOGRAM_BASE_URL "dev.${FOXOGRAM_BASE_URL}")
 endif()
 
 if(DEFINED LIBFOXOGRAM_SHARED_LIBS)
@@ -79,6 +79,7 @@ set(sources
         include/foxogram/Message.h
         include/foxogram/Channel.h
         include/foxogram/Member.h
+        include/foxogram/Gateway.h
         src/Logger.cpp
         src/HttpClient.cpp
         src/User.cpp
@@ -86,6 +87,7 @@ set(sources
         src/Message.cpp
         src/Channel.cpp
         src/Member.cpp
+        src/Gateway.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

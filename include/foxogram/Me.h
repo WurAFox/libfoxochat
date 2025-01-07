@@ -4,12 +4,16 @@
 #include <foxogram/User.h>
 #include <foxogram/Channel.h>
 #include <foxogram/Cache.h>
+#include <foxogram/Gateway.h>
 
 namespace foxogram {
     class LIBFOXOGRAM_EXPORT Me : public User {
+        friend Gateway;
+    protected:
         Cache<User>* userCache = new Cache<User>();
         Cache<Channel>* channelCache = new Cache<Channel>();
         std::string* token;
+        Gateway* gateway;
         [[nodiscard]] User fetchMe(std::string* token);
     public:
         explicit Me(const std::string& token);
@@ -46,7 +50,7 @@ namespace foxogram {
         ChannelPtr joinChannel(std::string name);
 
         [[nodiscard]] ChannelPtr fetchChannel(std::string name);
-
+        ~Me() override;
     protected:
         void handleError(const nlohmann::json &response) const override;
         static void _handleError(const nlohmann::json &response);

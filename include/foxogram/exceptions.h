@@ -3,36 +3,38 @@
 #include <foxogram/export.h>
 #include <exception>
 #include <string>
-#include <ixwebsocket/IXHttpClient.h>
+#include <iostream>
 
 #define decl_exception(name, Msg, Exception) class name : public foxogram::Exception { \
     protected: \
         std::string msg = Msg; \
     public: \
         using foxogram::Exception::Exception; \
-        explicit name(const std::string& what) = delete; \
-        explicit name(std::string&& what) = delete; \
-        name(const name&) = delete; \
-        name(name&&) = delete; \
+        explicit name(const std::string& what) : msg(what) {std::cout << what << std::endl;} \
+        explicit name(std::string&& what) : msg(std::move(what)) {std::cout << what << std::endl;} \
+        name(const name&) = default; \
+        name(name&&) = default; \
         name() = default; \
         ~name() override = default; \
         const char* what() const noexcept override { return msg.c_str(); }; \
 };
 
 namespace foxogram {
-    class LIBFOXOGRAM_EXPORT HttpException : public std::exception {
+    class LIBFOXOGRAM_EXPORT Exception : public std::exception {
     protected:
         std::string msg;
     public:
         using std::exception::exception;
-        explicit HttpException(const std::string& what) : msg(what) {}
-        explicit HttpException(std::string&& what) : msg(std::move(what)) {}
-        HttpException(const HttpException&) = default;
-        HttpException(HttpException&&) = default;
-        ~HttpException() override = default;
+        explicit Exception(const std::string& what) : msg(what) {}
+        explicit Exception(std::string&& what) : msg(std::move(what)) {}
+        Exception(const Exception&) = default;
+        Exception(Exception&&) = default;
+        ~Exception() override = default;
         [[nodiscard]] const char* what() const noexcept override { return msg.c_str(); };
     };
 
+    decl_exception(WebSocketException   , std::string(""), Exception)
+    decl_exception(HttpException, std::string(""), Exception)
     decl_exception(MessageNotFoundException, std::string("Unable to find message(s) for this channel or matching these parameters"), HttpException)
     decl_exception(ChannelNotFoundException, std::string("Unknown channel"), HttpException)
     decl_exception(UserEmailNotVerfiedException, std::string("You need to verify your email first"), HttpException)

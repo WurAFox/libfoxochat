@@ -4,13 +4,16 @@
 #include <foxogram/Logger.h>
 
 foxogram::Me::Me(const std::string& _token) : User(fetchMe(token = new std::string(_token))) {
+    gateway = new foxogram::Gateway(this);
 }
 
 foxogram::Me::Me(const std::string& username, const std::string& email, const std::string& password):
     User(fetchMe(token = new std::string(signup(username, email, password)))) {
+    gateway = new foxogram::Gateway(this);
 }
 
 foxogram::Me::Me(const std::string& email, const std::string& password): User(fetchMe(token = new std::string(Me::login(email, password)))) {
+    gateway = new foxogram::Gateway(this);
 }
 
 void foxogram::Me::handleError(const nlohmann::json &response) const {
@@ -156,4 +159,12 @@ foxogram::ChannelPtr foxogram::Me::fetchChannel(std::string name) {
     channel->token = *token;
     channelCache->store(channel);
     return channel;
+}
+
+foxogram::Me::~Me() {
+    gateway->close();
+    delete gateway;
+    delete token;
+    delete userCache;
+    delete channelCache;
 }
