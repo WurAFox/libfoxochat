@@ -17,11 +17,11 @@ namespace foxogram {
     class LIBFOXOGRAM_EXPORT Gateway {
     protected:
         class Me* me;
-        int heartbreakInterval = 10;
+        int heartbeatInterval = 10;
         static inline std::string wsUrl = FOXOGRAM_BASE_WEBSOCKET_URL;
         ix::WebSocket ws;
     public:
-        explicit Gateway(Me* me, int heartbreakInterval = 10);
+        explicit Gateway(Me* me, int heartbeatInterval = 10);
         void send(nlohmann::json data);
         void close();
     };

@@ -3,7 +3,7 @@
 #include <foxogram/exceptions.h>
 #include <foxogram/Logger.h>
 
-foxogram::Gateway::Gateway(foxogram::Me *me, int heartbreakInterval) : me(me), heartbreakInterval(heartbreakInterval) {
+foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), heartbeatInterval(heartbeatInterval) {
     ix::initNetSystem();
     ws.setUrl(wsUrl);
     ws.setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg){
