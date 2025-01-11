@@ -80,6 +80,8 @@ set(sources
         include/foxogram/Channel.h
         include/foxogram/Member.h
         include/foxogram/Gateway.h
+        include/foxogram/Events.h
+        include/foxogram/EventTypes.h
         src/Logger.cpp
         src/HttpClient.cpp
         src/User.cpp
