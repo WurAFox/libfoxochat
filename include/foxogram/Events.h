@@ -16,7 +16,7 @@ namespace foxogram {
         event_decl(MessageCreate)
         event_decl(MessageUpdate)
         event_decl(MessageDelete)
-//        event_decl(ChannelCreate)
+        event_decl(ChannelCreate)
         event_decl(CHANNEL_UPDATE)
         event_decl(ChannelDelete)
         event_decl(MemberAdd)
