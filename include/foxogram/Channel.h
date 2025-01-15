@@ -11,7 +11,6 @@
 namespace foxogram {
     struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
         friend class Me;
-
     private:
         std::string name;
         const int type;
@@ -19,7 +18,7 @@ namespace foxogram {
         std::list<Member> members;
         std::list<Message> messages;
         const long long createdAt;
-        Cache<Message>* messageCache = new Cache<Message>();
+        std::shared_ptr<Cache<Message>> messageCache = std::make_shared<Cache<Message>>();
 
     protected:
         std::string token;

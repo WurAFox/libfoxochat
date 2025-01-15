@@ -4,11 +4,9 @@
 #include <foxogram/HttpClient.h>
 #include <utility>
 
-foxogram::Message::Message(const long long int id, Channel *channel, const long long int authorId,
-                           const long long int timestamp,
-                           std::list<std::string> attachments): id(id), channel(channel), authorId(authorId),
-                                                                timestamp(timestamp),
-                                                                attachments(std::move(attachments)) {
+foxogram::Message::Message(const long long int id, std::shared_ptr<Channel> channel, const long long int authorId,
+                           const long long int timestamp, std::string content, std::list<std::string> attachments): id(id), channel(std::move(channel)), authorId(authorId),
+                           timestamp(timestamp), attachments(std::move(attachments)), content(std::move(content)) {
 }
 
 void foxogram::Message::handleError(const nlohmann::json &response) const {

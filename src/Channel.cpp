@@ -6,7 +6,7 @@
 
 foxogram::Channel::Channel(std::string name, short type,
                            std::string ownerName, long long createdAt) : name(std::move(name)), type(type),
-                                                          ownerName(ownerName), createdAt(createdAt) {
+                                                          ownerName(std::move(ownerName)), createdAt(createdAt) {
 }
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
@@ -47,7 +47,7 @@ foxogram::Message foxogram::Channel::getMessage(const long long id) const {
 
     handleError(j);
 
-    return {0, nullptr, 0, 0, {}};
+    return {0, nullptr, 0, 0, {}, {}};
 }
 
 foxogram::Message foxogram::Channel::createMessage() const {
@@ -55,7 +55,7 @@ foxogram::Message foxogram::Channel::createMessage() const {
 
     handleError(j);
 
-    return {0, nullptr, 0, 0, {}};
+    return {0, nullptr, 0, 0, {}, {}};
 }
 
 const std::string &foxogram::Channel::getName() const {

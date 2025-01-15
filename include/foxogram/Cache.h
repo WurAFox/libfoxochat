@@ -3,6 +3,7 @@
 #include <foxogram/BaseEntity.h>
 #include <map>
 #include <string>
+#include <iostream>
 
 namespace foxogram {
 
@@ -13,7 +14,7 @@ namespace foxogram {
         std::map<std::string, std::shared_ptr<T>> cacheMap;
     public:
         Cache() = default;
-        std::shared_ptr<User> get(std::string name) {
+        std::shared_ptr<T> get(std::string name) {
             auto it = cacheMap.find(name);
             return (it != cacheMap.end()) ? it->second : nullptr;
         }

@@ -80,8 +80,8 @@ set(sources
         include/foxogram/Channel.h
         include/foxogram/Member.h
         include/foxogram/Gateway.h
-        include/foxogram/Events.h
         include/foxogram/EventTypes.h
+        include/foxogram/Events.h
         src/Logger.cpp
         src/HttpClient.cpp
         src/User.cpp
@@ -89,7 +89,19 @@ set(sources
         src/Message.cpp
         src/Channel.cpp
         src/Member.cpp
+        src/EventTypes.cpp
         src/Gateway.cpp
+        src/Events/ChannelCreate.cpp
+        src/Events/ChannelDelete.cpp
+        src/Events/ChannelUpdate.cpp
+        src/Events/Hello.cpp
+        src/Events/MemberAdd.cpp
+        src/Events/MemberRemove.cpp
+        src/Events/MemberUpdate.cpp
+        src/Events/MessageCreate.cpp
+        src/Events/MessageDelete.cpp
+        src/Events/MessageUpdate.cpp
+        src/Events/Pong.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 
