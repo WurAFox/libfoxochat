@@ -40,8 +40,6 @@ namespace foxogram {
                 {"HELLO", Hello},
                 {"PONG", Pong}
         };
-        std::shared_ptr<Cache<User>> userCache = std::make_shared<Cache<User>>();
-        std::shared_ptr<Cache<Channel>> channelCache = std::make_shared<Cache<Channel>>();
         std::string* token;
         Gateway* gateway;
         [[nodiscard]] User fetchMe(std::string* token);

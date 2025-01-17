@@ -46,20 +46,7 @@ foxogram::UserPtr foxogram::Me::fetchUser(const std::string& username) {
             j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
             j.at("type").get<int>(), j.at("created_at").is_string() ? j.at("created_at").get<std::string>() : ""
     );
-    userCache->store(user);
     return user;
-}
-
-foxogram::UserPtr foxogram::Me::getUser(const std::string &username) {
-    return userCache->get(username);
-}
-
-foxogram::UserPtr foxogram::Me::getOrFetchUser(const std::string &username) {
-    auto u = getUser(username);
-    if (u == nullptr) {
-        return fetchUser(username);
-    }
-    return u;
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
@@ -147,7 +134,6 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
                    j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
                    j.at("created_at").get<long long>());
     channel->token = *token;
-    channelCache->store(channel);
     return channel;
 }
 
@@ -160,7 +146,6 @@ foxogram::ChannelPtr foxogram::Me::joinChannel(std::string name) {
             j.at("name").get<std::string>(), j.at("type").get<short>(),
             j.at("owner").get<std::string>(),j.at("created_at").get<long long>());
     channel->token = *token;
-    channelCache->store(channel);
     return channel;
 }
 
@@ -173,21 +158,9 @@ foxogram::ChannelPtr foxogram::Me::fetchChannel(std::string name) {
     handleError(j);
 
     channel->token = *token;
-    channelCache->store(channel);
     return channel;
 }
 
-foxogram::ChannelPtr foxogram::Me::getChannel(std::string name) {
-    return channelCache->get(std::move(name));
-}
-
-foxogram::ChannelPtr foxogram::Me::getOrFetchChannel(const std::string &name) {
-    auto u = getChannel(name);
-    if (u == nullptr) {
-        return fetchChannel(name);
-    }
-    return u;
-}
 
 foxogram::Me::~Me() {
     gateway->close();

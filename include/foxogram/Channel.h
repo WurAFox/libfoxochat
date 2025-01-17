@@ -18,7 +18,6 @@ namespace foxogram {
         std::list<Member> members;
         std::list<Message> messages;
         const long long createdAt;
-        std::shared_ptr<Cache<Message>> messageCache = std::make_shared<Cache<Message>>();
 
     protected:
         std::string token;
