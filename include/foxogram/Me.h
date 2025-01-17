@@ -87,7 +87,7 @@ namespace foxogram {
 
         [[nodiscard]] ChannelPtr getChannel(std::string name);
 
-        [[nodiscard]] ChannelPtr getOrfetchChannel(std::string name);
+        [[nodiscard]] ChannelPtr getOrFetchChannel(const std::string &name);
 
 
         ~Me() override;

@@ -1,8 +1,8 @@
 #include <foxogram/Member.h>
 
-foxogram::Member::Member(Channel *channel, const long long permissions, const std::string &username,
+foxogram::Member::Member(long long id, Channel *channel, const long long permissions, const std::string &username,
                          const std::string &avatar, const long long flags, const int type, const long long createdAt)
-    : User(createdAt, username, avatar, flags, type),
+    : User(id, createdAt, username, avatar, flags, type),
       channel(channel), permissions(permissions) {
 }
 
@@ -16,8 +16,4 @@ bool foxogram::Member::hasPermissions(const MemberPermissions permission) const 
 
 void foxogram::Member::removePermissions(const MemberPermissions permission) {
     permissions.removeFlag(permission);
-}
-
-std::string foxogram::Member::getIdOrName() const {
-    return username;
 }

@@ -26,7 +26,7 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
-        Channel(std::string name, short type, std::string ownerName, long long createdAt);
+        Channel(long long id, std::string name, short type, std::string ownerName, long long createdAt);
 
         void leave() const;
 
@@ -48,7 +48,6 @@ namespace foxogram {
 
         [[nodiscard]] const std::list<Member> &getMembers() const;
 
-        [[nodiscard]] std::string getIdOrName() const override;
     };
     using ChannelPtr = std::shared_ptr<Channel>;
 }

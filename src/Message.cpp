@@ -5,9 +5,9 @@
 #include <utility>
 
 foxogram::Message::Message(const long long int id, std::shared_ptr<Channel> channel, const long long int authorId,
-                           const long long int timestamp, std::string content, std::list<std::string> attachments): id(id), channel(std::move(channel)), authorId(authorId),
-                           timestamp(timestamp), attachments(std::move(attachments)), content(std::move(content)) {
-}
+                           const long long int timestamp, std::string content, std::list<std::string> attachments):
+                           channel(std::move(channel)), authorId(authorId), timestamp(timestamp),
+                           attachments(std::move(attachments)), content(std::move(content)), BaseEntity(id) {}
 
 void foxogram::Message::handleError(const nlohmann::json &response) const {
     if (!response.value("ok", true)) {
@@ -27,8 +27,4 @@ void foxogram::Message::deleteMessage() const {
 
 void foxogram::Message::edit() const {
     handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
-}
-
-std::string foxogram::Message::getIdOrName() const {
-    return std::to_string(id);
 }

@@ -12,7 +12,6 @@ namespace foxogram {
         std::shared_ptr<Channel> channel;
         long long authorId;
         long long timestamp;
-        const long long id;
         std::list<std::string> attachments;
         std::string content;
 
@@ -30,7 +29,6 @@ namespace foxogram {
 
         void edit() const;
 
-        [[nodiscard]] std::string getIdOrName() const override;
     };
     using MessagePtr = std::shared_ptr<Message>;
 }

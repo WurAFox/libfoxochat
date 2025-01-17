@@ -17,7 +17,7 @@ namespace foxogram {
 
         void handleError(const nlohmann::json &response) const override;
     public:
-        User(long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");
+        User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");
 
         User(const User &) = default;
 
@@ -39,7 +39,6 @@ namespace foxogram {
 
         [[nodiscard]] long long getCreatedAt() const;
 
-        [[nodiscard]] std::string getIdOrName() const override;
     };
     using UserPtr = std::shared_ptr<User>;
 }
