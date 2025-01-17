@@ -19,6 +19,7 @@ namespace foxogram {
     class Gateway;
     namespace events {
         class LIBFOXOGRAM_EXPORT Event {
+        public:
             virtual void handle(Me *me, nlohmann::json j, std::string raw) = 0;
         };
         event_decl(MessageCreate)
