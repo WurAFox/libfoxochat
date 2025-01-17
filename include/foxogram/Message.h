@@ -9,7 +9,7 @@ namespace foxogram {
 
     struct LIBFOXOGRAM_EXPORT Message : BaseEntity {
     private:
-        std::shared_ptr<Channel> channel;
+        long long channelId;
         long long authorId;
         long long timestamp;
         std::list<std::string> attachments;
@@ -22,7 +22,7 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
-        Message(long long id, std::shared_ptr<Channel> channel, long long authorId, long long timestamp,
+        Message(long long id, long long int channelId, long long authorId, long long timestamp,
                 std::string content, std::list<std::string> attachments);
 
         void deleteMessage() const;

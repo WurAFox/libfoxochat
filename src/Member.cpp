@@ -1,9 +1,9 @@
 #include <foxogram/Member.h>
 
-foxogram::Member::Member(long long id, Channel *channel, const long long permissions, const std::string &username,
-                         const std::string &avatar, const long long flags, const int type, const long long createdAt)
+foxogram::Member::Member(long long id, long long int channelId, long long permissions, const std::string &username,
+                         const std::string &avatar, long long flags, int type, long long createdAt)
     : User(id, createdAt, username, avatar, flags, type),
-      channel(channel), permissions(permissions) {
+      channelId(channelId), permissions(permissions) {
 }
 
 void foxogram::Member::addPermissions(const MemberPermissions permission) {

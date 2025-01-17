@@ -59,10 +59,6 @@ namespace foxogram {
 
         [[nodiscard]] UserPtr fetchUser(const std::string& username);
 
-        [[nodiscard]] UserPtr getUser(const std::string& username);
-
-        [[nodiscard]] UserPtr getOrFetchUser(const std::string& username);
-
         [[nodiscard]] User fetchMe() const;
 
         static std::string login(std::string email, std::string password);
@@ -82,11 +78,6 @@ namespace foxogram {
         ChannelPtr joinChannel(std::string name);
 
         [[nodiscard]] ChannelPtr fetchChannel(std::string name);
-
-        [[nodiscard]] ChannelPtr getChannel(std::string name);
-
-        [[nodiscard]] ChannelPtr getOrFetchChannel(const std::string &name);
-
 
         ~Me() override;
 
