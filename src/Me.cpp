@@ -131,8 +131,8 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
     handleError(j);
 
     auto channel = std::make_shared<Channel>(j.at("id").get<long long>(),
-                   j.at("name").get<std::string>(), j.at("type").get<int>(), j.at("owner").get<std::string>(),
-                   j.at("created_at").get<long long>());
+        j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
+        j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
     channel->token = *token;
     return channel;
 }
@@ -143,8 +143,8 @@ foxogram::ChannelPtr foxogram::Me::joinChannel(std::string name) {
     handleError(j);
 
     auto channel = std::make_shared<Channel>(j.at("id").get<long long>(),
-            j.at("name").get<std::string>(), j.at("type").get<short>(),
-            j.at("owner").get<std::string>(),j.at("created_at").get<long long>());
+            j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
+            j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
     channel->token = *token;
     return channel;
 }
@@ -152,9 +152,8 @@ foxogram::ChannelPtr foxogram::Me::joinChannel(std::string name) {
 foxogram::ChannelPtr foxogram::Me::fetchChannel(std::string name) {
     auto j = HttpClient::request(Payload("GET", "/channels/" + name, *token));
     auto channel = std::make_shared<Channel>(j.at("id").get<long long>(),
-            j.at("name").get<std::string>(), j.at("type").get<int>(),
-            j.at("owner").get<std::string>(),j.at("created_at").get<long long>());
-
+            j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
+            j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
     handleError(j);
 
     channel->token = *token;

@@ -2,8 +2,9 @@
 
 #include <foxogram/export.h>
 #include <string>
-#include <list>
+#include <map>
 #include <foxogram/Member.h>
+#include <foxogram/Message.h>
 #include <foxogram/Message.h>
 #include <foxogram/BaseEntity.h>
 #include <foxogram/Cache.h>
@@ -15,9 +16,11 @@ namespace foxogram {
         std::string name;
         const int type;
         std::string ownerName;
-        std::list<Member> members;
-        std::list<Message> messages;
+        std::map<long long, MemberPtr> members;
+        std::map<long long, MessagePtr> messages;
         const long long createdAt;
+        std::string displayName;
+        std::string icon;
 
     protected:
         std::string token;
@@ -25,28 +28,33 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
-        Channel(long long id, std::string name, short type, std::string ownerName, long long createdAt);
+        Channel(long long id, std::string name, std::string displayName, short type, std::string ownerName, long long createdAt, std::string icon);
 
-        void leave() const;
+        bool leave();
 
-        void edit() const;
+        void edit(const std::string& displayName, const std::string& name, const std::string& icon);
 
-        void deleteChannel() const;
+        bool deleteChannel();
 
-        [[nodiscard]] std::list<Message> getMessages() const;
+        [[nodiscard]] std::list<MessagePtr> getMessages() const;
 
-        [[nodiscard]] Message getMessage(long long id) const;
+        std::list<MessagePtr> fetchMessages();
 
-        [[nodiscard]] Message createMessage() const;
+        [[nodiscard]] MessagePtr fetchMessage(long long id);
 
-        [[nodiscard]] const std::string &getName() const;
+        [[nodiscard]] MessagePtr createMessage(std::string content, const std::list<std::string>& attachments = {});
+
+        [[nodiscard]] std::string getName() const;
 
         [[nodiscard]] int getType() const;
 
         [[nodiscard]] std::string getOwnerName() const;
 
-        [[nodiscard]] const std::list<Member> &getMembers() const;
+        [[nodiscard]] std::list<MemberPtr> getMembers() const;
 
+        std::list<MemberPtr> fetchMembers();
+
+        MemberPtr fetchMember(long long id);
     };
     using ChannelPtr = std::shared_ptr<Channel>;
 }

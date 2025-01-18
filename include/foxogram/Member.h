@@ -25,8 +25,10 @@ namespace foxogram {
 
         [[nodiscard]] bool hasPermissions(MemberPermissions permission) const;
 
-        Member(long long id, long long int channelId, long long permissions, const std::string &username,
+        Member(long long id, long long channelId, long long permissions, const std::string &username,
                const std::string &avatar, long long flags, int type, long long createdAt);
 
     };
+
+    using MemberPtr = std::shared_ptr<Member>;
 }

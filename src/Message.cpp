@@ -1,5 +1,4 @@
 #include <foxogram/Message.h>
-#include <foxogram/Channel.h>
 #include <foxogram/exceptions.h>
 #include <foxogram/HttpClient.h>
 #include <utility>
