@@ -10,8 +10,16 @@
 #include <foxogram/Cache.h>
 
 namespace foxogram {
+    namespace events {
+        class ChannelCreate;
+        class ChannelUpdate;
+        class ChannelDelete;
+    }
     struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
         friend class Me;
+        friend events::ChannelCreate;
+        friend events::ChannelUpdate;
+        friend events::ChannelDelete;
     private:
         std::string name;
         const int type;

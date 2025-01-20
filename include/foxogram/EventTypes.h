@@ -19,65 +19,66 @@ namespace foxogram {
             Event_t(Me* me, std::string&& raw);
             Event_t& operator=(const Event_t& e) = default;
             Event_t& operator=(Event_t&& e) = default;
-            virtual ~Event_t() = 0;
+            virtual ~Event_t() = default;
     };
 
     struct LIBFOXOGRAM_EXPORT MessageCreate_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Message* msg = nullptr;
+        MessagePtr msg = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT MessageUpdate_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Message* msg = nullptr;
+        MessagePtr msg = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT MessageDelete_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Message* msg = nullptr;
+        MessagePtr msg = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT ChannelCreate_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Channel* channel = nullptr;
+        ChannelPtr channel = nullptr;
     };
 
 
     struct LIBFOXOGRAM_EXPORT ChannelUpdate_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Channel* channel = nullptr;
+        ChannelPtr channel = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT ChannelDelete_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Channel* channel = nullptr;
+        ChannelPtr channel = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT MemberAdd_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Member* member = nullptr;
+        MemberPtr member = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT MemberRemove_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Member* member = nullptr;
+        MemberPtr member = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT MemberUpdate_t : public Event_t {
         using Event_t::Event_t;
         using Event_t::operator=;
-        Member* member = nullptr;
+        MemberPtr member = nullptr;
     };
 
     struct LIBFOXOGRAM_EXPORT Hello_t : public Event_t {
+        int interval = 0;
         using Event_t::Event_t;
         using Event_t::operator=;
     };

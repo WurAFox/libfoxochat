@@ -75,7 +75,7 @@ foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
         Payload("GET", "/channels/" + std::to_string(this->id) + "/" + std::to_string(id), token));
 
     handleError(j);
-    auto msg = std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").get<long long>(),
+    auto msg = std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").at("id").get<long long>(),
             j.at("author").at("id").get<long long>(), j.at("created_at").get<long long>(),
             j.at("content").get<std::string>(), j.at("attachments").get<std::list<std::string>>());
     messages.insert_or_assign(j.at("id").get<long long>(), msg);
@@ -121,7 +121,7 @@ foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const
         nlohmann::json({{"content", content}, {attachments, attachments}}), token));
 
     handleError(j);
-    auto msg = std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").get<long long>(),
+    auto msg = std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").at("id").get<long long>(),
         j.at("author").at("id").get<long long>(), j.at("created_at").get<long long>(),
         j.at("content").get<std::string>(), j.at("attachments").get<std::list<std::string>>());
     messages.insert_or_assign(j.at("id").get<long long>(), msg);

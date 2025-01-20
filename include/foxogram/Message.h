@@ -6,8 +6,15 @@
 
 namespace foxogram {
     struct Channel;
-
+    namespace events {
+        class MessageCreate;
+        class MessageUpdate;
+        class MessageDelete;
+    }
     struct LIBFOXOGRAM_EXPORT Message : BaseEntity {
+        friend events::MessageCreate;
+        friend events::MessageUpdate;
+        friend events::MessageDelete;
     private:
         long long channelId;
         long long authorId;

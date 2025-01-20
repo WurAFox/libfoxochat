@@ -5,11 +5,16 @@
 #include <foxogram/Enums.h>
 
 namespace foxogram {
-    struct Channel;
-
+    namespace events {
+        class MemberAdd;
+        class MemberUpdate;
+        class MemberRemove;
+    }
     struct LIBFOXOGRAM_EXPORT Member : User {
         friend class Me;
-
+        friend events::MemberAdd;
+        friend events::MemberUpdate;
+        friend events::MemberRemove;
     private:
         long long channelId;
 

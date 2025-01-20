@@ -7,7 +7,7 @@
 #include <foxogram/Gateway.h>
 #include <foxogram/Events.h>
 
-#define decl_on_event(x) typedef void (*Lamda##x)( foxogram::x##_t );\
+#define decl_on_event(x) friend events::x; typedef void (*Lamda##x)( foxogram::x##_t );\
 void on##x(Lamda##x callback) { \
     x->callback = callback;\
 } 
