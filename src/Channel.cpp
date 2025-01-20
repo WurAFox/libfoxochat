@@ -111,6 +111,11 @@ foxogram::MemberPtr foxogram::Channel::fetchMember(long long id) {
     return member;
 }
 
+foxogram::MemberPtr foxogram::Channel::getMember(long long id) {
+    auto it = members.find(id);
+    return (it != members.end()) ? it->second : nullptr;
+}
+
 foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const std::list<std::string>& attachments) {
     const auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id),
         nlohmann::json({{"content", content}, {attachments, attachments}}), token));

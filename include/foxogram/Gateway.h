@@ -13,17 +13,28 @@
 #endif
 
 namespace foxogram {
-
+    namespace events {
+        class Hello;
+        class Pong;
+    }
     class LIBFOXOGRAM_EXPORT Gateway {
     protected:
+        std::thread pingThread;
+        friend events::Hello;
+        friend events::Pong;
         class Me* me;
-        int heartbeatInterval = 10;
+        int heartbeatInterval;
         static inline std::string wsUrl = FOXOGRAM_BASE_WEBSOCKET_URL;
         ix::WebSocket ws;
+        std::mutex mtx;
+        std::condition_variable cv;
+        std::atomic<bool> running = true;
     public:
         explicit Gateway(Me* me, int heartbeatInterval = 10);
-        void send(nlohmann::json data);
+        void send(const nlohmann::json& data);
         void close();
+        void ping(int interval);
+        ~Gateway();
     };
 
 }

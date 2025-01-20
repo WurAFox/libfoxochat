@@ -32,7 +32,7 @@ namespace foxogram {
 
         bool leave();
 
-        void edit(const std::string& displayName, const std::string& name, const std::string& icon);
+        void edit(const std::string& displayName = "", const std::string& name = "", const std::string& icon = "");
 
         bool deleteChannel();
 
@@ -55,6 +55,8 @@ namespace foxogram {
         std::list<MemberPtr> fetchMembers();
 
         MemberPtr fetchMember(long long id);
+
+        MemberPtr getMember(long long id);
     };
     using ChannelPtr = std::shared_ptr<Channel>;
 }

@@ -40,21 +40,22 @@ foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), he
                 }
             }
 
-        }
-        else if (msg->type == ix::WebSocketMessageType::Error) {
-            foxogram::Logger::logDebug(msg->errorInfo.reason);
+        } else if (msg->type == ix::WebSocketMessageType::Error) {
+            foxogram::Logger::logError(msg->errorInfo.reason);
             throw foxogram::WebSocketException("Error while connecting to websocket: " + msg->errorInfo.reason);
         } else if (msg->type == ix::WebSocketMessageType::Open) {
-            send(nlohmann::json::parse(R"({"op": 0, "d": {
+            send(nlohmann::json::parse(R"({"op": 1, "d": {
                     "token": ")" + *this->me->token + R"("
                 }
             })"));
+        } else if (msg->type == ix::WebSocketMessageType::Close) {
+            Logger::logWarning("Closing websocket with reason: " + msg->closeInfo.reason);
         }
     });
     ws.start();
 }
 
-void foxogram::Gateway::send(nlohmann::json data) {
+void foxogram::Gateway::send(const nlohmann::json& data) {
     if (ws.getReadyState() == ix::ReadyState::Open) {
         ws.send(to_string(data));
     }
@@ -68,4 +69,21 @@ void foxogram::Gateway::close() {
         this->ws.close();
         this->ws.stop();
     }
+}
+
+void foxogram::Gateway::ping(int interval) {
+    std::unique_lock<std::mutex> lock(mtx);
+
+    while (running) {
+        send(nlohmann::json{{"op", 3}});
+        if (cv.wait_for(lock, std::chrono::milliseconds(interval), [this](){ return !running; })) {
+            break;
+        }
+    }
+}
+
+foxogram::Gateway::~Gateway() {
+    running = false;
+        cv.notify_one();
+    pingThread.join();
 }

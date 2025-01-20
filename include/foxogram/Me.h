@@ -25,7 +25,9 @@ namespace foxogram {
         events::MemberAdd* MemberAdd = new events::MemberAdd();
         events::MemberRemove* MemberRemove = new events::MemberRemove();
         events::MemberUpdate* MemberUpdate = new events::MemberUpdate();
+        friend events::Hello;
         events::Hello* Hello = new events::Hello();
+        friend events::Pong;
         events::Pong* Pong = new events::Pong();
         std::map<std::string, events::Event*> eventMap {
                 {"MESSAGE_CREATE", MessageCreate},
@@ -41,7 +43,7 @@ namespace foxogram {
                 {"PONG", Pong}
         };
         std::string* token;
-        Gateway* gateway;
+        Gateway gateway;
         [[nodiscard]] User fetchMe(std::string* token);
     public:
         explicit Me(const std::string& token);

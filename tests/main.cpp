@@ -28,7 +28,7 @@ std::string generateRandomString(int length) {
 }
 
 TEST(add_test, Me) {
-    foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG   );
+    foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG);
     std::string username = generateRandomString(12);
     std::string email = username+"@foxogram.su";
     std::string password = generateRandomString(12);
