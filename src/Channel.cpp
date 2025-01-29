@@ -147,3 +147,15 @@ std::list<foxogram::MemberPtr> foxogram::Channel::getMembers() const {
 std::string foxogram::Channel::getOwnerName() const {
     return ownerName;
 }
+
+const long long int foxogram::Channel::getCreatedAt() const {
+    return createdAt;
+}
+
+const std::string &foxogram::Channel::getDisplayName() const {
+    return displayName;
+}
+
+const std::string &foxogram::Channel::getIcon() const {
+    return icon;
+}

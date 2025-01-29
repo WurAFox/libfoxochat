@@ -36,6 +36,12 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
+        [[nodiscard]] const long long int getCreatedAt() const;
+
+        [[nodiscard]] const std::string &getDisplayName() const;
+
+        [[nodiscard]] const std::string &getIcon() const;
+
         Channel(long long id, std::string name, std::string displayName, short type, std::string ownerName, long long createdAt, std::string icon);
 
         bool leave();

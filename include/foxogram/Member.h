@@ -24,6 +24,10 @@ namespace foxogram {
         std::string token;
 
     public:
+        long long int getChannelId() const;
+
+        const FlagsBase<MemberPermissions> &getPermissions() const;
+
         void addPermissions(MemberPermissions permission);
 
         void removePermissions(MemberPermissions permission);

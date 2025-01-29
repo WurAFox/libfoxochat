@@ -17,3 +17,11 @@ bool foxogram::Member::hasPermissions(const MemberPermissions permission) const 
 void foxogram::Member::removePermissions(const MemberPermissions permission) {
     permissions.removeFlag(permission);
 }
+
+long long int foxogram::Member::getChannelId() const {
+    return channelId;
+}
+
+const foxogram::FlagsBase<foxogram::MemberPermissions> &foxogram::Member::getPermissions() const {
+    return permissions;
+}

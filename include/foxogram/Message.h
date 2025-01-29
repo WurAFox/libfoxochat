@@ -35,6 +35,15 @@ namespace foxogram {
         void deleteMessage() const;
 
         void edit() const;
+        [[nodiscard]] long long int getChannelId() const;
+
+        [[nodiscard]] long long int getAuthorId() const;
+
+        [[nodiscard]] long long int getCreatedAt() const;
+
+        [[nodiscard]] const std::list<std::string> &getAttachments() const;
+
+        [[nodiscard]] const std::string &getContent() const;
 
     };
     using MessagePtr = std::shared_ptr<Message>;

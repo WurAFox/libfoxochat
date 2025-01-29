@@ -26,3 +26,23 @@ void foxogram::Message::deleteMessage() const {
 void foxogram::Message::edit() const {
     handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
 }
+
+long long int foxogram::Message::getChannelId() const {
+    return channelId;
+}
+
+long long int foxogram::Message::getAuthorId() const {
+    return authorId;
+}
+
+long long int foxogram::Message::getCreatedAt() const {
+    return timestamp;
+}
+
+const std::list<std::string> &foxogram::Message::getAttachments() const {
+    return attachments;
+}
+
+const std::string &foxogram::Message::getContent() const {
+    return content;
+}

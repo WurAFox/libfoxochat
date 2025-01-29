@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 project(libfoxogram
-        VERSION 1.0.0
+        VERSION 0.2.0
         DESCRIPTION "Library for foxogram"
         LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -26,7 +26,6 @@ set_if_undefined(LIBFOXOGRAM_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/lib
         "Install path for libfoxogram package-related CMake files")
 option(LIBFOXOGRAM_USE_DEV "Use foxogram dev api" OFF)
 set(LIBFOXOGRAM_BASE_URL "foxogram.su")
-set(LIBFOXOGRAM_API_VERSION "v1")
 
 if(LIBFOXOGRAM_USE_DEV)
     set(LIBFOXOGRAM_BASE_URL "dev.${FOXOGRAM_BASE_URL}")
@@ -46,7 +45,7 @@ set_if_undefined(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 add_library(libfoxogram)
 add_library(libfoxogram::libfoxogram ALIAS libfoxogram)
-target_compile_definitions(libfoxogram PUBLIC FOXOGRAM_URL="${LIBFOXOGRAM_BASE_URL}" FOXOGRAM_API_VERSION="/${LIBFOXOGRAM_API_VERSION}")
+target_compile_definitions(libfoxogram PUBLIC FOXOGRAM_URL="${LIBFOXOGRAM_BASE_URL}")
 
 include(FetchContent)
 FetchContent_Declare(ixwebsocket GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git

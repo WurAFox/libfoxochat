@@ -17,6 +17,8 @@ namespace foxogram {
 
         void handleError(const nlohmann::json &response) const override;
     public:
+        const std::string &getDisplayName() const;
+
         User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");
 
         User(const User &) = default;
