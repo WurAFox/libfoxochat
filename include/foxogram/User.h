@@ -14,9 +14,10 @@ namespace foxogram {
         int type{};
         long long createdAt{};
         std::string displayName;
-
         void handleError(const nlohmann::json &response) const override;
     public:
+        [[nodiscard]] static std::shared_ptr<User> fromJSON(nlohmann::json j);
+
         const std::string &getDisplayName() const;
 
         User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");

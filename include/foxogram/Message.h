@@ -29,6 +29,8 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
+        [[nodiscard]] static std::shared_ptr<Message> fromJSON(nlohmann::json j);
+
         Message(long long id, long long int channelId, long long authorId, long long timestamp,
                 std::string content, std::list<std::string> attachments);
 

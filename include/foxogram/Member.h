@@ -24,9 +24,11 @@ namespace foxogram {
         std::string token;
 
     public:
-        long long int getChannelId() const;
+        [[nodiscard]] static std::shared_ptr<Member> fromJSON(nlohmann::json j);
 
-        const FlagsBase<MemberPermissions> &getPermissions() const;
+        [[nodiscard]] long long int getChannelId() const;
+
+        [[nodiscard]] const FlagsBase<MemberPermissions> &getPermissions() const;
 
         void addPermissions(MemberPermissions permission);
 

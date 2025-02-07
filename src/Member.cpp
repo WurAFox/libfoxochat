@@ -25,3 +25,11 @@ long long int foxogram::Member::getChannelId() const {
 const foxogram::FlagsBase<foxogram::MemberPermissions> &foxogram::Member::getPermissions() const {
     return permissions;
 }
+
+std::shared_ptr<foxogram::Member> foxogram::Member::fromJSON(nlohmann::json j) {
+    return std::make_shared<foxogram::Member>(j.at("id").get<long long>(),
+        j.at("channel").at("id").get<long long>(),j.at("permission").get<long long>(),
+        j.at("user").at("username").get<std::string>(),j.at("user").at("avatar").get<std::string>(),
+        j.at("user").at("flags").get<long long>(),j.at("user").at("type").get<int>(),
+        j.at("user").at("created_at").get<long long>());
+}

@@ -58,9 +58,7 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages() {
     handleError(j);
     for (auto& message : j) {
         messages.insert_or_assign(message.at("id").get<long long>(),
-            std::make_shared<foxogram::Message>(message.at("id").get<long long>(), message.at("channel").get<long long>(),
-            message.at("author").at("id").get<long long>(), message.at("created_at").get<long long>(),
-            message.at("content").get<std::string>(), message.at("attachments").get<std::list<std::string>>()));
+            foxogram::Message::fromJSON(message));
     }
 
     std::list<foxogram::MessagePtr> messagesList;
@@ -75,9 +73,7 @@ foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
         Payload("GET", "/channels/" + std::to_string(this->id) + "/" + std::to_string(id), token));
 
     handleError(j);
-    auto msg = std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").at("id").get<long long>(),
-            j.at("author").at("id").get<long long>(), j.at("created_at").get<long long>(),
-            j.at("content").get<std::string>(), j.at("attachments").get<std::list<std::string>>());
+    auto msg = foxogram::Message::fromJSON(j);
     messages.insert_or_assign(j.at("id").get<long long>(), msg);
     return msg;
 }
@@ -87,10 +83,7 @@ std::list<foxogram::MemberPtr> foxogram::Channel::fetchMembers() {
     handleError(j);
     members.clear();
     for (auto member : j) {
-        members.insert_or_assign(member.at("id").get<long long>(), std::make_shared<foxogram::Member>(member.at("id").get<long long>(), id,
-                 member.at("permission").get<long long>(), member.at("user").at("username").get<std::string>(),
-                 member.at("user").at("avatar").get<std::string>(),member.at("user").at("flags").get<long long>(),
-                 member.at("user").at("type").get<int>(),member.at("user").at("created_at").get<long long>()));
+        members.insert_or_assign(member.at("id").get<long long>(), foxogram::Member::fromJSON(member));
     }
     std::list<foxogram::MemberPtr> membersList;
     for(auto const& p: members) {
@@ -103,10 +96,7 @@ foxogram::MemberPtr foxogram::Channel::fetchMember(long long id) {
     auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(this->id)
     + "/members/" + std::to_string(id), token));
     handleError(j);
-    auto member = std::make_shared<foxogram::Member>(j.at("id").get<long long>(), id,
-        j.at("permission").get<long long>(), j.at("user").at("username").get<std::string>(),
-        j.at("user").at("avatar").get<std::string>(),j.at("user").at("flags").get<long long>(),
-        j.at("user").at("type").get<int>(),j.at("user").at("created_at").get<long long>());
+    auto member = foxogram::Member::fromJSON(j);
     members.insert_or_assign(j.at("id").get<long long>(), member);
     return member;
 }
@@ -121,9 +111,7 @@ foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const
         nlohmann::json({{"content", content}, {attachments, attachments}}), token));
 
     handleError(j);
-    auto msg = std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").at("id").get<long long>(),
-        j.at("author").at("id").get<long long>(), j.at("created_at").get<long long>(),
-        j.at("content").get<std::string>(), j.at("attachments").get<std::list<std::string>>());
+    auto msg = foxogram::Message::fromJSON(j);
     messages.insert_or_assign(j.at("id").get<long long>(), msg);
     return msg;
 }
@@ -148,7 +136,7 @@ std::string foxogram::Channel::getOwnerName() const {
     return ownerName;
 }
 
-const long long int foxogram::Channel::getCreatedAt() const {
+long long foxogram::Channel::getCreatedAt() const {
     return createdAt;
 }
 
@@ -158,4 +146,10 @@ const std::string &foxogram::Channel::getDisplayName() const {
 
 const std::string &foxogram::Channel::getIcon() const {
     return icon;
+}
+
+std::shared_ptr<foxogram::Channel> foxogram::Channel::fromJSON(nlohmann::json j) {
+    return std::make_shared<Channel>(j.at("id").get<long long>(),
+        j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
+        j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
 }

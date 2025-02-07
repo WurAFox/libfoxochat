@@ -3,8 +3,6 @@
 #include <foxogram/exceptions.h>
 #include <foxogram/Logger.h>
 
-#include <utility>
-
 foxogram::Me::Me(const std::string& _token) : User(fetchMe(token = new std::string(_token))), gateway(this) {
 }
 
@@ -40,11 +38,7 @@ foxogram::UserPtr foxogram::Me::fetchUser(const std::string& username) {
                                          std::string("/users/") +username, *token));
     handleError(j);
 
-    auto user = std::make_shared<User>(
-            j.at("id").get<long long>(), j.at("created_at").get<long long>(), j.at("username").get<std::string>(),
-            j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
-            j.at("type").get<int>(), j.at("created_at").is_string() ? j.at("created_at").get<std::string>() : ""
-    );
+    auto user = User::fromJSON(j);
     return user;
 }
 
@@ -129,9 +123,7 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
 
     handleError(j);
 
-    auto channel = std::make_shared<Channel>(j.at("id").get<long long>(),
-        j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
-        j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
+    auto channel = Channel::fromJSON(j);
     channel->token = *token;
     return channel;
 }
@@ -141,18 +133,14 @@ foxogram::ChannelPtr foxogram::Me::joinChannel(std::string name) {
 
     handleError(j);
 
-    auto channel = std::make_shared<Channel>(j.at("id").get<long long>(),
-            j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
-            j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
+    auto channel = Channel::fromJSON(j);
     channel->token = *token;
     return channel;
 }
 
 foxogram::ChannelPtr foxogram::Me::fetchChannel(std::string name) {
     auto j = HttpClient::request(Payload("GET", "/channels/" + name, *token));
-    auto channel = std::make_shared<Channel>(j.at("id").get<long long>(),
-            j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
-            j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
+    auto channel = Channel::fromJSON(j);
     handleError(j);
 
     channel->token = *token;

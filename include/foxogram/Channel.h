@@ -15,6 +15,7 @@ namespace foxogram {
         class ChannelUpdate;
         class ChannelDelete;
     }
+
     struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
         friend class Me;
         friend events::ChannelCreate;
@@ -36,7 +37,9 @@ namespace foxogram {
         void handleError(const nlohmann::json &response) const override;
 
     public:
-        [[nodiscard]] const long long int getCreatedAt() const;
+        [[nodiscard]] static std::shared_ptr<Channel> fromJSON(nlohmann::json j);
+
+        [[nodiscard]] long long int getCreatedAt() const;
 
         [[nodiscard]] const std::string &getDisplayName() const;
 
