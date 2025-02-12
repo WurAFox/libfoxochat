@@ -6,6 +6,7 @@
 #include <string>
 
 namespace foxogram {
+    class Me;
     struct LIBFOXOGRAM_EXPORT User : BaseEntity {
     protected:
         std::string username;
@@ -18,7 +19,7 @@ namespace foxogram {
     public:
         [[nodiscard]] static std::shared_ptr<User> fromJSON(nlohmann::json j);
 
-        const std::string &getDisplayName() const;
+        [[nodiscard]] const std::string &getDisplayName() const;
 
         User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");
 

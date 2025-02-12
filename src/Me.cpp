@@ -33,12 +33,13 @@ void foxogram::Me::_handleError(const nlohmann::json &response) {
     }
 }
 
-foxogram::UserPtr foxogram::Me::fetchUser(const std::string& username) {
+foxogram::UserPtr foxogram::Me::fetchUser(long long int id) {
     auto j = HttpClient::request(Payload("GET",
-                                         std::string("/users/") +username, *token));
+                                         std::string("/users/") + std::to_string(id), *token));
     handleError(j);
 
     auto user = User::fromJSON(j);
+    userCache->store(user);
     return user;
 }
 
@@ -124,25 +125,27 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
     handleError(j);
 
     auto channel = Channel::fromJSON(j);
+    channelCache->store(channel);
     channel->token = *token;
     return channel;
 }
 
-foxogram::ChannelPtr foxogram::Me::joinChannel(std::string name) {
-    auto j = HttpClient::request(Payload("POST", "/channels/" + name + "/join", *token));
+foxogram::ChannelPtr foxogram::Me::joinChannel(long long int id) {
+    auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/join", *token));
 
     handleError(j);
 
     auto channel = Channel::fromJSON(j);
+    channelCache->store(channel);
     channel->token = *token;
     return channel;
 }
 
-foxogram::ChannelPtr foxogram::Me::fetchChannel(std::string name) {
-    auto j = HttpClient::request(Payload("GET", "/channels/" + name, *token));
-    auto channel = Channel::fromJSON(j);
+foxogram::ChannelPtr foxogram::Me::fetchChannel(long long int id) {
+    auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id), *token));
     handleError(j);
-
+    auto channel = Channel::fromJSON(j);
+    channelCache->store(channel);
     channel->token = *token;
     return channel;
 }
@@ -162,4 +165,12 @@ foxogram::Me::~Me() {
     delete MemberUpdate;
     delete Hello;
     delete Pong;
+}
+
+foxogram::ChannelPtr foxogram::Me::getChannel(long long id) {
+    return channelCache->get(id);
+}
+
+foxogram::UserPtr foxogram::Me::getUser(long long id) {
+    return userCache->get(id);
 }

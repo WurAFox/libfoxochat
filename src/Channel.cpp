@@ -46,7 +46,7 @@ bool foxogram::Channel::leave() {
 
 std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
     std::list<foxogram::MessagePtr> messagesList;
-    for (auto& message : messages) {
+    for (auto& message : messages->getMap()) {
         messagesList.push_back(message.second);
     }
 
@@ -57,12 +57,14 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages() {
     const auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id), token));
     handleError(j);
     for (auto& message : j) {
-        messages.insert_or_assign(message.at("id").get<long long>(),
-            foxogram::Message::fromJSON(message));
+        auto msg = foxogram::Message::fromJSON(message);
+        msg->token = token;
+        msg->memberCache = members;
+        messages->store(foxogram::Message::fromJSON(message));
     }
 
     std::list<foxogram::MessagePtr> messagesList;
-    for (auto& message : messages) {
+    for (auto& message : messages->getMap()) {
         messagesList.push_back(message.second);
     }
     return messagesList;
@@ -74,19 +76,20 @@ foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
 
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
-    messages.insert_or_assign(j.at("id").get<long long>(), msg);
+    msg->token = token;
+    msg->memberCache = members;
+    messages->store(msg);
     return msg;
 }
 
 std::list<foxogram::MemberPtr> foxogram::Channel::fetchMembers() {
     auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id) + "/members", token));
     handleError(j);
-    members.clear();
-    for (auto member : j) {
-        members.insert_or_assign(member.at("id").get<long long>(), foxogram::Member::fromJSON(member));
+    for (const auto& member : j) {
+        members->store(foxogram::Member::fromJSON(member));
     }
     std::list<foxogram::MemberPtr> membersList;
-    for(auto const& p: members) {
+    for(auto const& p : members->getMap()) {
         membersList.push_back(p.second);
     }
     return membersList;
@@ -97,13 +100,12 @@ foxogram::MemberPtr foxogram::Channel::fetchMember(long long id) {
     + "/members/" + std::to_string(id), token));
     handleError(j);
     auto member = foxogram::Member::fromJSON(j);
-    members.insert_or_assign(j.at("id").get<long long>(), member);
+    members->store(member);
     return member;
 }
 
 foxogram::MemberPtr foxogram::Channel::getMember(long long id) {
-    auto it = members.find(id);
-    return (it != members.end()) ? it->second : nullptr;
+    return members->get(id);
 }
 
 foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const std::list<std::string>& attachments) {
@@ -112,7 +114,9 @@ foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const
 
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
-    messages.insert_or_assign(j.at("id").get<long long>(), msg);
+    msg->token = token;
+    msg->memberCache = members;
+    messages->store(msg);
     return msg;
 }
 
@@ -126,7 +130,7 @@ int foxogram::Channel::getType() const {
 
 std::list<foxogram::MemberPtr> foxogram::Channel::getMembers() const {
     std::list<foxogram::MemberPtr> membersList;
-    for(auto const& p: members) {
+    for(auto const& p : members->getMap()) {
         membersList.push_back(p.second);
     }
     return membersList;

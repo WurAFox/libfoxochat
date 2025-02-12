@@ -14,8 +14,6 @@ namespace foxogram {
         std::map<long long, std::shared_ptr<T>> cacheMap;
     public:
         Cache() = default;
-        std::shared_ptr<T> get(std::string name) {
-        }
         std::shared_ptr<T> get(long long id) {
             auto it = cacheMap.find(id);
             return (it != cacheMap.end()) ? it->second : nullptr;
@@ -30,6 +28,9 @@ namespace foxogram {
                     it->second = obj;
                 }
             }
+        }
+        const std::map<long long, std::shared_ptr<T>>& getMap() const {
+            return cacheMap;
         }
     };
 

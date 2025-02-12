@@ -1,6 +1,7 @@
 #pragma once
 
 #include <foxogram/BaseEntity.h>
+#include <foxogram/Cache.h>
 #include <string>
 #include <list>
 
@@ -11,6 +12,8 @@ namespace foxogram {
         class MessageUpdate;
         class MessageDelete;
     }
+    class Member;
+    class Me;
     struct LIBFOXOGRAM_EXPORT Message : BaseEntity {
         friend events::MessageCreate;
         friend events::MessageUpdate;
@@ -23,8 +26,10 @@ namespace foxogram {
         std::string content;
 
     protected:
+        std::shared_ptr<Cache<Member>> memberCache;
         std::string token;
         friend class Me;
+        friend class Channel;
 
         void handleError(const nlohmann::json &response) const override;
 
@@ -46,6 +51,8 @@ namespace foxogram {
         [[nodiscard]] const std::list<std::string> &getAttachments() const;
 
         [[nodiscard]] const std::string &getContent() const;
+
+        [[nodiscard]] std::shared_ptr<Member> getAuthor() const;
 
     };
     using MessagePtr = std::shared_ptr<Message>;

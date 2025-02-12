@@ -3,6 +3,7 @@
 #include <foxogram/export.h>
 #include <foxogram/User.h>
 #include <foxogram/Enums.h>
+#include <foxogram/Cache.h>
 
 namespace foxogram {
     namespace events {
@@ -10,6 +11,8 @@ namespace foxogram {
         class MemberUpdate;
         class MemberRemove;
     }
+    class Me;
+    class Channel;
     struct LIBFOXOGRAM_EXPORT Member : User {
         friend class Me;
         friend events::MemberAdd;
