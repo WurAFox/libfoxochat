@@ -13,7 +13,7 @@ namespace foxogram {
     }
     class Me;
     class Channel;
-    struct LIBFOXOGRAM_EXPORT Member : User {
+    struct LIBFOXOGRAM_EXPORT Member : public User {
         friend class Me;
         friend events::MemberAdd;
         friend events::MemberUpdate;
