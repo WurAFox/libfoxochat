@@ -39,8 +39,7 @@ foxogram::UserPtr foxogram::Me::fetchUser(long long int id) {
     handleError(j);
 
     auto user = User::fromJSON(j);
-    userCache->store(user);
-    return user;
+    return userCache->store(user);
 }
 
 std::string foxogram::Me::login(std::string email, std::string password) {
@@ -125,9 +124,8 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
     handleError(j);
 
     auto channel = Channel::fromJSON(j);
-    channelCache->store(channel);
     channel->token = *token;
-    return channel;
+    return channelCache->store(channel);
 }
 
 foxogram::ChannelPtr foxogram::Me::joinChannel(long long int id) {
@@ -136,18 +134,16 @@ foxogram::ChannelPtr foxogram::Me::joinChannel(long long int id) {
     handleError(j);
 
     auto channel = Channel::fromJSON(j);
-    channelCache->store(channel);
     channel->token = *token;
-    return channel;
+    return channelCache->store(channel);
 }
 
 foxogram::ChannelPtr foxogram::Me::fetchChannel(long long int id) {
     auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id), *token));
     handleError(j);
     auto channel = Channel::fromJSON(j);
-    channelCache->store(channel);
     channel->token = *token;
-    return channel;
+    return channelCache->store(channel);
 }
 
 

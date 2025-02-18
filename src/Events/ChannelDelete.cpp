@@ -7,7 +7,8 @@ void foxogram::events::ChannelDelete::handle(foxogram::Me *me, nlohmann::json j,
     e.rawEvent = raw;
     auto channel = foxogram::Channel::fromJSON(j);
     channel->token = *me->token;
-    e.channel = channel;
+    e.channel = me->channelCache->get(channel->getId());
+    me->channelCache->Delete(channel->getId());
     if (callback != nullptr) {
         callback(e);
     }

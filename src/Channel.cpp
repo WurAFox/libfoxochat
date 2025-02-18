@@ -59,8 +59,7 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages() {
     for (auto& message : j) {
         auto msg = foxogram::Message::fromJSON(message);
         msg->token = token;
-        msg->memberCache = members;
-        messages->store(foxogram::Message::fromJSON(message));
+        messages->store(msg);
     }
 
     std::list<foxogram::MessagePtr> messagesList;
@@ -77,9 +76,7 @@ foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
     msg->token = token;
-    msg->memberCache = members;
-    messages->store(msg);
-    return msg;
+    return messages->store(msg);
 }
 
 std::list<foxogram::MemberPtr> foxogram::Channel::fetchMembers() {
@@ -100,8 +97,7 @@ foxogram::MemberPtr foxogram::Channel::fetchMember(long long id) {
     + "/members/" + std::to_string(id), token));
     handleError(j);
     auto member = foxogram::Member::fromJSON(j);
-    members->store(member);
-    return member;
+    return members->store(member);;
 }
 
 foxogram::MemberPtr foxogram::Channel::getMember(long long id) {
@@ -115,9 +111,7 @@ foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
     msg->token = token;
-    msg->memberCache = members;
-    messages->store(msg);
-    return msg;
+    return messages->store(msg);
 }
 
 std::string foxogram::Channel::getName() const {

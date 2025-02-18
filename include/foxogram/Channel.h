@@ -14,6 +14,12 @@ namespace foxogram {
         class ChannelCreate;
         class ChannelUpdate;
         class ChannelDelete;
+        class MessageUpdate;
+        class MessageCreate;
+        class MessageDelete;
+        class MemberAdd;
+        class MemberRemove;
+        class MemberUpdate;
     }
     class Me;
     struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
@@ -21,6 +27,12 @@ namespace foxogram {
         friend events::ChannelCreate;
         friend events::ChannelUpdate;
         friend events::ChannelDelete;
+        friend events::MessageUpdate;
+        friend events::MessageCreate;
+        friend events::MessageDelete;
+        friend events::MemberAdd;
+        friend events::MemberRemove;
+        friend events::MemberUpdate;
     private:
         std::string name;
         const int type;
@@ -76,5 +88,4 @@ namespace foxogram {
 
         MemberPtr getMember(long long id);
     };
-    using ChannelPtr = std::shared_ptr<Channel>;
 }

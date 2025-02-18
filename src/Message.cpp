@@ -53,7 +53,3 @@ std::shared_ptr<foxogram::Message> foxogram::Message::fromJSON(nlohmann::json j)
         j.at("author").at("id").get<long long>(), j.at("created_at").get<long long>(),
         j.at("content").get<std::string>(), j.at("attachments").get<std::list<std::string>>());
 }
-
-std::shared_ptr<foxogram::Member> foxogram::Message::getAuthor() const {
-    return (memberCache != nullptr) ? memberCache->get(authorId) : nullptr;
-}

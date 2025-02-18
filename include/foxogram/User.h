@@ -3,6 +3,7 @@
 #include <foxogram/export.h>
 #include <foxogram/Enums.h>
 #include <foxogram/BaseEntity.h>
+#include <foxogram/Cache.h>
 #include <string>
 
 namespace foxogram {
@@ -44,5 +45,4 @@ namespace foxogram {
         [[nodiscard]] long long getCreatedAt() const;
 
     };
-    using UserPtr = std::shared_ptr<User>;
 }

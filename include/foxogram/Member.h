@@ -44,5 +44,4 @@ namespace foxogram {
 
     };
 
-    using MemberPtr = std::shared_ptr<Member>;
 }

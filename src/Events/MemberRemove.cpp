@@ -7,7 +7,14 @@ void foxogram::events::MemberRemove::handle(foxogram::Me *me, nlohmann::json j, 
     e.rawEvent = raw;
     auto member = foxogram::Member::fromJSON(j);
     member->token = *me->token;
-    e.member = member;
+    auto channel = me->getChannel(j.at("channel").at("id").get<long long>());
+    if (!channel) {
+        auto channelPtr = foxogram::Channel::fromJSON(j.at("channel"));
+        channelPtr->token = *me->token;
+        me->channelCache->store(channelPtr);
+    }
+
+    e.member = channel->members->get(member->id);
     if (callback != nullptr) {
         callback(e);
     }
