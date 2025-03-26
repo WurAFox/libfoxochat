@@ -137,7 +137,7 @@ namespace foxogram {
         return ptr->getContent();
     }
 
-    std::shared_ptr<Member> Proxy<struct Message>::getAuthor() const {
+    std::shared_ptr<Proxy<Member>> Proxy<struct Message>::getAuthor() const {
         return ptr->getAuthor();
     }
 

@@ -36,6 +36,12 @@ long long int foxogram::Message::getAuthorId() const {
     return authorId;
 }
 
+std::shared_ptr<foxogram::Proxy<foxogram::Member>> foxogram::Message::getAuthor() const
+{
+    return author;
+}
+
+
 long long int foxogram::Message::getCreatedAt() const {
     return timestamp;
 }

@@ -144,6 +144,6 @@ namespace foxogram {
 
         [[nodiscard]] const std::string &getContent() const;
 
-        [[nodiscard]] std::shared_ptr<Member> getAuthor() const;
+        [[nodiscard]] std::shared_ptr<Proxy<Member>> getAuthor() const;
     };
 }
