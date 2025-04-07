@@ -109,6 +109,11 @@ namespace foxogram {
         return ptr->getChannelId();
     }
 
+    long long int Proxy<struct Message>::getCreatedAt() const {
+        return ptr->getCreatedAt();
+    }
+
+
     const FlagsBase<MemberPermissions> &Proxy<struct Member>::getPermissions() const {
         return ptr->getPermissions();
     }

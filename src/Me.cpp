@@ -118,11 +118,9 @@ foxogram::User foxogram::Me::fetchMe() const {
 }
 
 foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
-    auto j = HttpClient::request(Payload("POST", "/channels/create",
+    auto j = HttpClient::request(Payload("POST", "/channels/",
                                          nlohmann::json({{"name", name}, {"type", type}}), *token));
-
     handleError(j);
-
     auto channel = Channel::fromJSON(j);
     channel->token = *token;
     return channelCache->store(channel);

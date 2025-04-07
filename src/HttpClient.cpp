@@ -46,8 +46,8 @@ namespace foxogram {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
         std::string strBody;
-        for (const auto& pair : body.get<std::map<std::string, std::string>>()) {
-            strBody += pair.first + "=" + pair.second + "+";
+        for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {
+            strBody += pair.first + "=" + to_string(pair.second) + "+";
         }
         this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
@@ -60,8 +60,8 @@ namespace foxogram {
         this->url = foxogram::Payload::baseUrl + path;
         this->headers.merge(headers);
         std::string strBody;
-        for (const auto& pair : body.get<std::map<std::string, std::string>>()) {
-            strBody += pair.first + "=" + pair.second + "+";
+        for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {
+            strBody += pair.first + "=" + to_string(pair.second) + "+";
         }
         this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
@@ -82,8 +82,9 @@ namespace foxogram {
         ix::HttpRequestArgsPtr args = httpClient.createRequest();
         args->extraHeaders = payload.getHeaders();
         ix::HttpResponsePtr r;
-        Logger::logDebug("Performing " + payload.getMethod() + " request to " + payload.getUrl() + " with body: " + to_string(payload.getBodyJson()));
-        r = httpClient.request(payload.getUrl(), payload.getMethod(), to_string(payload.getBodyJson()), args);
+        auto body = (payload.getMethod() == "GET") ? payload.getBody() : to_string(payload.getBodyJson());\
+        Logger::logDebug("Performing " + payload.getMethod() + " request to " + payload.getUrl() + " with body: " + body);
+        r = httpClient.request(payload.getUrl(), payload.getMethod(), body, args);
         if (!r->errorMsg.empty()) {
             throw HttpException(r->errorMsg);
         }
