@@ -11,11 +11,11 @@ foxogram::Message::Message(long long int id, long long int channelId, long long 
 
 void foxogram::Message::handleError(const nlohmann::json &response) const {
     if (!response.value("ok", true)) {
-        switch (response.at("code").get<int>()) {
+        switch (response.value<int>("code", 0)) {
             case(301): throw UserUnauthorizatedException();
             case(302): throw UserEmailNotVerfiedException();
             case(403): throw MissingPermissionException();
-            default: throw HttpException(response.at("message").get<std::string>());
+            default: throw HttpException(response.value<std::string>("message", ""));
         }
     }
 }
@@ -55,7 +55,7 @@ const std::string &foxogram::Message::getContent() const {
 }
 
 std::shared_ptr<foxogram::Message> foxogram::Message::fromJSON(nlohmann::json j) {
-    return std::make_shared<foxogram::Message>(j.at("id").get<long long>(), j.at("channel").at("id").get<long long>(),
-        j.at("author").at("id").get<long long>(), j.at("created_at").get<long long>(),
-        j.at("content").get<std::string>(), j.at("attachments").get<std::list<std::string>>());
+    return std::make_shared<foxogram::Message>(j.value<long long>("id", 0), j.at("channel").value<long long>("id", 0),
+        j.at("author").value<long long>("id", 0), j.value<long long>("created_at", 0),
+        j.value<std::string>("content", ""), j.value<std::list<std::string>>("attachments", {}));
 }

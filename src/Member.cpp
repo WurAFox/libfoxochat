@@ -27,9 +27,9 @@ const foxogram::FlagsBase<foxogram::MemberPermissions> &foxogram::Member::getPer
 }
 
 std::shared_ptr<foxogram::Member> foxogram::Member::fromJSON(nlohmann::json j) {
-    return std::make_shared<foxogram::Member>(j.at("id").get<long long>(),
-        j.at("channel").at("id").get<long long>(),j.at("permission").get<long long>(),
-        j.at("user").at("username").get<std::string>(),j.at("user").at("avatar").get<std::string>(),
-        j.at("user").at("flags").get<long long>(),j.at("user").at("type").get<int>(),
-        j.at("user").at("created_at").get<long long>());
+    return std::make_shared<foxogram::Member>(j.value<long long>("id", 0),
+        j.at("channel").value<long long>("id", 0),j.value<long long>("permission", 0),
+        j.at("user").value<std::string>("username", ""),j.at("user").value<std::string>("avatar", ""),
+        j.at("user").value<long long>("flags", 0),j.at("user").value<int>("type", 0),
+        j.at("user").value<long long>("created_at", 0));
 }

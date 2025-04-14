@@ -21,14 +21,14 @@ void foxogram::Me::handleError(const nlohmann::json &response) const {
 
 void foxogram::Me::_handleError(const nlohmann::json &response) {
     if (!response.value("ok", true)) {
-        switch (response.at("code").get<int>()) {
+        switch (response.value<int>("code", 0)) {
             case 301: throw UserUnauthorizatedException();
             case 302: throw UserEmailNotVerfiedException();
             case 303: throw UserWithThisEmailAlreadyExistException();
             case 304: throw UserCredentialsIsInvalidException();
             case 502: throw CodeExpiredException();
             case 501: throw CodeIsInvalidException();
-            default: throw HttpException(response.at("message").get<std::string>());
+            default: throw HttpException(response.value<std::string>("message", ""));
         }
     }
 }
@@ -50,7 +50,7 @@ std::string foxogram::Me::login(std::string email, std::string password) {
                                                                                })));
     _handleError(j);
     Logger::logInfo("Logged in as " + email);
-    return j.at("access_token").get<std::string>();
+    return j.value<std::string>("access_token", "");
 }
 
 std::string foxogram::Me::signup(std::string username, std::string email, std::string password) {
@@ -63,7 +63,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
     _handleError(j);
 
     Logger::logInfo("Signed up in as " + email);
-    return j.at("access_token").get<std::string>();
+    return j.value<std::string>("access_token", "");
 }
 
 bool foxogram::Me::verifyEmail(const std::string &code) const {
@@ -71,7 +71,7 @@ bool foxogram::Me::verifyEmail(const std::string &code) const {
 
     handleError(j);
 
-    return j.at("ok").get<bool>();
+    return j.value<bool>("ok", true);
 }
 
 bool foxogram::Me::resendEmail() const {
@@ -79,7 +79,7 @@ bool foxogram::Me::resendEmail() const {
 
     handleError(j);
 
-    return j.at("ok").get<bool>();
+    return j.value<bool>("ok", true);
 }
 
 bool foxogram::Me::deleteUser(std::string password) const {
@@ -87,23 +87,23 @@ bool foxogram::Me::deleteUser(std::string password) const {
                                                                                         {"password", password}
                                                                                 }), *token));
     handleError(j);
-    return j.at("ok").get<bool>();
+    return j.value<bool>("ok", true);
 }
 
 bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
     auto j = HttpClient::request(Payload("POST", "/users/@me/delete-confirm", nlohmann::json({{"code", code}}), *token));
     handleError(j);
 
-    return j.at("ok").get<bool>();
+    return j.value<bool>("ok", true);
 }
 
 foxogram::User foxogram::Me::fetchMe(std::string* token) {
     auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
     return {
-            j.at("id").get<long long>(), j.at("created_at").get<long long>(), j.at("username").get<std::string>(),
-            j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
-            j.at("type").get<int>(), j.at("created_at").is_string() ? j.at("created_at").get<std::string>() : ""
+            j.value<long long>("id", 0), j.value<long long>("created_at", 0), j.value<std::string>("username", ""),
+            j.at("avatar").is_string() ? j.value<std::string>("avatar", "") : "", j.value<long long>("flags", 0),
+            j.value<int>("type", 0), j.at("created_at").is_string() ? j.value<std::string>("created_at", "") : ""
     };
 }
 
@@ -111,9 +111,9 @@ foxogram::User foxogram::Me::fetchMe() const {
     auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
     return {
-            j.at("id").get<long long>(),j.at("created_at").get<long long>(), j.at("username").get<std::string>(),
-            j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
-            j.at("type").get<int>(), j.at("created_at").is_string() ? j.at("created_at").get<std::string>() : ""
+            j.value<long long>("id", 0),j.value<long long>("created_at", 0), j.value<std::string>("username", ""),
+            j.at("avatar").is_string() ? j.value<std::string>("avatar", "") : "", j.value<long long>("flags", 0),
+            j.value<int>("type", 0), j.at("created_at").is_string() ? j.value<std::string>("created_at", "") : ""
     };
 }
 

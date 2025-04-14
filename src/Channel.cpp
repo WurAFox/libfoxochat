@@ -10,12 +10,12 @@ foxogram::Channel::Channel(long long id, std::string name, std::string displayNa
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
     if (!response.value("ok", true)) {
-        switch (response.at("code").get<int>()) {
+        switch (response.value<int>("code", 0)) {
             case 301: throw UserUnauthorizatedException();
             case 302: throw UserEmailNotVerfiedException();
             case 401: throw MissingPermissionException();
             case 403: throw MemberInChannelNotFoundException();
-            default: throw HttpException(response.at("message").get<std::string>());
+            default: throw HttpException(response.value<std::string>("message", ""));
         }
     }
 }
@@ -23,7 +23,7 @@ void foxogram::Channel::handleError(const nlohmann::json &response) const {
 bool foxogram::Channel::deleteChannel() {
     auto j = HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(id), token));
     handleError(j);
-    return j.at("ok").get<bool>();
+    return j.value<bool>("ok", true);
 }
 
 void foxogram::Channel::edit(const std::string& displayName, const std::string& name, const std::string& icon) {
@@ -41,7 +41,7 @@ void foxogram::Channel::edit(const std::string& displayName, const std::string& 
 bool foxogram::Channel::leave() {
     auto j =HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(id) + "/member/@me", token));
     handleError(j);
-    return j.at("ok").get<bool>();
+    return j.value<bool>("ok", true);
 }
 
 std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
@@ -147,7 +147,7 @@ const std::string &foxogram::Channel::getIcon() const {
 }
 
 std::shared_ptr<foxogram::Channel> foxogram::Channel::fromJSON(nlohmann::json j) {
-    return std::make_shared<Channel>(j.at("id").get<long long>(),
-        j.at("name").get<std::string>(), j.at("display_name").get<std::string>(), j.at("type").get<int>(),
-        j.at("owner").get<std::string>(), j.at("created_at").get<long long>(), j.at("icon").get<std::string>());
+    return std::make_shared<Channel>(j.value<long long>("id", 0),
+        j.value<std::string>("name", ""), j.value<std::string>("display_name", ""), j.value<int>("type", 0),
+        j.value<std::string>("owner", ""), j.value<long long>("created_at", 0), j.value("icon", ""));
 }

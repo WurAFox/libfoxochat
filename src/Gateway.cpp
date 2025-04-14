@@ -10,13 +10,13 @@ foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), he
         if (msg->type == ix::WebSocketMessageType::Message) {
             foxogram::Logger::logDebug("Get message from gateway: " + msg->str);
             auto j = nlohmann::json::parse(msg->str);
-            switch (j.at("op").get<int>()) {
+            switch (j.value<int>("op", 0)) {
                 case 0: {
-                    auto it = this->me->eventMap.find(j.at("t").get<std::string>());
+                    auto it = this->me->eventMap.find(j.value<std::string>("t", ""));
                     if (it != this->me->eventMap.end()) {
                         it->second->handle(this->me, j, to_string(j));
                     } else {
-                        Logger::logWarning("Unknown dispatch event: " + j.at("t").get<std::string>());
+                        Logger::logWarning("Unknown dispatch event: " + j.value<std::string>("t", ""));
                     }
                     break;
                 }

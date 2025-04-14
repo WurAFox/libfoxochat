@@ -46,8 +46,8 @@ const std::string &foxogram::User::getDisplayName() const {
 
 std::shared_ptr<foxogram::User> foxogram::User::fromJSON(nlohmann::json j) {
     return std::make_shared<User>(
-            j.at("id").get<long long>(), j.at("created_at").get<long long>(), j.at("username").get<std::string>(),
-            j.at("avatar").is_string() ? j.at("avatar").get<std::string>() : "", j.at("flags").get<long long>(),
-            j.at("type").get<int>(), j.at("created_at").is_string() ? j.at("created_at").get<std::string>() : ""
+            j.value<long long>("id", 0), j.value<long long>("created_at", 0), j.value<std::string>("username", ""),
+            j.at("avatar").is_string() ? j.value<std::string>("avatar", "") : "", j.value<long long>("flags", 0),
+            j.value<int>("type", 0), j.at("created_at").is_string() ? j.value<std::string>("created_at", "") : ""
     );
 }
