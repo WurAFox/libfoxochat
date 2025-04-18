@@ -1,4 +1,5 @@
 #include <foxogram/Member.h>
+#include <foxogram/Utils.h>
 
 foxogram::Member::Member(long long id, long long int channelId, long long permissions, const std::string &username,
                          const std::string &avatar, long long flags, int type, long long createdAt)
@@ -27,9 +28,9 @@ const foxogram::FlagsBase<foxogram::MemberPermissions> &foxogram::Member::getPer
 }
 
 std::shared_ptr<foxogram::Member> foxogram::Member::fromJSON(nlohmann::json j) {
-    return std::make_shared<foxogram::Member>(j.value<long long>("id", 0),
-        j.at("channel").value<long long>("id", 0),j.value<long long>("permission", 0),
-        j.at("user").value<std::string>("username", ""),j.at("user").value<std::string>("avatar", ""),
-        j.at("user").value<long long>("flags", 0),j.at("user").value<int>("type", 0),
-        j.at("user").value<long long>("created_at", 0));
+    return std::make_shared<foxogram::Member>(Utils::value<long long>(j, "id", 0),
+        Utils::value<long long>(j.at("channel"), "id", 0),Utils::value<long long>(j, "permission", 0),
+        Utils::value<std::string>(j.at("user"), "username", ""),Utils::value<std::string>(j.at("user"), "avatar", ""),
+        Utils::value<long long>(j.at("user"), "flags", 0),Utils::value<int>(j.at("user"), "type", 0),
+        Utils::value<long long>(j.at("user"), "created_at", 0));
 }

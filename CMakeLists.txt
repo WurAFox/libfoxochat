@@ -65,6 +65,7 @@ endif()
 generate_export_header(libfoxogram EXPORT_FILE_NAME include/libfoxogram/${export_file_name})
 
 set(sources
+        include/foxogram/Utils.h
         include/foxogram/Cache.h
         include/foxogram/Logger.h
         include/nlohmann/json.hpp
@@ -82,6 +83,7 @@ set(sources
         include/foxogram/EventTypes.h
         include/foxogram/Events.h
         include/foxogram/Proxy.h
+        src/Utils.cpp
         src/Logger.cpp
         src/HttpClient.cpp
         src/User.cpp

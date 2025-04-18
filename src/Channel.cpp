@@ -1,21 +1,23 @@
 #include <foxogram/Channel.h>
 #include <foxogram/HttpClient.h>
 #include <foxogram/exceptions.h>
+#include <foxogram/Utils.h>
 #include <utility>
+#include <foxogram/Logger.h>
 
 foxogram::Channel::Channel(long long id, std::string name, std::string displayName, short type,
-                           std::string ownerName, long long createdAt, std::string icon) : name(std::move(name)), displayName(std::move(displayName)),
-                           type(type), ownerName(std::move(ownerName)), createdAt(createdAt), icon(std::move(icon)), BaseEntity(id) {
+                           std::string ownerName, long long createdAt, std::string icon) : BaseEntity(id), name(std::move(name)),
+                                                                                           type(type), ownerName(std::move(ownerName)), createdAt(createdAt), displayName(std::move(displayName)), icon(std::move(icon)) {
 }
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
     if (!response.value("ok", true)) {
-        switch (response.value<int>("code", 0)) {
+        switch (Utils::value<int>(response, "code", 0)) {
             case 301: throw UserUnauthorizatedException();
             case 302: throw UserEmailNotVerfiedException();
             case 401: throw MissingPermissionException();
             case 403: throw MemberInChannelNotFoundException();
-            default: throw HttpException(response.value<std::string>("message", ""));
+            default: throw HttpException(Utils::value<std::string>(response, "message", ""));
         }
     }
 }
@@ -23,7 +25,7 @@ void foxogram::Channel::handleError(const nlohmann::json &response) const {
 bool foxogram::Channel::deleteChannel() {
     auto j = HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(id), token));
     handleError(j);
-    return j.value<bool>("ok", true);
+    return Utils::value<bool>(j, "ok", true);
 }
 
 void foxogram::Channel::edit(const std::string& displayName, const std::string& name, const std::string& icon) {
@@ -41,7 +43,7 @@ void foxogram::Channel::edit(const std::string& displayName, const std::string& 
 bool foxogram::Channel::leave() {
     auto j =HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(id) + "/member/@me", token));
     handleError(j);
-    return j.value<bool>("ok", true);
+    return Utils::value<bool>(j, "ok", true);
 }
 
 std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
@@ -147,7 +149,9 @@ const std::string &foxogram::Channel::getIcon() const {
 }
 
 std::shared_ptr<foxogram::Channel> foxogram::Channel::fromJSON(nlohmann::json j) {
-    return std::make_shared<Channel>(j.value<long long>("id", 0),
-        j.value<std::string>("name", ""), j.value<std::string>("display_name", ""), j.value<int>("type", 0),
-        j.value<std::string>("owner", ""), j.value<long long>("created_at", 0), j.value("icon", ""));
+    return std::make_shared<Channel>(Utils::value<long long>(j, "id", 0),
+        Utils::value<std::string>(j, "name", ""),
+        Utils::value<std::string>(j, "display_name", ""), Utils::value<short>(j, "type", 0),
+        Utils::value<std::string>(j.at("owner"), "username", ""),
+        Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "icon", ""));
 }

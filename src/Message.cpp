@@ -2,6 +2,7 @@
 #include <foxogram/Member.h>
 #include <foxogram/exceptions.h>
 #include <foxogram/HttpClient.h>
+#include <foxogram/Utils.h>
 #include <utility>
 
 foxogram::Message::Message(long long int id, long long int channelId, long long int authorId,
@@ -11,11 +12,11 @@ foxogram::Message::Message(long long int id, long long int channelId, long long 
 
 void foxogram::Message::handleError(const nlohmann::json &response) const {
     if (!response.value("ok", true)) {
-        switch (response.value<int>("code", 0)) {
+        switch (Utils::value<int>(response, "code", 0)) {
             case(301): throw UserUnauthorizatedException();
             case(302): throw UserEmailNotVerfiedException();
             case(403): throw MissingPermissionException();
-            default: throw HttpException(response.value<std::string>("message", ""));
+            default: throw HttpException(Utils::value<std::string>(response, "message", ""));
         }
     }
 }
@@ -55,7 +56,7 @@ const std::string &foxogram::Message::getContent() const {
 }
 
 std::shared_ptr<foxogram::Message> foxogram::Message::fromJSON(nlohmann::json j) {
-    return std::make_shared<foxogram::Message>(j.value<long long>("id", 0), j.at("channel").value<long long>("id", 0),
-        j.at("author").value<long long>("id", 0), j.value<long long>("created_at", 0),
-        j.value<std::string>("content", ""), j.value<std::list<std::string>>("attachments", {}));
+    return std::make_shared<foxogram::Message>(Utils::value<long long>(j, "id", 0), Utils::value<long long>(j.at("channel"), "id", 0),
+        Utils::value<long long>(j.at("author"), "id", 0), Utils::value<long long>(j, "created_at", 0),
+        Utils::value<std::string>(j, "content", ""), Utils::value<std::list<std::string>>(j, "attachments", {}));
 }

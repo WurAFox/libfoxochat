@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <stdexcept>
 #include <foxogram/HttpClient.h>
 
@@ -16,11 +17,5 @@ namespace foxogram {
             virtual ~BaseEntity() = default;
 
             [[nodiscard]] long long getId() const { return id; }
-
-            virtual void validate() const {
-                if (id <= 0) {
-                    throw std::invalid_argument("Invalid entity ID");
-                }
-            }
     };
 }

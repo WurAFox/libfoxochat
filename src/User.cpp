@@ -1,4 +1,5 @@
 #include <foxogram/User.h>
+#include <foxogram/Utils.h>
 #include <utility>
 
 foxogram::User::User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName): createdAt(createdAt),
@@ -46,8 +47,8 @@ const std::string &foxogram::User::getDisplayName() const {
 
 std::shared_ptr<foxogram::User> foxogram::User::fromJSON(nlohmann::json j) {
     return std::make_shared<User>(
-            j.value<long long>("id", 0), j.value<long long>("created_at", 0), j.value<std::string>("username", ""),
-            j.at("avatar").is_string() ? j.value<std::string>("avatar", "") : "", j.value<long long>("flags", 0),
-            j.value<int>("type", 0), j.at("created_at").is_string() ? j.value<std::string>("created_at", "") : ""
+            Utils::value<long long>(j, "id", 0), Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "username", ""),
+            j.at("avatar").is_string() ? Utils::value<std::string>(j, "avatar", "") : "", Utils::value<long long>(j, "flags", 0),
+            Utils::value<int>(j, "type", 0), j.at("created_at").is_string() ? Utils::value<std::string>(j, "created_at", "") : ""
     );
 }

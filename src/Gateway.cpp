@@ -2,6 +2,7 @@
 #include <foxogram/Me.h>
 #include <foxogram/exceptions.h>
 #include <foxogram/Logger.h>
+#include <foxogram/Utils.h>
 
 foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), heartbeatInterval(heartbeatInterval) {
     ix::initNetSystem();
@@ -10,13 +11,13 @@ foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), he
         if (msg->type == ix::WebSocketMessageType::Message) {
             foxogram::Logger::logDebug("Get message from gateway: " + msg->str);
             auto j = nlohmann::json::parse(msg->str);
-            switch (j.value<int>("op", 0)) {
+            switch (Utils::value<int>(j, "op", 0)) {
                 case 0: {
-                    auto it = this->me->eventMap.find(j.value<std::string>("t", ""));
+                    auto it = this->me->eventMap.find(Utils::value<std::string>(j, "t", ""));
                     if (it != this->me->eventMap.end()) {
                         it->second->handle(this->me, j, to_string(j));
                     } else {
-                        Logger::logWarning("Unknown dispatch event: " + j.value<std::string>("t", ""));
+                        Logger::logWarning("Unknown dispatch event: " + Utils::value<std::string>(j, "t", ""));
                     }
                     break;
                 }

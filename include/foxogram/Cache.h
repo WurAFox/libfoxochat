@@ -12,14 +12,12 @@ namespace foxogram {
     template<class T>
     class Cache {
     private:
-        static_assert(std::is_base_of<BaseEntity, T>::value, "template must be base of BaseEntity");
+        static_assert(std::is_base_of_v<BaseEntity, T>, "template must be base of BaseEntity");
         std::map<long long, std::shared_ptr<Proxy<T>>> cacheMap;
     public:
-        Cache() = default;
         std::shared_ptr<Proxy<T>> get(long long id) {
             auto it = cacheMap.find(id);
             return (it != cacheMap.end()) ? it->second : nullptr;
-
         }
         std::shared_ptr<Proxy<T>> store(std::shared_ptr<T> obj) {
             std::shared_ptr<Proxy<T>> proxyObj;
