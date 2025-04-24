@@ -22,11 +22,11 @@ void foxogram::Message::handleError(const nlohmann::json &response) const {
 }
 
 void foxogram::Message::deleteMessage() const {
-    handleError(HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(channelId) + std::to_string(id), token)));
+    handleError(HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(channelId) + "/" + std::to_string(id), token)));
 }
 
 void foxogram::Message::edit() const {
-    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), token)));
+    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(channelId) + "/" + std::to_string(id), token)));
 }
 
 long long int foxogram::Message::getChannelId() const {

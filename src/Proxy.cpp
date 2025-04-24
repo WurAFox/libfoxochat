@@ -41,8 +41,8 @@ namespace foxogram {
         return ptr->fetchMessage(id);
     }
 
-    std::list<MessagePtr> Proxy<struct Channel>::fetchMessages() {
-        return ptr->fetchMessages();
+    std::list<MessagePtr> Proxy<struct Channel>::fetchMessages(long long before, int after) {
+        return ptr->fetchMessages(before, after);
     }
 
     std::list<MessagePtr> Proxy<struct Channel>::getMessages() const {

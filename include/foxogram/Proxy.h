@@ -104,7 +104,7 @@ namespace foxogram {
 
         [[nodiscard]] std::list<MessagePtr> getMessages() const;
 
-        std::list<MessagePtr> fetchMessages();
+        std::list<MessagePtr> fetchMessages(long long before = 0, int limit= 25);
 
         [[nodiscard]] MessagePtr fetchMessage(long long id);
 

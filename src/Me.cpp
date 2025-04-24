@@ -74,7 +74,7 @@ std::string foxogram::Me::signup(std::string username, std::string email, std::s
 }
 
 bool foxogram::Me::verifyEmail(const std::string &code) const {
-    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify", nlohmann::json({{"code", code}}), *token));
+    nlohmann::json j = HttpClient::request(Payload("POST", "/auth/email/verify", nlohmann::json({{"otp", code}}), *token));
 
     handleError(j);
 
@@ -134,7 +134,7 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
 }
 
 foxogram::ChannelPtr foxogram::Me::joinChannel(long long int id) {
-    auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/join", *token));
+    auto j = HttpClient::request(Payload("PUT", "/channels/" + std::to_string(id) + "/members/@me", *token));
 
     handleError(j);
 

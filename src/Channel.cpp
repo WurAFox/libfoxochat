@@ -8,6 +8,8 @@
 foxogram::Channel::Channel(long long id, std::string name, std::string displayName, short type,
                            std::string ownerName, long long createdAt, std::string icon) : BaseEntity(id), name(std::move(name)),
                                                                                            type(type), ownerName(std::move(ownerName)), createdAt(createdAt), displayName(std::move(displayName)), icon(std::move(icon)) {
+    messages = std::make_shared<foxogram::Cache<Message>>();
+    members = std::make_shared<foxogram::Cache<Member>>();
 }
 
 void foxogram::Channel::handleError(const nlohmann::json &response) const {
@@ -55,9 +57,12 @@ std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
     return messagesList;
 }
 
-std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages() {
-    const auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id), token));
-    handleError(j);
+std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long before, int limit) {
+    const auto j = HttpClient::request(Payload("GET", "/messages/channel/" + std::to_string(id) + "?before=" +
+        std::to_string(before) +"&limit=" + std::to_string(limit), token));
+    if (!j.is_array()) {
+        handleError(j);
+    }
     for (auto& message : j) {
         auto msg = foxogram::Message::fromJSON(message);
         msg->token = token;

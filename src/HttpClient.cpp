@@ -45,11 +45,11 @@ namespace foxogram {
                      const nlohmann::json& body, const std::string& token) {
         this->method = std::move(method);
         this->url = this->baseUrl + path;
-        std::string strBody;
-        for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {
-            strBody += pair.first + "=" + to_string(pair.second) + "+";
-        }
-        this->body = strBody.substr(0, strBody.size()-1);
+        // std::string strBody;
+        // for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {
+        //     strBody += pair.first + "=" + to_string(pair.second) + "+";
+        // }
+        // this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
         this->addAuth(token);
     }
@@ -59,11 +59,11 @@ namespace foxogram {
         this->method = std::move(method);
         this->url = foxogram::Payload::baseUrl + path;
         this->headers.merge(headers);
-        std::string strBody;
-        for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {
-            strBody += pair.first + "=" + to_string(pair.second) + "+";
-        }
-        this->body = strBody.substr(0, strBody.size()-1);
+        // std::string strBody;
+        // for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {
+        //     strBody += pair.first + "=" + to_string(pair.second) + "+";
+        // }
+        // this->body = strBody.substr(0, strBody.size()-1);
         this->bodyJson = body;
         this->addAuth(token);
     }
@@ -82,7 +82,7 @@ namespace foxogram {
         ix::HttpRequestArgsPtr args = httpClient.createRequest();
         args->extraHeaders = payload.getHeaders();
         ix::HttpResponsePtr r;
-        auto body = (payload.getMethod() == "GET") ? payload.getBody() : to_string(payload.getBodyJson());\
+        auto body = to_string(payload.getBodyJson());
         Logger::logDebug("Performing " + payload.getMethod() + " request to " + payload.getUrl() + " with body: " + body);
         r = httpClient.request(payload.getUrl(), payload.getMethod(), body, args);
         if (!r->errorMsg.empty()) {
