@@ -28,7 +28,6 @@ namespace foxogram {
     using ChannelPtr = std::shared_ptr<Proxy<class Channel>>;
     using UserPtr = std::shared_ptr<Proxy<class User>>;
 
-
     template<typename T>
     class Cache;
     template<>
@@ -57,7 +56,7 @@ namespace foxogram {
     };
 
     template<>
-    class LIBFOXOGRAM_EXPORT Proxy<class Member> {
+    class LIBFOXOGRAM_EXPORT Proxy<class Member> : public Proxy<User> {
     protected:
         std::shared_ptr<Member> ptr;
         friend Cache<Member>;

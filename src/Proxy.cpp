@@ -73,6 +73,18 @@ namespace foxogram {
         return ptr->getCreatedAt();
     }
 
+    const std::string& Proxy<User>::getDisplayName() const {
+        return ptr->getDisplayName();
+    }
+
+    int Proxy<User>::getType() const {
+        return ptr->getType();
+    }
+
+    long long Proxy<User>::getCreatedAt() const {
+        return ptr->getCreatedAt();
+    }
+
     void Proxy<struct User>::addFlag(UserFlags flag) {
         ptr->addFlag(flag);
     }
@@ -113,6 +125,10 @@ namespace foxogram {
         return ptr->getCreatedAt();
     }
 
+
+    long long int Proxy<Member>::getChannelId() const {
+        return ptr->getChannelId();
+    }
 
     const FlagsBase<MemberPermissions> &Proxy<struct Member>::getPermissions() const {
         return ptr->getPermissions();
