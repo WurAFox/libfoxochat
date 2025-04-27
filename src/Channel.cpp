@@ -64,8 +64,10 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long befor
         handleError(j);
     }
     for (auto& message : j) {
+        auto member = foxogram::Member::fromJSON(message.at("author"));
         auto msg = foxogram::Message::fromJSON(message);
         msg->token = token;
+        msg->author = members->store(member);
         messages->store(msg);
     }
 
@@ -82,7 +84,9 @@ foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
 
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
+    auto member = foxogram::Member::fromJSON(j.at("author"));
     msg->token = token;
+    msg->author = members->store(member);
     return messages->store(msg);
 }
 
@@ -117,7 +121,9 @@ foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const
 
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
+    auto member = foxogram::Member::fromJSON(j.at("author"));
     msg->token = token;
+    msg->author = members->store(member);
     return messages->store(msg);
 }
 
