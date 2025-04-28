@@ -9,6 +9,10 @@ namespace foxogram {
         return ptr->getMember(id);
     }
 
+    long long Proxy<Channel>::getId() const {
+        return ptr->getId();
+    }
+
     MemberPtr Proxy<struct Channel>::fetchMember(long long int id) {
         return ptr->fetchMember(id);
     }
@@ -33,7 +37,7 @@ namespace foxogram {
         return ptr->getName();
     }
 
-    MessagePtr Proxy<struct Channel>::createMessage(std::string content, const std::list<std::string> &attachments) {
+    MessagePtr Proxy<struct Channel>::createMessage(std::string content, const std::list<long long> &attachments) {
         return foxogram::MessagePtr();
     }
 
@@ -83,6 +87,10 @@ namespace foxogram {
 
     long long Proxy<User>::getCreatedAt() const {
         return ptr->getCreatedAt();
+    }
+
+    long long Proxy<User>::getId() const {
+        return ptr->getId();
     }
 
     void Proxy<struct User>::addFlag(UserFlags flag) {
@@ -146,11 +154,51 @@ namespace foxogram {
         return ptr->hasPermissions(permission);
     }
 
+    const std::string& Proxy<Member>::getDisplayName() const {
+        return ptr->getDisplayName();
+    }
+
+    void Proxy<Member>::addFlag(UserFlags flag) {
+        ptr->addFlag(flag);
+    }
+
+    void Proxy<Member>::removeFlag(UserFlags flag) {
+        ptr->removeFlag(flag);
+    }
+
+    bool Proxy<Member>::hasFlag(UserFlags flag) const {
+        return ptr->hasFlag(flag);
+    }
+
+    const std::string& Proxy<Member>::getUsername() const {
+        return ptr->getUsername();
+    }
+
+    const std::string& Proxy<Member>::getAvatar() const {
+        return ptr->getAvatar();
+    }
+
+    FlagsBase<UserFlags> Proxy<Member>::getFlags() const {
+        return ptr->getFlags();
+    }
+
+    int Proxy<Member>::getType() const {
+        return ptr->getType();
+    }
+
+    long long Proxy<Member>::getCreatedAt() const {
+        return ptr->getCreatedAt();
+    }
+
+    long long Proxy<Member>::getId() const {
+        return ptr->getId();
+    }
+
     long long int Proxy<struct Message>::getAuthorId() const {
         return ptr->getAuthorId();
     }
 
-    const std::list<std::string> &Proxy<struct Message>::getAttachments() const {
+    const std::list<Attachment> &Proxy<struct Message>::getAttachments() const {
         return ptr->getAttachments();
     }
 
@@ -162,4 +210,7 @@ namespace foxogram {
         return ptr->getAuthor();
     }
 
+    long long Proxy<Message>::getId() const {
+        return ptr->getId();
+    }
 }

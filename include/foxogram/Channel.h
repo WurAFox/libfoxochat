@@ -72,7 +72,7 @@ namespace foxogram {
 
         [[nodiscard]] MessagePtr fetchMessage(long long id);
 
-        [[nodiscard]] MessagePtr createMessage(std::string content, const std::list<std::string>& attachments = {});
+        [[nodiscard]] MessagePtr createMessage(std::string content, const std::list<long long>& attachments = {});
 
         [[nodiscard]] std::string getName() const;
 

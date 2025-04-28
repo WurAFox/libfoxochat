@@ -5,8 +5,10 @@
 #include <foxogram/Utils.h>
 #include <utility>
 
+#include <foxogram/Attachment.h>
+
 foxogram::Message::Message(long long int id, long long int channelId, long long int authorId,
-                           long long int timestamp, std::string content, std::list<std::string> attachments):
+                           long long int timestamp, std::string content, std::list<Attachment> attachments):
                            channelId(channelId), authorId(authorId), timestamp(timestamp),
                            attachments(std::move(attachments)), content(std::move(content)), BaseEntity(id) {}
 
@@ -22,11 +24,11 @@ void foxogram::Message::handleError(const nlohmann::json &response) const {
 }
 
 void foxogram::Message::deleteMessage() const {
-    handleError(HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(channelId) + "/" + std::to_string(id), token)));
+    handleError(HttpClient::request(Payload("DELETE", "/channels/" + std::to_string(channelId) + "/messages/" + std::to_string(id), token)));
 }
 
 void foxogram::Message::edit() const {
-    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(channelId) + "/" + std::to_string(id), token)));
+    handleError(HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(channelId) + "/messages/" + std::to_string(id), token)));
 }
 
 long long int foxogram::Message::getChannelId() const {
@@ -47,7 +49,7 @@ long long int foxogram::Message::getCreatedAt() const {
     return timestamp;
 }
 
-const std::list<std::string> &foxogram::Message::getAttachments() const {
+const std::list<foxogram::Attachment> &foxogram::Message::getAttachments() const {
     return attachments;
 }
 
@@ -56,7 +58,11 @@ const std::string &foxogram::Message::getContent() const {
 }
 
 std::shared_ptr<foxogram::Message> foxogram::Message::fromJSON(nlohmann::json j) {
+    std::list<Attachment> attachments;
+    for (const auto& attachment : j.at("attachments")) {
+        attachments.push_back(Attachment::fromJson(attachment));
+    }
     return std::make_shared<foxogram::Message>(Utils::value<long long>(j, "id", 0), Utils::value<long long>(j.at("channel"), "id", 0),
         Utils::value<long long>(j.at("author"), "id", 0), Utils::value<long long>(j, "created_at", 0),
-        Utils::value<std::string>(j, "content", ""), Utils::value<std::list<std::string>>(j, "attachments", {}));
+        Utils::value<std::string>(j, "content", ""), attachments);
 }

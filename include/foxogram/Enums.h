@@ -2,8 +2,8 @@
 
 #include <bitset>
 
-namespace foxogram {
-    enum LIBFOXOGRAM_EXPORT LogLevel {
+namespace LIBFOXOGRAM_EXPORT foxogram {
+    enum LogLevel {
         LOG_DEBUG = 0,
         LOG_INFO,
         LOG_WARNING,
@@ -65,4 +65,10 @@ namespace foxogram {
     };
 
     using MemberPermission = FlagsBase<MemberPermissions>;
+
+    enum class AttachmentFlags : long long {
+        SPOILER = 1,
+    };
+
+    using AttachmentFlag = FlagsBase<AttachmentFlags>;
 }

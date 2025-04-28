@@ -4,6 +4,8 @@
 #include <memory>
 #include <list>
 
+#include "Attachment.h"
+
 namespace foxogram {
     namespace events {
         class ChannelCreate;
@@ -53,10 +55,12 @@ namespace foxogram {
         [[nodiscard]] int getType() const;
 
         [[nodiscard]] long long getCreatedAt() const;
+
+        [[nodiscard]] long long getId() const;
     };
 
     template<>
-    class LIBFOXOGRAM_EXPORT Proxy<class Member> : public Proxy<User> {
+    class LIBFOXOGRAM_EXPORT Proxy<class Member>  {
     protected:
         std::shared_ptr<Member> ptr;
         friend Cache<Member>;
@@ -70,6 +74,26 @@ namespace foxogram {
         void removePermissions(MemberPermissions permission);
 
         [[nodiscard]] bool hasPermissions(MemberPermissions permission) const;
+
+        [[nodiscard]] const std::string &getDisplayName() const;
+
+        void addFlag(UserFlags flag);
+
+        void removeFlag(UserFlags flag);
+
+        [[nodiscard]] bool hasFlag(UserFlags flag) const;
+
+        [[nodiscard]] const std::string &getUsername() const;
+
+        [[nodiscard]] const std::string &getAvatar() const;
+
+        [[nodiscard]] FlagsBase<UserFlags> getFlags() const;
+
+        [[nodiscard]] int getType() const;
+
+        [[nodiscard]] long long getCreatedAt() const;
+
+        [[nodiscard]] long long getId() const;
     };
 
     template<>
@@ -107,7 +131,7 @@ namespace foxogram {
 
         [[nodiscard]] MessagePtr fetchMessage(long long id);
 
-        [[nodiscard]] MessagePtr createMessage(std::string content, const std::list<std::string>& attachments = {});
+        [[nodiscard]] MessagePtr createMessage(std::string content, const std::list<long long>& attachments = {});
 
         [[nodiscard]] std::string getName() const;
 
@@ -122,10 +146,12 @@ namespace foxogram {
         MemberPtr fetchMember(long long id);
 
         MemberPtr getMember(long long id);
+
+        [[nodiscard]] long long getId() const;
     };
 
     template<>
-    class LIBFOXOGRAM_EXPORT Proxy<class Message> {
+    class LIBFOXOGRAM_EXPORT Proxy<class Message>   {
     protected:
         std::shared_ptr<Message> ptr;
         friend Cache<Message>;
@@ -139,10 +165,12 @@ namespace foxogram {
 
         [[nodiscard]] long long int getCreatedAt() const;
 
-        [[nodiscard]] const std::list<std::string> &getAttachments() const;
+        [[nodiscard]] const std::list<Attachment> &getAttachments() const;
 
         [[nodiscard]] const std::string &getContent() const;
 
         [[nodiscard]] std::shared_ptr<Proxy<Member>> getAuthor() const;
+
+        [[nodiscard]] long long getId() const;
     };
 }

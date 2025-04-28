@@ -5,6 +5,8 @@
 #include <string>
 #include <list>
 
+#include <foxogram/Attachment.h>
+
 namespace foxogram {
     struct Channel;
     namespace events {
@@ -22,7 +24,7 @@ namespace foxogram {
         long long channelId;
         long long authorId;
         long long timestamp;
-        std::list<std::string> attachments;
+        std::list<Attachment> attachments;
         std::string content;
 
     protected:
@@ -36,7 +38,7 @@ namespace foxogram {
         [[nodiscard]] static std::shared_ptr<Message> fromJSON(nlohmann::json j);
 
         Message(long long id, long long int channelId, long long authorId, long long timestamp,
-                std::string content, std::list<std::string> attachments);
+                std::string content, std::list<Attachment> attachments);
 
         void deleteMessage() const;
 
@@ -47,7 +49,7 @@ namespace foxogram {
 
         [[nodiscard]] long long int getCreatedAt() const;
 
-        [[nodiscard]] const std::list<std::string> &getAttachments() const;
+        [[nodiscard]] const std::list<Attachment> &getAttachments() const;
 
         [[nodiscard]] const std::string &getContent() const;
 

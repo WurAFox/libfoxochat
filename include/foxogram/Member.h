@@ -27,7 +27,7 @@ namespace foxogram {
         std::string token;
 
     public:
-        [[nodiscard]] static std::shared_ptr<Member> fromJSON(nlohmann::json j);
+        [[nodiscard]] static std::shared_ptr<Member> fromJSON(nlohmann::json j, long long channelId = 0);
 
         [[nodiscard]] long long int getChannelId() const;
 

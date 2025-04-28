@@ -58,13 +58,13 @@ std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
 }
 
 std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long before, int limit) {
-    const auto j = HttpClient::request(Payload("GET", "/messages/channel/" + std::to_string(id) + "?before=" +
+    const auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id) + "/messages?before=" +
         std::to_string(before) +"&limit=" + std::to_string(limit), token));
     if (!j.is_array()) {
         handleError(j);
     }
     for (auto& message : j) {
-        auto member = foxogram::Member::fromJSON(message.at("author"));
+        auto member = foxogram::Member::fromJSON(message.at("author"), id);
         auto msg = foxogram::Message::fromJSON(message);
         msg->token = token;
         msg->author = members->store(member);
@@ -80,11 +80,11 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long befor
 
 foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
     const auto j = HttpClient::request(
-        Payload("GET", "/channels/" + std::to_string(this->id) + "/" + std::to_string(id), token));
+        Payload("GET", "/channels/" + std::to_string(this->id) + "/messages/" + std::to_string(id), token));
 
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
-    auto member = foxogram::Member::fromJSON(j.at("author"));
+    auto member = foxogram::Member::fromJSON(j.at("author"), id);
     msg->token = token;
     msg->author = members->store(member);
     return messages->store(msg);
@@ -94,7 +94,7 @@ std::list<foxogram::MemberPtr> foxogram::Channel::fetchMembers() {
     auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(id) + "/members", token));
     handleError(j);
     for (const auto& member : j) {
-        members->store(foxogram::Member::fromJSON(member));
+        members->store(foxogram::Member::fromJSON(member, id));
     }
     std::list<foxogram::MemberPtr> membersList;
     for(auto const& p : members->getMap()) {
@@ -107,7 +107,7 @@ foxogram::MemberPtr foxogram::Channel::fetchMember(long long id) {
     auto j = HttpClient::request(Payload("GET", "/channels/" + std::to_string(this->id)
     + "/members/" + std::to_string(id), token));
     handleError(j);
-    auto member = foxogram::Member::fromJSON(j);
+    auto member = foxogram::Member::fromJSON(j, id);
     return members->store(member);;
 }
 
@@ -115,13 +115,13 @@ foxogram::MemberPtr foxogram::Channel::getMember(long long id) {
     return members->get(id);
 }
 
-foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const std::list<std::string>& attachments) {
-    const auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id),
+foxogram::MessagePtr foxogram::Channel::createMessage(std::string content, const std::list<long long>& attachments) {
+    const auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/messages",
         nlohmann::json({{"content", content}, {attachments, attachments}}), token));
 
     handleError(j);
     auto msg = foxogram::Message::fromJSON(j);
-    auto member = foxogram::Member::fromJSON(j.at("author"));
+    auto member = foxogram::Member::fromJSON(j.at("author"), id);
     msg->token = token;
     msg->author = members->store(member);
     return messages->store(msg);

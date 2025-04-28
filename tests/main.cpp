@@ -27,12 +27,13 @@ std::string generateRandomString(int length) {
     return random_string;
 }
 
-TEST(add_test, Me) {
+TEST(add_test, Me)
+{
     foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG);
     std::string username = generateRandomString(12);
     std::string email = username+"@foxogram.su";
     std::string password = generateRandomString(12);
-    auto u =  foxogram::Me(username, email, password);
+    auto u = foxogram::Me(username, email, password);
     EXPECT_EQ(u.getUsername(), username);
     EXPECT_TRUE(u.resendEmail());
     // EXPECT_TRUE(u.verifyEmail("000000"));
