@@ -45,7 +45,7 @@ namespace foxogram {
         std::string* token;
         Gateway gateway;
         [[nodiscard]] User fetchMe(std::string* token);
-        std::shared_ptr<Cache<Channel>> channelCache;
+        std::shared_ptr<Cache<Channel>> channels;
         std::shared_ptr<Cache<User>> userCache;
     public:
         explicit Me(const std::string& token);
@@ -54,9 +54,11 @@ namespace foxogram {
 
         Me(const std::string& email, const std::string& password);
 
-        Me(const Me &) = delete;
+        [[nodiscard]] std::string getToken() const;
 
-        Me(Me &&) = delete;
+        [[nodiscard]] std::list<foxogram::ChannelPtr> getChannels() const;
+
+        [[nodiscard]] std::list<foxogram::ChannelPtr> fetchChannels();
 
         Me(long long int id, std::string username, std::string avatar, long long int flags,
            int type, long long int createdAt) = delete;

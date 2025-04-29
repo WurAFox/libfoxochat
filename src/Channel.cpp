@@ -49,12 +49,10 @@ bool foxogram::Channel::leave() {
 }
 
 std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
-    std::list<foxogram::MessagePtr> messagesList;
-    for (auto& message : messages->getMap()) {
-        messagesList.push_back(message.second);
-    }
-
-    return messagesList;
+    std::list<foxogram::MessagePtr> messageList;
+    std::transform(messages->getMap().begin(), messages->getMap().end(),
+        std::back_inserter(messageList), [](const std::pair<long long, std::shared_ptr<Proxy<Message>>>& p) {return p.second;});
+    return messageList;
 }
 
 std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long before, int limit) {
@@ -71,11 +69,10 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long befor
         messages->store(msg);
     }
 
-    std::list<foxogram::MessagePtr> messagesList;
-    for (auto& message : messages->getMap()) {
-        messagesList.push_back(message.second);
-    }
-    return messagesList;
+    std::list<foxogram::MessagePtr> messageList;
+    std::transform(messages->getMap().begin(), messages->getMap().end(),
+        std::back_inserter(messageList), [](const std::pair<long long, std::shared_ptr<Proxy<Message>>>& p) {return p.second;});
+    return messageList;
 }
 
 foxogram::MessagePtr foxogram::Channel::fetchMessage(long long id) {
@@ -96,11 +93,10 @@ std::list<foxogram::MemberPtr> foxogram::Channel::fetchMembers() {
     for (const auto& member : j) {
         members->store(foxogram::Member::fromJSON(member, id));
     }
-    std::list<foxogram::MemberPtr> membersList;
-    for(auto const& p : members->getMap()) {
-        membersList.push_back(p.second);
-    }
-    return membersList;
+    std::list<foxogram::MemberPtr> memberList;
+    std::transform(members->getMap().begin(), members->getMap().end(),
+        std::back_inserter(memberList), [](const std::pair<long long, std::shared_ptr<Proxy<Member>>>& p) {return p.second;});
+    return memberList;
 }
 
 foxogram::MemberPtr foxogram::Channel::fetchMember(long long id) {
@@ -136,11 +132,10 @@ int foxogram::Channel::getType() const {
 }
 
 std::list<foxogram::MemberPtr> foxogram::Channel::getMembers() const {
-    std::list<foxogram::MemberPtr> membersList;
-    for(auto const& p : members->getMap()) {
-        membersList.push_back(p.second);
-    }
-    return membersList;
+    std::list<foxogram::MemberPtr> memberList;
+    std::transform(members->getMap().begin(), members->getMap().end(),
+        std::back_inserter(memberList), [](const std::pair<long long, std::shared_ptr<Proxy<Member>>>& p) {return p.second;});
+    return memberList;
 }
 
 std::string foxogram::Channel::getOwnerName() const {

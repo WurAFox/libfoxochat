@@ -13,7 +13,7 @@ void foxogram::events::MemberAdd::handle(foxogram::Me *me, nlohmann::json j, con
     if (!channel) {
         auto channelPtr = foxogram::Channel::fromJSON(j.at("channel"));
         channelPtr->token = *me->token;
-        me->channelCache->store(channelPtr);
+        me->channels->store(channelPtr);
     }
 
     e.member = channel->members->store(member);

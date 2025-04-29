@@ -12,7 +12,7 @@ void foxogram::events::MessageDelete::handle(foxogram::Me *me, nlohmann::json j,
     if (!channel) {
         auto channelPtr = foxogram::Channel::fromJSON(j.at("channel"));
         channelPtr->token = *me->token;
-        me->channelCache->store(channelPtr);
+        me->channels->store(channelPtr);
     }
     auto m = foxogram::Member::fromJSON(j.at("author"));
     auto member = channel->getMember(m->getId());

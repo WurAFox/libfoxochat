@@ -5,21 +5,59 @@
 #include <foxogram/Utils.h>
 
 foxogram::Me::Me(const std::string& _token) : User(fetchMe(token = new std::string(_token))), gateway(this) {
-    channelCache = std::make_shared<Cache<Channel>>();
+    channels = std::make_shared<Cache<Channel>>();
     userCache = std::make_shared<Cache<User>>();
 }
 
 foxogram::Me::Me(const std::string& username, const std::string& email, const std::string& password):
     User(fetchMe(token = new std::string(signup(username, email, password)))),
     gateway(this) {
-    channelCache = std::make_shared<Cache<Channel>>();
+    channels = std::make_shared<Cache<Channel>>();
     userCache = std::make_shared<Cache<User>>();
 }
 
 foxogram::Me::Me(const std::string& email, const std::string& password): User(fetchMe(token = new std::string(Me::login(email, password)))),
                                                                          gateway(this) {
-    channelCache = std::make_shared<Cache<Channel>>();
+    channels = std::make_shared<Cache<Channel>>();
     userCache = std::make_shared<Cache<User>>();
+}
+
+std::string foxogram::Me::getToken() const {
+    return *token;
+}
+
+std::list<foxogram::ChannelPtr> foxogram::Me::getChannels() const {
+    std::list<foxogram::ChannelPtr> channelList;
+    std::transform(channels->getMap().begin(), channels->getMap().end(),
+        std::back_inserter(channelList), [](const std::pair<long long, std::shared_ptr<Proxy<Channel>>>& p) {return p.second;});
+    return channelList;
+
+}
+
+std::list<foxogram::ChannelPtr> foxogram::Me::fetchChannels() {
+    auto j = HttpClient::request(Payload("GET",
+                                         std::string("/users/@me/channels") , *token));
+    if (!j.is_array()) {
+        handleError(j);
+    }
+
+    for (const auto& channel_j : j) {
+        auto channel = foxogram::Channel::fromJSON(channel_j);
+        channel->token = *token;
+        if (channel_j.contains("last_message")) {
+            auto member = foxogram::Member::fromJSON(channel_j.at("last_message").at("author"), id);
+            auto msg = foxogram::Message::fromJSON(channel_j.at("last_message"));
+            msg->token = *token;
+            msg->author = channel->members->store(member);
+            channel->messages->store(msg);
+        }
+        channels->store(channel);
+    }
+
+    std::list<foxogram::ChannelPtr> channelList;
+    std::transform(channels->getMap().begin(), channels->getMap().end(),
+        std::back_inserter(channelList), [](const std::pair<long long, std::shared_ptr<Proxy<Channel>>>& p) {return p.second;});
+    return channelList;
 }
 
 void foxogram::Me::handleError(const nlohmann::json &response) const {
@@ -130,7 +168,7 @@ foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {
     handleError(j);
     auto channel = Channel::fromJSON(j);
     channel->token = *token;
-    return channelCache->store(channel);
+    return channels->store(channel);
 }
 
 foxogram::ChannelPtr foxogram::Me::joinChannel(long long int id) {
@@ -140,7 +178,7 @@ foxogram::ChannelPtr foxogram::Me::joinChannel(long long int id) {
 
     auto channel = Channel::fromJSON(j);
     channel->token = *token;
-    return channelCache->store(channel);
+    return channels->store(channel);
 }
 
 foxogram::ChannelPtr foxogram::Me::fetchChannel(long long int id) {
@@ -148,7 +186,7 @@ foxogram::ChannelPtr foxogram::Me::fetchChannel(long long int id) {
     handleError(j);
     auto channel = Channel::fromJSON(j);
     channel->token = *token;
-    return channelCache->store(channel);
+    return channels->store(channel);
 }
 
 
@@ -169,7 +207,7 @@ foxogram::Me::~Me() {
 }
 
 foxogram::ChannelPtr foxogram::Me::getChannel(long long id) {
-    return channelCache->get(id);
+    return channels->get(id);
 }
 
 foxogram::UserPtr foxogram::Me::getUser(long long id) {
