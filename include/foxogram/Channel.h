@@ -24,6 +24,9 @@ namespace foxogram {
         class MemberUpdate;
     }
     class Me;
+
+    using ChannelPtr = std::shared_ptr<foxogram::Channel>;
+
     struct LIBFOXOGRAM_EXPORT Channel : BaseEntity {
         friend class Me;
         friend events::ChannelCreate;

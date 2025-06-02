@@ -14,6 +14,9 @@ namespace foxogram {
     }
     class Me;
     class Channel;
+
+    using MemberPtr = std::shared_ptr<foxogram::Member>;
+
     struct LIBFOXOGRAM_EXPORT Member : public User {
         friend class Me;
         friend events::MemberAdd;

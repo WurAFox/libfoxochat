@@ -16,6 +16,9 @@ namespace foxogram {
     }
     class Member;
     class Me;
+
+    using MessagePtr = std::shared_ptr<foxogram::Message>;
+
     struct LIBFOXOGRAM_EXPORT Message : BaseEntity {
         friend events::MessageCreate;
         friend events::MessageUpdate;

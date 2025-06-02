@@ -1,7 +1,6 @@
 #pragma once
 #include <foxogram/export.h>
 #include <foxogram/BaseEntity.h>
-#include <foxogram/Proxy.h>
 #include <map>
 #include <string>
 #include <iostream>
