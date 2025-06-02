@@ -12,7 +12,7 @@ namespace foxogram {
     struct LIBFOXOGRAM_EXPORT User : BaseEntity {
     protected:
         std::string username;
-        std::string avatar;
+        Attachment avatar;
         FlagsBase<UserFlags> flags;
         int type{};
         long long createdAt{};
@@ -23,7 +23,7 @@ namespace foxogram {
 
         [[nodiscard]] const std::string &getDisplayName() const;
 
-        User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName = "");
+        User(long long id, long long createdAt, std::string username, Attachment avatar, long long int flags, int type, std::string displayName = "");
 
         User(const User &) = default;
 
@@ -37,7 +37,7 @@ namespace foxogram {
 
         [[nodiscard]] const std::string &getUsername() const;
 
-        [[nodiscard]] const std::string &getAvatar() const;
+        [[nodiscard]] const Attachment &getAvatar() const;
 
         [[nodiscard]] FlagsBase<UserFlags> getFlags() const;
 

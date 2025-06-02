@@ -29,7 +29,7 @@ std::string foxogram::Me::getToken() const {
 std::list<foxogram::ChannelPtr> foxogram::Me::getChannels() const {
     std::list<foxogram::ChannelPtr> channelList;
     std::transform(channels->getMap().begin(), channels->getMap().end(),
-        std::back_inserter(channelList), [](const std::pair<long long, std::shared_ptr<Proxy<Channel>>>& p) {return p.second;});
+        std::back_inserter(channelList), [](const std::pair<long long, std::shared_ptr<Channel>>& p) {return p.second;});
     return channelList;
 
 }
@@ -56,7 +56,7 @@ std::list<foxogram::ChannelPtr> foxogram::Me::fetchChannels() {
 
     std::list<foxogram::ChannelPtr> channelList;
     std::transform(channels->getMap().begin(), channels->getMap().end(),
-        std::back_inserter(channelList), [](const std::pair<long long, std::shared_ptr<Proxy<Channel>>>& p) {return p.second;});
+        std::back_inserter(channelList), [](const std::pair<long long, std::shared_ptr<Channel>>& p) {return p.second;});
     return channelList;
 }
 
@@ -145,21 +145,13 @@ bool foxogram::Me::confirmDeleteUser(const std::string &code) const {
 foxogram::User foxogram::Me::fetchMe(std::string* token) {
     auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
-    return {
-            Utils::value<long long>(j, "id", 0), Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "username", ""),
-            j.at("avatar").is_string() ? Utils::value<std::string>(j, "avatar", "") : "", Utils::value<long long>(j, "flags", 0),
-            Utils::value<int>(j, "type", 0), j.at("created_at").is_string() ? Utils::value<std::string>(j, "created_at", "") : ""
-    };
+    return *foxogram::User::fromJSON(j);
 }
 
 foxogram::User foxogram::Me::fetchMe() const {
     auto j = HttpClient::request(Payload("GET", "/users/@me", *token));
     handleError(j);
-    return {
-            Utils::value<long long>(j, "id", 0),Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "username", ""),
-            j.at("avatar").is_string() ? Utils::value<std::string>(j, "avatar", "") : "", Utils::value<long long>(j, "flags", 0),
-            Utils::value<int>(j, "type", 0), j.at("created_at").is_string() ? Utils::value<std::string>(j, "created_at", "") : ""
-    };
+    return *foxogram::User::fromJSON(j);
 }
 
 foxogram::ChannelPtr foxogram::Me::createChannel(std::string name, int type) {

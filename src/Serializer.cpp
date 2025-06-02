@@ -8,8 +8,8 @@
 foxogram::User nlohmann::adl_serializer<foxogram::User>::from_json(const nlohmann::json& j) {
     return {
         foxogram::Utils::value<long long>(j, "id", 0), foxogram::Utils::value<long long>(j, "created_at", 0),
-        foxogram::Utils::value<std::string>(j, "username", ""), j.at("avatar").is_string() ?
-        foxogram::Utils::value<std::string>(j, "avatar", "") : "", foxogram::Utils::value<long long>(j, "flags", 0),
+        foxogram::Utils::value<std::string>(j, "username", ""),
+        foxogram::Utils::value<foxogram::Attachment>(j, "avatar", {0, "", "", "", 0}), foxogram::Utils::value<long long>(j, "flags", 0),
         foxogram::Utils::value<int>(j, "type", 0), j.at("display_name").is_string() ?
         foxogram::Utils::value<std::string>(j, "display_name", "") : ""
     };
@@ -48,7 +48,7 @@ foxogram::Member nlohmann::adl_serializer<foxogram::Member>::from_json(const nlo
         foxogram::Utils::value<long long>(j, "id", 0),
         j.contains("channel") ? foxogram::Utils::value<long long>(j.at("channel"), "id", 0) : 0,
         foxogram::Utils::value<long long>(j, "permissions", 0), foxogram::Utils::value<std::string>(j.at("user"), "username", ""),
-        foxogram::Utils::value<std::string>(j.at("user"), "avatar", ""),
+        foxogram::Utils::value<foxogram::Attachment>(j.at("user"), "avatar", {0, "", "", "", 0}),
         foxogram::Utils::value<long long>(j.at("user"), "flags", 0),foxogram::Utils::value<int>(j.at("user"), "type", 0),
         foxogram::Utils::value<long long>(j.at("user"), "created_at", 0)
     };

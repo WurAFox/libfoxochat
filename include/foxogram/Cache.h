@@ -13,22 +13,20 @@ namespace foxogram {
     class Cache {
     private:
         static_assert(std::is_base_of_v<BaseEntity, T>, "template must be base of BaseEntity");
-        std::map<long long, std::shared_ptr<Proxy<T>>> cacheMap;
+        std::map<long long, std::shared_ptr<T>> cacheMap;
     public:
-        std::shared_ptr<Proxy<T>> get(long long id) {
+        std::shared_ptr<T> get(long long id) {
             auto it = cacheMap.find(id);
             return (it != cacheMap.end()) ? it->second : nullptr;
         }
-        std::shared_ptr<Proxy<T>> store(std::shared_ptr<T> obj) {
-            std::shared_ptr<Proxy<T>> proxyObj;
+        std::shared_ptr<T> store(std::shared_ptr<T> obj) {
             auto it = cacheMap.find(obj->getId());
             if (it == cacheMap.end()) {
-                auto proxy = std::make_shared<Proxy<T>>();
-                proxy->ptr = obj;
-                return cacheMap.insert({obj->getId(), proxy}).first->second;
+                return cacheMap.insert({obj->getId(), obj}).first->second;
             } else {
-                if (it->second->ptr != obj) {
-                    it->second->ptr = obj;
+                if (it->second != obj) {
+                    it->second->~T();
+                    new (it->second.get()) T(*obj);
                 }
                 return it->second;
             }
@@ -36,7 +34,7 @@ namespace foxogram {
         void Delete(long long id) {
             cacheMap.erase(id);
         }
-        const std::map<long long, std::shared_ptr<Proxy<T>>>& getMap() const {
+        const std::map<long long, std::shared_ptr<T>>& getMap() const {
             return cacheMap;
         }
     };

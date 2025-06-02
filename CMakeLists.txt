@@ -82,8 +82,8 @@ set(sources
         include/foxogram/Gateway.h
         include/foxogram/EventTypes.h
         include/foxogram/Events.h
-        include/foxogram/Proxy.h
         include/foxogram/Attachment.h
+        include/foxogram/Serializer.h
         src/Utils.cpp
         src/Logger.cpp
         src/HttpClient.cpp
@@ -105,8 +105,8 @@ set(sources
         src/Events/MessageDelete.cpp
         src/Events/MessageUpdate.cpp
         src/Events/Pong.cpp
-        src/Proxy.cpp
         src/Attachment.cpp
+        src/Serializer.cpp
 )
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${sources})
 

@@ -31,7 +31,7 @@ namespace foxogram {
         std::string token;
         friend class Me;
         friend class Channel;
-        std::shared_ptr<Proxy<Member>> author;
+        std::shared_ptr<Member> author;
         void handleError(const nlohmann::json &response) const override;
 
     public:
@@ -53,7 +53,7 @@ namespace foxogram {
 
         [[nodiscard]] const std::string &getContent() const;
 
-        [[nodiscard]] std::shared_ptr<Proxy<Member>> getAuthor() const;
+        [[nodiscard]] std::shared_ptr<Member> getAuthor() const;
 
     };
 }

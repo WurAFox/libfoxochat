@@ -2,8 +2,8 @@
 #include <foxogram/Utils.h>
 #include <utility>
 
-foxogram::User::User(long long id, long long createdAt, std::string username, std::string avatar, long long int flags, int type, std::string displayName): createdAt(createdAt),
-    username(std::move(username)), avatar(std::move(avatar)), flags(flags), type(type),
+foxogram::User::User(long long id, long long createdAt, std::string username, Attachment avatar, long long int flags, int type, std::string displayName): createdAt(createdAt),
+    username(std::move(username)), avatar(avatar), flags(flags), type(type),
     displayName(std::move(displayName)), BaseEntity(id) {}
 
 void foxogram::User::handleError(const nlohmann::json &response) const {
@@ -25,7 +25,7 @@ const std::string &foxogram::User::getUsername() const {
     return username;
 }
 
-const std::string &foxogram::User::getAvatar() const {
+const foxogram::Attachment &foxogram::User::getAvatar() const {
     return avatar;
 }
 
@@ -48,7 +48,7 @@ const std::string &foxogram::User::getDisplayName() const {
 std::shared_ptr<foxogram::User> foxogram::User::fromJSON(nlohmann::json j) {
     return std::make_shared<User>(
             Utils::value<long long>(j, "id", 0), Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "username", ""),
-            j.at("avatar").is_string() ? Utils::value<std::string>(j, "avatar", "") : "", Utils::value<long long>(j, "flags", 0),
+             Utils::value<foxogram::Attachment>(j, "avatar", {0, "", "", "", 0}), Utils::value<long long>(j, "flags", 0),
             Utils::value<int>(j, "type", 0), j.at("display_name").is_string() ? Utils::value<std::string>(j, "display_name", "") : ""
     );
 }

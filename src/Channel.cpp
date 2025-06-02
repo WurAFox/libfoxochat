@@ -64,7 +64,7 @@ bool foxogram::Channel::leave() {
 std::list<foxogram::MessagePtr> foxogram::Channel::getMessages() const {
     std::list<foxogram::MessagePtr> messageList;
     std::transform(messages->getMap().begin(), messages->getMap().end(),
-        std::back_inserter(messageList), [](const std::pair<long long, std::shared_ptr<Proxy<Message>>>& p) {return p.second;});
+        std::back_inserter(messageList), [](const std::pair<long long, std::shared_ptr<Message>>& p) {return p.second;});
     return messageList;
 }
 
@@ -84,7 +84,7 @@ std::list<foxogram::MessagePtr> foxogram::Channel::fetchMessages(long long befor
 
     std::list<foxogram::MessagePtr> messageList;
     std::transform(messages->getMap().begin(), messages->getMap().end(),
-        std::back_inserter(messageList), [](const std::pair<long long, std::shared_ptr<Proxy<Message>>>& p) {return p.second;});
+        std::back_inserter(messageList), [](const std::pair<long long, std::shared_ptr<Message>>& p) {return p.second;});
     return messageList;
 }
 
@@ -108,7 +108,7 @@ std::list<foxogram::MemberPtr> foxogram::Channel::fetchMembers() {
     }
     std::list<foxogram::MemberPtr> memberList;
     std::transform(members->getMap().begin(), members->getMap().end(),
-        std::back_inserter(memberList), [](const std::pair<long long, std::shared_ptr<Proxy<Member>>>& p) {return p.second;});
+        std::back_inserter(memberList), [](const std::pair<long long, std::shared_ptr<Member>>& p) {return p.second;});
     return memberList;
 }
 
@@ -147,7 +147,7 @@ int foxogram::Channel::getType() const {
 std::list<foxogram::MemberPtr> foxogram::Channel::getMembers() const {
     std::list<foxogram::MemberPtr> memberList;
     std::transform(members->getMap().begin(), members->getMap().end(),
-        std::back_inserter(memberList), [](const std::pair<long long, std::shared_ptr<Proxy<Member>>>& p) {return p.second;});
+        std::back_inserter(memberList), [](const std::pair<long long, std::shared_ptr<Member>>& p) {return p.second;});
     return memberList;
 }
 
