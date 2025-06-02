@@ -117,11 +117,12 @@ namespace foxogram {
 
         [[nodiscard]] const std::string &getDisplayName() const;
 
-        [[nodiscard]] const std::string &getIcon() const;
+        [[nodiscard]] const Attachment &getIcon() const;
 
         bool leave();
 
-        void edit(const std::string& displayName = "", const std::string& name = "", const std::string& icon = "");
+        void edit(const std::string& displayName = "", const std::string& name = "", const Attachment& icon =
+            Attachment{0, "", "", "", 0});
 
         bool deleteChannel();
 

@@ -49,6 +49,6 @@ std::shared_ptr<foxogram::User> foxogram::User::fromJSON(nlohmann::json j) {
     return std::make_shared<User>(
             Utils::value<long long>(j, "id", 0), Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "username", ""),
             j.at("avatar").is_string() ? Utils::value<std::string>(j, "avatar", "") : "", Utils::value<long long>(j, "flags", 0),
-            Utils::value<int>(j, "type", 0), j.at("created_at").is_string() ? Utils::value<std::string>(j, "created_at", "") : ""
+            Utils::value<int>(j, "type", 0), j.at("display_name").is_string() ? Utils::value<std::string>(j, "display_name", "") : ""
     );
 }

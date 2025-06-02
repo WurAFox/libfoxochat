@@ -4,6 +4,7 @@
 #include <foxogram/Enums.h>
 #include <foxogram/BaseEntity.h>
 #include <foxogram/Cache.h>
+#include <foxogram/Serializer.h>
 #include <string>
 
 namespace foxogram {

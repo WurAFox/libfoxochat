@@ -57,7 +57,7 @@ namespace foxogram {
         return ptr->deleteChannel();
     }
 
-    void Proxy<struct Channel>::edit(const std::string &displayName, const std::string &name, const std::string &icon) {
+    void Proxy<struct Channel>::edit(const std::string &displayName, const std::string &name, const Attachment &icon) {
         ptr->edit(displayName, name, icon);
     }
 
@@ -65,7 +65,7 @@ namespace foxogram {
         return ptr->leave();
     }
 
-    const std::string &Proxy<struct Channel>::getIcon() const {
+    const Attachment &Proxy<struct Channel>::getIcon() const {
         return ptr->getIcon();
     }
 

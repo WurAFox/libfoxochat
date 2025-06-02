@@ -4,7 +4,7 @@
 #include <foxogram/Cache.h>
 #include <string>
 #include <list>
-
+#include <foxogram/Serializer.h>
 #include <foxogram/Attachment.h>
 
 namespace foxogram {

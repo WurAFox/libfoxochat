@@ -8,6 +8,8 @@
 #include <foxogram/Message.h>
 #include <foxogram/BaseEntity.h>
 #include <foxogram/Cache.h>
+#include <foxogram/Serializer.h>
+#include <foxogram/Attachment.h>
 
 namespace foxogram {
     namespace events {
@@ -39,7 +41,7 @@ namespace foxogram {
         std::string ownerName;
         const long long createdAt;
         std::string displayName;
-        std::string icon;
+        Attachment icon;
 
     protected:
         std::shared_ptr<Cache<Member>> members;
@@ -56,13 +58,14 @@ namespace foxogram {
 
         [[nodiscard]] const std::string &getDisplayName() const;
 
-        [[nodiscard]] const std::string &getIcon() const;
+        [[nodiscard]] const Attachment &getIcon() const;
 
-        Channel(long long id, std::string name, std::string displayName, short type, std::string ownerName, long long createdAt, std::string icon);
+        Channel(long long id, std::string name, std::string displayName, short type, std::string ownerName, long long createdAt, Attachment icon);
 
         bool leave();
 
-        void edit(const std::string& displayName = "", const std::string& name = "", const std::string& icon = "");
+        void edit(const std::string& displayName = "", const std::string& name = "",
+            const Attachment& = Attachment{0, "", "", "", 0});
 
         bool deleteChannel();
 

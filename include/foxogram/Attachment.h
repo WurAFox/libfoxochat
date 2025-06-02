@@ -22,8 +22,5 @@ namespace foxogram {
         [[nodiscard]] std::string getContentType() const;
         [[nodiscard]] FlagsBase<AttachmentFlags> getFlags() const;
         [[nodiscard]] bool hasFlag(AttachmentFlags flag) const;
-        void addFlag(AttachmentFlags flag);
-        void removeFlag(AttachmentFlags flag);
     };
-
 } // foxogram

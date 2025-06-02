@@ -6,8 +6,8 @@
 #include <foxogram/Logger.h>
 
 foxogram::Channel::Channel(long long id, std::string name, std::string displayName, short type,
-                           std::string ownerName, long long createdAt, std::string icon) : BaseEntity(id), name(std::move(name)),
-                                                                                           type(type), ownerName(std::move(ownerName)), createdAt(createdAt), displayName(std::move(displayName)), icon(std::move(icon)) {
+                           std::string ownerName, long long createdAt, Attachment icon) : BaseEntity(id), name(std::move(name)),
+    type(type), ownerName(std::move(ownerName)), createdAt(createdAt), displayName(std::move(displayName)), icon(std::move(icon)) {
     messages = std::make_shared<foxogram::Cache<Message>>();
     members = std::make_shared<foxogram::Cache<Member>>();
 }
@@ -30,16 +30,29 @@ bool foxogram::Channel::deleteChannel() {
     return Utils::value<bool>(j, "ok", true);
 }
 
-void foxogram::Channel::edit(const std::string& displayName, const std::string& name, const std::string& icon) {
-    auto j = HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id), nlohmann::json{
-        {"displayName", displayName},
-        {"name", name},
-        {"icon", icon}
-    }, token));
+void foxogram::Channel::edit(const std::string& displayName, const std::string& name, const Attachment& icon) {
+    auto displayName_ = displayName;
+    auto name_ = name;
+    auto icon_ = icon;
+
+    if (displayName.empty()) {
+        displayName_ = this->displayName;
+    }
+
+    if (name.empty()) {
+        name_ = this->name;
+    }
+
+    if (icon.getUuid().empty()) {
+        icon_ = this->icon;
+    }
+
+    auto j = HttpClient::request(Payload("PATCH", "/channels/" + std::to_string(id),
+        nlohmann::json{{"name", name_}, {"displayName", displayName_}, {"icon", icon_.getUuid()}}, token));
     handleError(j);
-    this->displayName = displayName;
-    this->name = name;
-    this->icon = icon;
+    this->displayName = displayName_;
+    this->name = name_;
+    this->icon = icon_;
 }
 
 bool foxogram::Channel::leave() {
@@ -150,7 +163,7 @@ const std::string &foxogram::Channel::getDisplayName() const {
     return displayName;
 }
 
-const std::string &foxogram::Channel::getIcon() const {
+const foxogram::Attachment& foxogram::Channel::getIcon() const {
     return icon;
 }
 
@@ -159,5 +172,5 @@ std::shared_ptr<foxogram::Channel> foxogram::Channel::fromJSON(nlohmann::json j)
         Utils::value<std::string>(j, "name", ""),
         Utils::value<std::string>(j, "display_name", ""), Utils::value<short>(j, "type", 0),
         Utils::value<std::string>(j.at("owner"), "username", ""),
-        Utils::value<long long>(j, "created_at", 0), Utils::value<std::string>(j, "icon", ""));
+        Utils::value<long long>(j, "created_at", 0), Utils::value<Attachment>(j, "icon", Attachment{0, "", "", "", 0}));
 }

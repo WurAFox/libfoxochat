@@ -37,12 +37,4 @@ namespace foxogram {
     bool Attachment::hasFlag(AttachmentFlags flag) const {
         return flags.hasFlag(flag);
     }
-
-    void Attachment::addFlag(AttachmentFlags flag) {
-        flags.addFlag(flag);
-    }
-
-    void Attachment::removeFlag(AttachmentFlags flag) {
-        flags.removeFlag(flag);
-    }
 } // foxogram

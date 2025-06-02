@@ -4,6 +4,7 @@
 #include <foxogram/User.h>
 #include <foxogram/Enums.h>
 #include <foxogram/Cache.h>
+#include <foxogram/Serializer.h>
 
 namespace foxogram {
     namespace events {
