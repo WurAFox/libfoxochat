@@ -1,7 +1,7 @@
-#include <foxogram/Events.h>
-#include <foxogram/Me.h>
+#include <foxochat/Events.h>
+#include <foxochat/Me.h>
 
-void foxogram::events::Pong::handle(foxogram::Me *me, nlohmann::json j, const std::string raw) {
+void foxochat::events::Pong::handle(foxochat::Me *me, nlohmann::json j, const std::string raw) {
     Pong_t e;
     e.me = me;
     e.rawEvent = raw;

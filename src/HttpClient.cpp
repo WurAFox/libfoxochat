@@ -1,12 +1,12 @@
 #include <utility>
-#include <foxogram/HttpClient.h>
-#include <foxogram/exceptions.h>
+#include <foxochat/HttpClient.h>
+#include <foxochat/exceptions.h>
 #include <ixwebsocket/IXNetSystem.h>
-#include <foxogram/Logger.h>
+#include <foxochat/Logger.h>
 
 bool isWSAInitialized = false;
 
-namespace foxogram {
+namespace foxochat {
     const std::string &Payload::getMethod() const {
         return method;
     }
@@ -57,7 +57,7 @@ namespace foxogram {
     Payload::Payload(std::string method, const std::string& path, std::map<std::string, std::string> headers,
                      const nlohmann::json& body, const std::string& token) {
         this->method = std::move(method);
-        this->url = foxogram::Payload::baseUrl + path;
+        this->url = foxochat::Payload::baseUrl + path;
         this->headers.merge(headers);
         // std::string strBody;
         // for (const auto& pair : body.get<std::map<std::string, nlohmann::json>>()) {

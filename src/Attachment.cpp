@@ -1,9 +1,9 @@
-#include <foxogram/Attachment.h>
+#include <foxochat/Attachment.h>
 
 #include <utility>
-#include <foxogram/Utils.h>
+#include <foxochat/Utils.h>
 
-namespace foxogram {
+namespace foxochat {
     Attachment Attachment::fromJson(const nlohmann::json& j) {
         return Attachment{Utils::value<long long>(j, "id", 0), Utils::value<std::string>(j, "uuid", ""),
             Utils::value<std::string>(j, "filename", ""), Utils::value<std::string>(j, "contentType", ""),
@@ -37,4 +37,4 @@ namespace foxogram {
     bool Attachment::hasFlag(AttachmentFlags flag) const {
         return flags.hasFlag(flag);
     }
-} // foxogram
+} // foxochat

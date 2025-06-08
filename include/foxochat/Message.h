@@ -1,13 +1,13 @@
 #pragma once
 
-#include <foxogram/BaseEntity.h>
-#include <foxogram/Cache.h>
+#include <foxochat/BaseEntity.h>
+#include <foxochat/Cache.h>
 #include <string>
 #include <list>
-#include <foxogram/Serializer.h>
-#include <foxogram/Attachment.h>
+#include <foxochat/Serializer.h>
+#include <foxochat/Attachment.h>
 
-namespace foxogram {
+namespace foxochat {
     struct Channel;
     namespace events {
         class MessageCreate;
@@ -17,9 +17,9 @@ namespace foxogram {
     class Member;
     class Me;
 
-    using MessagePtr = std::shared_ptr<foxogram::Message>;
+    using MessagePtr = std::shared_ptr<foxochat::Message>;
 
-    struct LIBFOXOGRAM_EXPORT Message : BaseEntity {
+    struct LIBFOXOCHAT_EXPORT Message : BaseEntity {
         friend events::MessageCreate;
         friend events::MessageUpdate;
         friend events::MessageDelete;

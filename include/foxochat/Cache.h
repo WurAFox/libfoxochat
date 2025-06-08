@@ -1,12 +1,12 @@
 #pragma once
-#include <foxogram/export.h>
-#include <foxogram/BaseEntity.h>
+#include <foxochat/export.h>
+#include <foxochat/BaseEntity.h>
 #include <map>
 #include <string>
 #include <iostream>
 
 
-namespace foxogram {
+namespace foxochat {
 
     template<class T>
     class Cache {

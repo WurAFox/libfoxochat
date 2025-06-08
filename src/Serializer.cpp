@@ -1,21 +1,21 @@
-#include <foxogram/Serializer.h>
-#include <foxogram/User.h>
-#include <foxogram/Member.h>
-#include <foxogram/Channel.h>
-#include <foxogram/Message.h>
-#include <foxogram/Utils.h>
+#include <foxochat/Serializer.h>
+#include <foxochat/User.h>
+#include <foxochat/Member.h>
+#include <foxochat/Channel.h>
+#include <foxochat/Message.h>
+#include <foxochat/Utils.h>
 
-foxogram::User nlohmann::adl_serializer<foxogram::User>::from_json(const nlohmann::json& j) {
+foxochat::User nlohmann::adl_serializer<foxochat::User>::from_json(const nlohmann::json& j) {
     return {
-        foxogram::Utils::value<long long>(j, "id", 0), foxogram::Utils::value<long long>(j, "created_at", 0),
-        foxogram::Utils::value<std::string>(j, "username", ""),
-        foxogram::Utils::value<foxogram::Attachment>(j, "avatar", {0, "", "", "", 0}), foxogram::Utils::value<long long>(j, "flags", 0),
-        foxogram::Utils::value<int>(j, "type", 0), j.at("display_name").is_string() ?
-        foxogram::Utils::value<std::string>(j, "display_name", "") : ""
+        foxochat::Utils::value<long long>(j, "id", 0), foxochat::Utils::value<long long>(j, "created_at", 0),
+        foxochat::Utils::value<std::string>(j, "username", ""),
+        foxochat::Utils::value<foxochat::Attachment>(j, "avatar", {0, "", "", "", 0}), foxochat::Utils::value<long long>(j, "flags", 0),
+        foxochat::Utils::value<int>(j, "type", 0), j.at("display_name").is_string() ?
+        foxochat::Utils::value<std::string>(j, "display_name", "") : ""
     };
 }
 
-void nlohmann::adl_serializer<foxogram::User>::to_json(nlohmann::json &j, foxogram::User u) {
+void nlohmann::adl_serializer<foxochat::User>::to_json(nlohmann::json &j, foxochat::User u) {
     j = {};
     j.at("id") = u.getId();
     j.at("username") = u.getUsername();
@@ -25,17 +25,17 @@ void nlohmann::adl_serializer<foxogram::User>::to_json(nlohmann::json &j, foxogr
     j.at("display_name") = u.getDisplayName();
 }
 
-foxogram::Attachment nlohmann::adl_serializer<foxogram::Attachment>::from_json(
+foxochat::Attachment nlohmann::adl_serializer<foxochat::Attachment>::from_json(
     const nlohmann::json& j) {
     return {
-        foxogram::Utils::value<long long>(j, "id", 0),
-        foxogram::Utils::value<std::string>(j, "uuid", ""), foxogram::Utils::value<std::string>(j, "filename", ""),
-        foxogram::Utils::value<std::string>(j, "contentType", ""), foxogram::Utils::value<long long>(j, "flags", 0)
+        foxochat::Utils::value<long long>(j, "id", 0),
+        foxochat::Utils::value<std::string>(j, "uuid", ""), foxochat::Utils::value<std::string>(j, "filename", ""),
+        foxochat::Utils::value<std::string>(j, "contentType", ""), foxochat::Utils::value<long long>(j, "flags", 0)
     };
 }
 
-void nlohmann::adl_serializer<foxogram::Attachment>::to_json(nlohmann::json& j,
-    foxogram::Attachment a) {
+void nlohmann::adl_serializer<foxochat::Attachment>::to_json(nlohmann::json& j,
+    foxochat::Attachment a) {
     j.at("id") = a.getId();
     j.at("uuid") = a.getUuid();
     j.at("filename") = a.getFilename();
@@ -43,36 +43,36 @@ void nlohmann::adl_serializer<foxogram::Attachment>::to_json(nlohmann::json& j,
     j.at("flags") = a.getFlags().toLongLong();
 }
 
-foxogram::Member nlohmann::adl_serializer<foxogram::Member>::from_json(const nlohmann::json& j) {
+foxochat::Member nlohmann::adl_serializer<foxochat::Member>::from_json(const nlohmann::json& j) {
     return {
-        foxogram::Utils::value<long long>(j, "id", 0),
-        j.contains("channel") ? foxogram::Utils::value<long long>(j.at("channel"), "id", 0) : 0,
-        foxogram::Utils::value<long long>(j, "permissions", 0), foxogram::Utils::value<std::string>(j.at("user"), "username", ""),
-        foxogram::Utils::value<foxogram::Attachment>(j.at("user"), "avatar", {0, "", "", "", 0}),
-        foxogram::Utils::value<long long>(j.at("user"), "flags", 0),foxogram::Utils::value<int>(j.at("user"), "type", 0),
-        foxogram::Utils::value<long long>(j.at("user"), "created_at", 0)
+        foxochat::Utils::value<long long>(j, "id", 0),
+        j.contains("channel") ? foxochat::Utils::value<long long>(j.at("channel"), "id", 0) : 0,
+        foxochat::Utils::value<long long>(j, "permissions", 0), foxochat::Utils::value<std::string>(j.at("user"), "username", ""),
+        foxochat::Utils::value<foxochat::Attachment>(j.at("user"), "avatar", {0, "", "", "", 0}),
+        foxochat::Utils::value<long long>(j.at("user"), "flags", 0),foxochat::Utils::value<int>(j.at("user"), "type", 0),
+        foxochat::Utils::value<long long>(j.at("user"), "created_at", 0)
     };
 }
 
-void nlohmann::adl_serializer<foxogram::Member>::to_json(nlohmann::json& j, foxogram::Member a) {
+void nlohmann::adl_serializer<foxochat::Member>::to_json(nlohmann::json& j, foxochat::Member a) {
     j = {};
     j.at("id") = a.getId();
     j.at("permissions") = a.getPermissions().toLongLong();
-    j.at("user") = static_cast<foxogram::User>(a);
+    j.at("user") = static_cast<foxochat::User>(a);
 }
 
-foxogram::Channel nlohmann::adl_serializer<foxogram::Channel>::from_json(const nlohmann::json& j) {
+foxochat::Channel nlohmann::adl_serializer<foxochat::Channel>::from_json(const nlohmann::json& j) {
     return {
-        foxogram::Utils::value<long long>(j, "id", 0),
-        foxogram::Utils::value<std::string>(j, "name", ""),
-        foxogram::Utils::value<std::string>(j, "display_name", ""), foxogram::Utils::value<short>(j, "type", 0),
-        foxogram::Utils::value<std::string>(j.at("owner"), "username", ""),
-        foxogram::Utils::value<long long>(j, "created_at", 0), foxogram::Utils::value<foxogram::Attachment>(j, "icon",
-        foxogram::Attachment(0, "", "","", 0))
+        foxochat::Utils::value<long long>(j, "id", 0),
+        foxochat::Utils::value<std::string>(j, "name", ""),
+        foxochat::Utils::value<std::string>(j, "display_name", ""), foxochat::Utils::value<short>(j, "type", 0),
+        foxochat::Utils::value<std::string>(j.at("owner"), "username", ""),
+        foxochat::Utils::value<long long>(j, "created_at", 0), foxochat::Utils::value<foxochat::Attachment>(j, "icon",
+        foxochat::Attachment(0, "", "","", 0))
     };
 }
 
-void nlohmann::adl_serializer<foxogram::Channel>::to_json(nlohmann::json& j, foxogram::Channel a) {
+void nlohmann::adl_serializer<foxochat::Channel>::to_json(nlohmann::json& j, foxochat::Channel a) {
     j = {};
     j.at("id") = a.getId();
     j.at("name") = a.getName();
@@ -83,15 +83,15 @@ void nlohmann::adl_serializer<foxogram::Channel>::to_json(nlohmann::json& j, fox
     j.at("icon") = a.getIcon();
 }
 
-foxogram::Message nlohmann::adl_serializer<foxogram::Message>::from_json(const nlohmann::json& j) {
+foxochat::Message nlohmann::adl_serializer<foxochat::Message>::from_json(const nlohmann::json& j) {
     return {
-        foxogram::Utils::value<long long>(j, "id", 0), foxogram::Utils::value<long long>(j.at("channel"), "id", 0),
-        foxogram::Utils::value<long long>(j.at("author"), "id", 0), foxogram::Utils::value<long long>(j, "created_at", 0),
-        foxogram::Utils::value<std::string>(j, "content", ""), foxogram::Utils::value<std::list<foxogram::Attachment>>(j, "attachments", {})
+        foxochat::Utils::value<long long>(j, "id", 0), foxochat::Utils::value<long long>(j.at("channel"), "id", 0),
+        foxochat::Utils::value<long long>(j.at("author"), "id", 0), foxochat::Utils::value<long long>(j, "created_at", 0),
+        foxochat::Utils::value<std::string>(j, "content", ""), foxochat::Utils::value<std::list<foxochat::Attachment>>(j, "attachments", {})
     };
 }
 
-void nlohmann::adl_serializer<foxogram::Message>::to_json(nlohmann::json& j, foxogram::Message a) {
+void nlohmann::adl_serializer<foxochat::Message>::to_json(nlohmann::json& j, foxochat::Message a) {
     j = {};
     j.at("id") = a.getId();
     j.at("channel").at("id") = a.getChannelId();

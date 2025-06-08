@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
 #include <stdexcept>
-#include <foxogram/HttpClient.h>
+#include <foxochat/HttpClient.h>
 
-namespace foxogram {
-    class LIBFOXOGRAM_EXPORT BaseEntity {
+namespace foxochat {
+    class LIBFOXOCHAT_EXPORT BaseEntity {
             protected:
             long long id;
 

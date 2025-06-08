@@ -1,22 +1,22 @@
 #pragma once
 
-#include <foxogram/export.h>
+#include <foxochat/export.h>
 #include <ixwebsocket/IXHttpClient.h>
 #include <string>
 #include "nlohmann/json.hpp"
 
-#ifndef FOXOGRAM_BASE_API_URL
+#ifndef FOXOCHAT_BASE_API_URL
 #ifdef IXWEBSOCKET_USE_TLS
-#define FOXOGRAM_BASE_API_URL "https://api." FOXOGRAM_URL
+#define FOXOCHAT_BASE_API_URL "https://api" FOXOCHAT_URL
 #else
-#define FOXOGRAM_BASE_API_URL "http://api." FOXOGRAM_URL
+#define FOXOCHAT_BASE_API_URL "http://api" FOXOCHAT_URL
 #endif
 #endif
 
-namespace foxogram {
-    class LIBFOXOGRAM_EXPORT Payload {
+namespace foxochat {
+    class LIBFOXOCHAT_EXPORT Payload {
     private:
-        inline static std::string baseUrl = FOXOGRAM_BASE_API_URL;
+        inline static std::string baseUrl = FOXOCHAT_BASE_API_URL;
         std::string method;
         std::string url;
         ix::WebSocketHttpHeaders headers{{"content-type", "application/json"}};
@@ -47,7 +47,7 @@ namespace foxogram {
         [[nodiscard]] const nlohmann::json &getBodyJson() const;
     };
 
-    class LIBFOXOGRAM_EXPORT HttpClient {
+    class LIBFOXOCHAT_EXPORT HttpClient {
     public:
         static nlohmann::json request(const Payload& request);
     };

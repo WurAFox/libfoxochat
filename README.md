@@ -1,11 +1,11 @@
-# foxogram-lib
-Foxogram-lib is a user-friendly c++ lib to comfortably work with foxogram api.
+# libfoxochat
+Libfoxochat is a user-friendly c++ lib to comfortably work with foxochat api.
 
 # Build
 
 ```
-git clone https://github.com/Foxocorp/foxogram-lib
-cd foxogram-lib
+git clone https://github.com/Foxocorp/libfoxochat
+cd libfoxochat
 mkdir cmake-build
 cd cmake-build 
 cmake ..

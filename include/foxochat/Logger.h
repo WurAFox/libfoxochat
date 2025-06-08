@@ -1,10 +1,10 @@
 #pragma once
-#include <foxogram/export.h>
-#include <foxogram/Enums.h>
+#include <foxochat/export.h>
+#include <foxochat/Enums.h>
 #include <string>
 
-namespace foxogram {
-    class LIBFOXOGRAM_EXPORT Logger {
+namespace foxochat {
+    class LIBFOXOCHAT_EXPORT Logger {
     public:
         static unsigned short logLevel;
         static void setLogLevel(LogLevel level);

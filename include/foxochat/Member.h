@@ -1,12 +1,12 @@
 #pragma once
 
-#include <foxogram/export.h>
-#include <foxogram/User.h>
-#include <foxogram/Enums.h>
-#include <foxogram/Cache.h>
-#include <foxogram/Serializer.h>
+#include <foxochat/export.h>
+#include <foxochat/User.h>
+#include <foxochat/Enums.h>
+#include <foxochat/Cache.h>
+#include <foxochat/Serializer.h>
 
-namespace foxogram {
+namespace foxochat {
     namespace events {
         class MemberAdd;
         class MemberUpdate;
@@ -15,9 +15,9 @@ namespace foxogram {
     class Me;
     class Channel;
 
-    using MemberPtr = std::shared_ptr<foxogram::Member>;
+    using MemberPtr = std::shared_ptr<foxochat::Member>;
 
-    struct LIBFOXOGRAM_EXPORT Member : public User {
+    struct LIBFOXOCHAT_EXPORT Member : public User {
         friend class Me;
         friend events::MemberAdd;
         friend events::MemberUpdate;

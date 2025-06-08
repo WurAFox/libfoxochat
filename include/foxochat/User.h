@@ -1,19 +1,19 @@
 #pragma once
 
-#include <foxogram/export.h>
-#include <foxogram/Enums.h>
-#include <foxogram/BaseEntity.h>
-#include <foxogram/Cache.h>
-#include <foxogram/Attachment.h>
-#include <foxogram/Serializer.h>
+#include <foxochat/export.h>
+#include <foxochat/Enums.h>
+#include <foxochat/BaseEntity.h>
+#include <foxochat/Cache.h>
+#include <foxochat/Attachment.h>
+#include <foxochat/Serializer.h>
 #include <string>
 
-namespace foxogram {
+namespace foxochat {
     class Me;
 
     using UserPtr = std::shared_ptr<User>;
 
-    struct LIBFOXOGRAM_EXPORT User : BaseEntity {
+    struct LIBFOXOCHAT_EXPORT User : BaseEntity {
     protected:
         std::string username;
         Attachment avatar;

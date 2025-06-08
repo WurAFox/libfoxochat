@@ -1,15 +1,15 @@
 #pragma once
 
-#include <foxogram/export.h>
+#include <foxochat/export.h>
 #include <exception>
 #include <string>
 #include <iostream>
 
-#define decl_exception(name, Msg, Exception) class name : public foxogram::Exception { \
+#define decl_exception(name, Msg, Exception) class name : public foxochat::Exception { \
     protected: \
         std::string msg = Msg; \
     public: \
-        using foxogram::Exception::Exception; \
+        using foxochat::Exception::Exception; \
         explicit name(const std::string& what) : msg(what) {std::cout << what << std::endl;} \
         explicit name(std::string&& what) : msg(std::move(what)) {std::cout << what << std::endl;} \
         name(const name&) = default; \
@@ -19,8 +19,8 @@
         const char* what() const noexcept override { return msg.c_str(); }; \
 };
 
-namespace foxogram {
-    class LIBFOXOGRAM_EXPORT Exception : public std::exception {
+namespace foxochat {
+    class LIBFOXOCHAT_EXPORT Exception : public std::exception {
     protected:
         std::string msg;
     public:

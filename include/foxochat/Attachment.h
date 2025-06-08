@@ -1,12 +1,12 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <foxogram/export.h>
-#include <foxogram/Enums.h>
+#include <foxochat/export.h>
+#include <foxochat/Enums.h>
 
-namespace foxogram {
+namespace foxochat {
 
-    struct LIBFOXOGRAM_EXPORT Attachment {
+    struct LIBFOXOCHAT_EXPORT Attachment {
     private:
         long long id;
         std::string uuid;
@@ -23,4 +23,4 @@ namespace foxogram {
         [[nodiscard]] FlagsBase<AttachmentFlags> getFlags() const;
         [[nodiscard]] bool hasFlag(AttachmentFlags flag) const;
     };
-} // foxogram
+} // foxochat

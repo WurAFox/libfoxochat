@@ -1,12 +1,11 @@
-#define FOXOGRAM_BASE_API_URL "https://api.dev." FOXOGRAM_URL
-#define FOXOGRAM_BASE_WEBSOCKET_URL "wss://api.dev." FOXOGRAM_URL
+#define FOXOCHAT_URL "-dev.foxochat.app"
 
-#include <foxogram/Me.h>
-#include <foxogram/Logger.h>
+#include <foxochat/Me.h>
+#include <foxochat/Logger.h>
 #include <random>
 #include <string>
 #include <gtest/gtest.h>
-#include <foxogram/exceptions.h>
+#include <foxochat/exceptions.h>
 
 std::string generateRandomString(int length) {
     const std::string CHARACTERS
@@ -28,11 +27,11 @@ std::string generateRandomString(int length) {
 }
 
 TEST(add_test, Me) {
-    foxogram::Logger::setLogLevel(foxogram::LOG_DEBUG);
+    foxochat::Logger::setLogLevel(foxochat::LOG_DEBUG);
     std::string username = generateRandomString(12);
-    std::string email = username+"@foxogram.su";
+    std::string email = username+"@foxochat.app";
     std::string password = generateRandomString(12);
-    auto u = foxogram::Me(username, email, password);
+    auto u = foxochat::Me(username, email, password);
     EXPECT_EQ(u.getUsername(), username);
     EXPECT_TRUE(u.resendEmail());
     // EXPECT_TRUE(u.verifyEmail("000000"));

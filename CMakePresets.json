@@ -12,7 +12,7 @@
       "binaryDir": "${sourceDir}/build",
       "hidden": true,
       "cacheVariables": {
-        "FOXOGRAM-LIB_BUILD_EXAMPLES": "ON"
+        "LIBFOXOCHAT_BUILD_EXAMPLES": "ON"
       }
     },
     {

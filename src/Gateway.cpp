@@ -1,15 +1,15 @@
-#include <foxogram/Gateway.h>
-#include <foxogram/Me.h>
-#include <foxogram/exceptions.h>
-#include <foxogram/Logger.h>
-#include <foxogram/Utils.h>
+#include <foxochat/Gateway.h>
+#include <foxochat/Me.h>
+#include <foxochat/exceptions.h>
+#include <foxochat/Logger.h>
+#include <foxochat/Utils.h>
 
-foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), heartbeatInterval(heartbeatInterval) {
+foxochat::Gateway::Gateway(foxochat::Me *me, int heartbeatInterval) : me(me), heartbeatInterval(heartbeatInterval) {
     ix::initNetSystem();
     ws.setUrl(wsUrl);
     ws.setOnMessageCallback([this](const ix::WebSocketMessagePtr& msg){
         if (msg->type == ix::WebSocketMessageType::Message) {
-            foxogram::Logger::logDebug("Get message from gateway: " + msg->str);
+            foxochat::Logger::logDebug("Get message from gateway: " + msg->str);
             auto j = nlohmann::json::parse(msg->str);
             switch (Utils::value<int>(j, "op", 0)) {
                 case 0: {
@@ -42,8 +42,8 @@ foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), he
             }
 
         } else if (msg->type == ix::WebSocketMessageType::Error) {
-            foxogram::Logger::logError(msg->errorInfo.reason);
-            throw foxogram::WebSocketException("Error while connecting to websocket: " + msg->errorInfo.reason);
+            foxochat::Logger::logError(msg->errorInfo.reason);
+            throw foxochat::WebSocketException("Error while connecting to websocket: " + msg->errorInfo.reason);
         } else if (msg->type == ix::WebSocketMessageType::Open) {
             send(nlohmann::json::parse(R"({"op": 1, "d": {
                     "token": ")" + *this->me->token + R"("
@@ -56,23 +56,23 @@ foxogram::Gateway::Gateway(foxogram::Me *me, int heartbeatInterval) : me(me), he
     ws.start();
 }
 
-void foxogram::Gateway::send(const nlohmann::json& data) {
+void foxochat::Gateway::send(const nlohmann::json& data) {
     if (ws.getReadyState() == ix::ReadyState::Open) {
         ws.send(to_string(data));
     }
     else {
-        throw foxogram::WebSocketException(std::string("Websocket not opened"));
+        throw foxochat::WebSocketException(std::string("Websocket not opened"));
     }
 }
 
-void foxogram::Gateway::close() {
+void foxochat::Gateway::close() {
     if (this->ws.getReadyState() == ix::ReadyState::Open) {
         this->ws.close();
         this->ws.stop();
     }
 }
 
-void foxogram::Gateway::ping(int interval) {
+void foxochat::Gateway::ping(int interval) {
     std::unique_lock<std::mutex> lock(mtx);
 
     while (running) {
@@ -83,7 +83,7 @@ void foxogram::Gateway::ping(int interval) {
     }
 }
 
-foxogram::Gateway::~Gateway() {
+foxochat::Gateway::~Gateway() {
     running = false;
         cv.notify_one();
     pingThread.join();

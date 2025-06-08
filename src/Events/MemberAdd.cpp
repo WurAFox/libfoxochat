@@ -1,17 +1,17 @@
-#include <foxogram/Events.h>
-#include <foxogram/Me.h>
+#include <foxochat/Events.h>
+#include <foxochat/Me.h>
 
-#include "foxogram/Utils.h"
+#include "foxochat/Utils.h"
 
-void foxogram::events::MemberAdd::handle(foxogram::Me *me, nlohmann::json j, const std::string raw) {
+void foxochat::events::MemberAdd::handle(foxochat::Me *me, nlohmann::json j, const std::string raw) {
     MemberAdd_t e;
     e.me = me;
     e.rawEvent = raw;
-    auto member = foxogram::Member::fromJSON(j);
+    auto member = foxochat::Member::fromJSON(j);
     member->token = *me->token;
     auto channel = me->getChannel(Utils::value<long long>(j.at("channel"), "id", 0));
     if (!channel) {
-        auto channelPtr = foxogram::Channel::fromJSON(j.at("channel"));
+        auto channelPtr = foxochat::Channel::fromJSON(j.at("channel"));
         channelPtr->token = *me->token;
         me->channels->store(channelPtr);
     }

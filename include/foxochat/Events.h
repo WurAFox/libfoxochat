@@ -1,24 +1,24 @@
 #pragma once
 
-#include <foxogram/EventTypes.h>
-#include <foxogram/export.h>
+#include <foxochat/EventTypes.h>
+#include <foxochat/export.h>
 #include <nlohmann/json.hpp>
 
 #define event_decl(x) \
 	class x : public Event { \
     protected:        \
-        typedef void (*Lamda##x)( ::foxogram::x##_t );          \
-        friend class foxogram::Gateway;                         \
-        friend class foxogram::Me;              \
+        typedef void (*Lamda##x)( ::foxochat::x##_t );          \
+        friend class foxochat::Gateway;                         \
+        friend class foxochat::Me;              \
         Lamda##x callback = nullptr; \
     public:            \
         virtual void handle(Me* me, nlohmann::json j, const std::string raw); \
     };
-namespace foxogram {
+namespace foxochat {
     class Me;
     class Gateway;
     namespace events {
-        class LIBFOXOGRAM_EXPORT Event {
+        class LIBFOXOCHAT_EXPORT Event {
         public:
             virtual void handle(Me *me, nlohmann::json j, std::string raw) = 0;
         };

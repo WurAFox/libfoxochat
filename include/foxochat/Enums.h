@@ -2,7 +2,7 @@
 
 #include <bitset>
 
-namespace LIBFOXOGRAM_EXPORT foxogram {
+namespace LIBFOXOCHAT_EXPORT foxochat {
     enum LogLevel {
         LOG_DEBUG = 0,
         LOG_INFO,
@@ -12,7 +12,7 @@ namespace LIBFOXOGRAM_EXPORT foxogram {
     };
 
     template<typename EnumType>
-    class LIBFOXOGRAM_EXPORT FlagsBase {
+    class LIBFOXOCHAT_EXPORT FlagsBase {
         long long bits;
 
     public:

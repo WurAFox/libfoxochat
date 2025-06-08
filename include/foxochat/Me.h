@@ -1,19 +1,19 @@
 #pragma once
 
-#include <foxogram/export.h>
-#include <foxogram/User.h>
-#include <foxogram/Channel.h>
-#include <foxogram/Cache.h>
-#include <foxogram/Gateway.h>
-#include <foxogram/Events.h>
+#include <foxochat/export.h>
+#include <foxochat/User.h>
+#include <foxochat/Channel.h>
+#include <foxochat/Cache.h>
+#include <foxochat/Gateway.h>
+#include <foxochat/Events.h>
 
-#define decl_on_event(x) friend events::x; typedef void (*Lamda##x)( foxogram::x##_t );\
+#define decl_on_event(x) friend events::x; typedef void (*Lamda##x)( foxochat::x##_t );\
 void on##x(Lamda##x callback) { \
     x->callback = callback;\
 } 
 
-namespace foxogram {
-    class LIBFOXOGRAM_EXPORT Me : public User {
+namespace foxochat {
+    class LIBFOXOCHAT_EXPORT Me : public User {
         friend Gateway;
     protected:
         events::MessageCreate* MessageCreate = new events::MessageCreate();
@@ -56,9 +56,9 @@ namespace foxogram {
 
         [[nodiscard]] std::string getToken() const;
 
-        [[nodiscard]] std::list<foxogram::ChannelPtr> getChannels() const;
+        [[nodiscard]] std::list<foxochat::ChannelPtr> getChannels() const;
 
-        [[nodiscard]] std::list<foxogram::ChannelPtr> fetchChannels();
+        [[nodiscard]] std::list<foxochat::ChannelPtr> fetchChannels();
 
         Me(long long int id, std::string username, std::string avatar, long long int flags,
            int type, long long int createdAt) = delete;

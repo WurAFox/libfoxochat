@@ -3,7 +3,7 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
-namespace foxogram {
+namespace foxochat {
 
     class Utils {
     public:

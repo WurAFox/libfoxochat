@@ -1,11 +1,11 @@
-#include <foxogram/Events.h>
-#include <foxogram/Me.h>
+#include <foxochat/Events.h>
+#include <foxochat/Me.h>
 
-void foxogram::events::ChannelDelete::handle(foxogram::Me *me, nlohmann::json j, const std::string raw) {
+void foxochat::events::ChannelDelete::handle(foxochat::Me *me, nlohmann::json j, const std::string raw) {
     ChannelDelete_t e;
     e.me = me;
     e.rawEvent = raw;
-    auto channel = foxogram::Channel::fromJSON(j);
+    auto channel = foxochat::Channel::fromJSON(j);
     channel->token = *me->token;
     e.channel = me->channels->get(channel->getId());
     me->channels->Delete(channel->getId());
