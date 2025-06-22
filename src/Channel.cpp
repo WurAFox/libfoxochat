@@ -75,14 +75,10 @@ std::list<foxochat::MessagePtr> foxochat::Channel::fetchMessages(long long befor
         handleError(j);
     }
     for (auto& message : j) {
+        auto member = foxochat::Member::fromJSON(message.at("author"), id);
         auto msg = foxochat::Message::fromJSON(message);
         msg->token = token;
-        if (!members->get(j.at("author").at("id").get<long long>()))
-        {
-            auto member = foxochat::Member::fromJSON(j.at("author"), id);
-            members->store(member);
-        }
-        msg->author = members->get(j.at("author").at("id").get<long long>());
+        msg->author = members->store(member);
         messages->store(msg);
     }
 
@@ -98,13 +94,9 @@ foxochat::MessagePtr foxochat::Channel::fetchMessage(long long id) {
 
     handleError(j);
     auto msg = foxochat::Message::fromJSON(j);
+    auto member = foxochat::Member::fromJSON(j.at("author"), id);
     msg->token = token;
-    if (!members->get(j.at("author").at("id").get<long long>()))
-    {
-        auto member = foxochat::Member::fromJSON(j.at("author"), id);
-        members->store(member);
-    }
-    msg->author = members->get(j.at("author").at("id").get<long long>());
+    msg->author = members->store(member);
     return messages->store(msg);
 }
 
@@ -138,13 +130,9 @@ foxochat::MessagePtr foxochat::Channel::createMessage(std::string content, const
 
     handleError(j);
     auto msg = foxochat::Message::fromJSON(j);
+    auto member = foxochat::Member::fromJSON(j.at("author"), id);
     msg->token = token;
-    if (!members->get(j.at("author").at("id").get<long long>()))
-    {
-        auto member = foxochat::Member::fromJSON(j.at("author"), id);
-        members->store(member);
-    }
-    msg->author = members->get(j.at("author").at("id").get<long long>());
+    msg->author = members->store(member);
     return messages->store(msg);
 }
 
