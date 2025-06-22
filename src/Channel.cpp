@@ -126,7 +126,7 @@ foxochat::MemberPtr foxochat::Channel::getMember(long long id) {
 
 foxochat::MessagePtr foxochat::Channel::createMessage(std::string content, const std::list<long long>& attachments) {
     const auto j = HttpClient::request(Payload("POST", "/channels/" + std::to_string(id) + "/messages",
-        nlohmann::json({{"content", content}, {attachments, attachments}}), token));
+        nlohmann::json{{"content", content}, {"attachments", attachments}}, token));
 
     handleError(j);
     auto msg = foxochat::Message::fromJSON(j);
