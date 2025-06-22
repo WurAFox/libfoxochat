@@ -67,7 +67,6 @@ void foxochat::Gateway::send(const nlohmann::json& data) {
 
 void foxochat::Gateway::close() {
     if (this->ws.getReadyState() == ix::ReadyState::Open) {
-        this->ws.close();
         this->ws.stop();
     }
 }

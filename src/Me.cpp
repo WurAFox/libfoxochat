@@ -136,7 +136,7 @@ bool foxochat::Me::deleteUser(std::string password) const {
 }
 
 bool foxochat::Me::confirmDeleteUser(const std::string &code) const {
-    auto j = HttpClient::request(Payload("POST", "/users/@me/delete-confirm", nlohmann::json({{"code", code}}), *token));
+    auto j = HttpClient::request(Payload("POST", "/users/@me/delete-confirm", nlohmann::json({{"otp", code}}), *token));
     handleError(j);
 
     return Utils::value<bool>(j, "ok", true);

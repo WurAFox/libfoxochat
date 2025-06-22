@@ -34,9 +34,9 @@ TEST(add_test, Me) {
     auto u = foxochat::Me(username, email, password);
     EXPECT_EQ(u.getUsername(), username);
     EXPECT_TRUE(u.resendEmail());
-    // EXPECT_TRUE(u.verifyEmail("000000"));
+    EXPECT_TRUE(u.verifyEmail("000000"));
     EXPECT_TRUE(u.deleteUser(password));
-    // EXPECT_TRUE(u.confirmDeleteUser("000000"));
+    EXPECT_TRUE(u.confirmDeleteUser("000000"));
 }
 
 int main(int argc, char **argv)
