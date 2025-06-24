@@ -2,10 +2,11 @@
 #include <foxochat/Me.h>
 #include <foxochat/Utils.h>
 
-void foxochat::events::MessageDelete::handle(foxochat::Me *me, nlohmann::json j, const std::string raw) {
+void foxochat::events::MessageDelete::handle(foxochat::Me *me, nlohmann::json eventJ, const std::string raw) {
     MessageDelete_t e;
     e.me = me;
     e.rawEvent = raw;
+    nlohmann::json j = eventJ.at("d");
     auto msg = foxochat::Message::fromJSON(j);
     msg->token = *me->token;
     auto channel = me->getChannel(Utils::value<long long>(j.at("channel"), "id", 0));

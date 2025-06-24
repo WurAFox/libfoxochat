@@ -79,7 +79,7 @@ namespace foxochat {
 
         bool confirmDeleteUser(const std::string &code) const;
 
-        ChannelPtr createChannel(std::string name, int type);
+        ChannelPtr createChannel(std::string name, int type, std::string displayName, bool isPublic = false);
 
         ChannelPtr joinChannel(long long int id);
 

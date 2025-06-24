@@ -154,9 +154,18 @@ foxochat::User foxochat::Me::fetchMe() const {
     return *foxochat::User::fromJSON(j);
 }
 
-foxochat::ChannelPtr foxochat::Me::createChannel(std::string name, int type) {
-    auto j = HttpClient::request(Payload("POST", "/channels/",
-                                         nlohmann::json({{"name", name}, {"type", type}}), *token));
+foxochat::ChannelPtr foxochat::Me::createChannel(std::string name, int type, std::string displayName, bool isPublic) {
+    nlohmann::json body = nlohmann::json({
+        {"name", name},
+        {"type", type},
+        {"display_name", nlohmann::detail::value_t::null},
+        {"public", isPublic}
+    });
+    if (!displayName.empty())
+    {
+        body.at("display_name") = displayName;
+    }
+    auto j = HttpClient::request(Payload("POST", "/channels/", body, *token));
     handleError(j);
     auto channel = Channel::fromJSON(j);
     channel->token = *token;

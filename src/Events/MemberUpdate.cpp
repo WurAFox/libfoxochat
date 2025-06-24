@@ -2,10 +2,11 @@
 #include <foxochat/Me.h>
 #include <foxochat/Utils.h>
 
-void foxochat::events::MemberUpdate::handle(foxochat::Me *me, nlohmann::json j, const std::string raw) {
+void foxochat::events::MemberUpdate::handle(foxochat::Me *me, nlohmann::json eventJ, const std::string raw) {
     MemberUpdate_t e;
     e.me = me;
     e.rawEvent = raw;
+    nlohmann::json j = eventJ.at("d");
     auto member = foxochat::Member::fromJSON(j);
     member->token = *me->token;
     auto channel = me->getChannel(Utils::value<long long>(j.at("channel"), "id", 0));

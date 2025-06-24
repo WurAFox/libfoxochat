@@ -12,7 +12,7 @@
         friend class foxochat::Me;              \
         Lamda##x callback = nullptr; \
     public:            \
-        virtual void handle(Me* me, nlohmann::json j, const std::string raw); \
+        virtual void handle(Me* me, nlohmann::json eventJ, const std::string raw); \
     };
 namespace foxochat {
     class Me;
@@ -20,7 +20,7 @@ namespace foxochat {
     namespace events {
         class LIBFOXOCHAT_EXPORT Event {
         public:
-            virtual void handle(Me *me, nlohmann::json j, std::string raw) = 0;
+            virtual void handle(Me *me, nlohmann::json eventJ, std::string raw) = 0;
         };
         event_decl(MessageCreate)
         event_decl(MessageUpdate)
